@@ -1,0 +1,30 @@
+
+PETSc, which stands for Portable, Extensible Toolkit for Scientific Computation, is a software library developed primarily by Argonne National Library to facilitate the development of high-performance parallel numerical code written in C/C++, Fortran and Python.
+It provides a wide range of functionality for solving linear and nonlinear algebraic equations, ordinary and partial differential equations, and also optimization problems (provided by TAO) on parallel computing architectures.
+In addition, PETSc includes support for managing parallel PDE discretizations including parallel matrix and vector assembly routines.
+
+Key features of PETSc includes:
+\begin{itemize}
+    \item Parallelism: PETSc is designed for parallel computing, especially distributed-memory parallel computing architectures. It is intended to run efficiently on parallel computing systems where multiple processors or nodes communicate over the network via a message passing interface (MPI).
+    These architectures include clusters, supercomputers, and other HPC platforms.
+    \item Modularity and Extensibility: PETSc is highly modular and extensible, allowing users to combine different numerical techniques and algorithms to solve complex problems efficiently.
+    It provides a flexible framework for implementing new algorithms and incorporating external libraries. It mainly contains the following objects
+    \begin{itemize}
+        \item Algebraic objects 
+            \begin{itemize}
+                \item Vectors (Vec) containers for simulation solutions, right-hand sides of linear systems
+                \item Matrices (Mat) containers for Jacobians and operators that define linear systems
+            \end{itemize}
+        \item Solvers
+            \begin{itemize}
+                \item Linear solvers based on preconditioners (PC) and Krylov subspace methods (KSP)
+                \item Nonlinear solvers (SNES) that use data-structure-neutral implementations of Newton-like methods
+                \item Time integrators (TS) for ODE/PDE, explicit, implicit, IMEX
+                \item Optimization (TAO) with equality and inequality constraints, first and second order Newton methods
+                \item Eigenvalue/Eigenvectors (SLEPc) and related algorithms
+            \end{itemize}
+    \end{itemize}
+    \item Efficiency and Performance: PETSc is optimized for performance, with algorithms and data structures designed to minimize memory usage and maximize computational efficiency. It supports parallel matrix and vector operations as well as efficient iterative solvers and preconditioners via the objects mentioned previously 
+    \item Flexibility: PETSc supports a wide range of numerical methods and algorithms and has built-in discretization tools. It provides interfaces for solving problems in various scientific and engineering disciplines, including computational fluid dynamics (CFD), solid mechanics, etc with documented examples and tutorials for researchers.
+    \item PETSc is portable across different computing platforms and operating systems, including UNIX/Linux, macOS, and Windows. It provides a consistent interface and functionalities across different architectures, making it easy to develop and deploy simulation code across multiple platforms.
+\end{itemize}
