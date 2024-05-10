@@ -1,4 +1,20 @@
-
 HYPRE is a software library of high performance numerical algorithms including preconditioners and solvers for large, sparse linear systems of equations on massively parallel computers \cite{Falgout2006TheDA}. 
+The HPYRE library was created to provide users with advanced parallel preconditioners. It features parallel multigrid solvers for both structured and unstructured grid problems.
+These solvers are called from application code via HYPRE's conceptual linear system interfaces \cite{10.5555/1125403.1125423}, which allow a variety of natural problem descriptions.
 
-\cite{10.5555/1125403.1125423}
+Key features of PETSc include:
+\begin{itemize}
+    \item Scalable preconditioners: HYPRE contains several families of preconditioners focused on scalable solutions of very large linear systems.
+    HYPRE includes "grey box" algorithms including structured multigrid that use more than just the matrix to solve certain classes of problems more efficiently.
+    \item Common iterative methods: HYPRE provides several common Krylov-based iterative methods in conjunction with scalable preconditioners. 
+    This includes methods for symmetric matrices such as Conjugate Gradient (CG) and nonsymmetric matrices such as GMRES.
+    \item Grid-centric interfaces for complicated data structures and advanced solvers: HYPRE has improved usability from earlier generations of sparse linear solver libraries in that users do not have to learn complicated sparse matrix data structures.
+    HYPRE builds these data structures for users through a variety of conceptual interfaces for different classes of users.
+    These include stencil-based structured/semi-structured interfaces most suitable for finite difference methods, unstructured interfaces for finite element methods, and linear algebra based interfaces for general applications.
+    Each conceptual interface provides access to several solvers without the need to manually write code for new interfaces.
+    \item User options for beginners through experts: HYPRE allows users with various levels of expertise to write their code easily. The beginner users can set up runnable code with a minimal amount of effort. Expert users can take further control of the solution process through various parameters
+    \item Configuration options for different platforms: HYPRE allows a simple and flexible installation on various computing platforms. Users have options to configure for different platforms during the installation.
+    Additional options include debug mode which offers more info and optimized mode for better performance.
+    It also allows users to change different libraries such as MPI and BLAS.
+    \item Interfaces to multiple languages: HYPRE is written in C, but it also provides an interface for Fortran users.
+\end{itemize}
