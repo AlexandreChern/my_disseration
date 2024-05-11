@@ -1,5 +1,5 @@
-
-\section{Fortran}
+\section{Review of several languages for scientific computing}
+\subsection{Fortran}
 There are many languages designed for high performance computing.
 Traditionally, Fortran has been used to write high performance numerical code.
 It is short for "Formula Translation". As the name suggest, it is one of the oldest and most enduring programming languages in scientific computing.
@@ -14,4 +14,50 @@ This allows legacy Fortran programs to continue running without modification on 
 
 Because of these reasons, despite its age, Fortran remains widely used in scientific and engineering computing.
 
-\section{C++}
+\subsection{C and C\texttt{++}}
+C was created in 1972 as a general-purpose programming language. C\texttt{++} was created in 1979 to enhance C language with object-oriented design and many useful standard template libraries.
+Despite the historical dominance of Fortran in scientific and engineering computing, C and C\texttt{++} have gradually replaced Fortran in many scientific computing and HPC codes due to their performance, flexibility, and rich ecosystem of tools and libraries.
+
+While Fortran continues to be used in certain domains, particularly in legacy codebases and specialized applications, the adoption of C and C\texttt{++} as the default language in many modern packages reflects the evolving needs and preferences of HPC developers for modern, versatile programming languages.
+
+C and C\texttt{++} are known for their performance and efficiency. 
+In fact, they are often used as the standard to compare the performance of various programming languages. 
+This is because they provide low-level control over hardware resources and memory management, allowing programmers to write code that executes with high speed and minimal overhead. 
+The performance is crucial for HPC applications, which often involve computationally extensive tasks and large-scale simulations.
+Known as high-level languages, C and C\texttt{++} strike a balance between high-level abstractions and low-level control. They support multiple programming paradigms including procedural, and object-oriented.
+C/C\texttt{++} can also be extended to handle parallel processing via pragma directives.
+This allows the creation of modular, reusable code with encapsulation, inheritance, polymorphism, and templates.
+Standard Libraries built on top of these features provide implementations of fundamental data structures, algorithms, and utilities.
+
+In addition to their language features, C and C\texttt{++} offer support for concurrency and parallelism via low-level features like threads, mutexes, condition variables, atomic operations, and parallel algorithms.
+Modern C\texttt{++} standards (such as C\texttt{++}11, C\texttt{++}17 and C\texttt{++}20) have introduced high-level features to manage asynchronous execution, parallel computation, and parallelism-aware data structures.
+All these efforts further enhance the capability of C and C\texttt{++} as high performance computing languages.
+
+As general-purpose programming languages, C and C\texttt{++} codes are highly portable across different platforms and architectures. 
+The portability is essential for deploying HPC applications on diverse computing platforms, including cloud servers, clusters, and supercomputers.
+C and C\texttt{++} also have excellent interoperability with other programming languages and systems. 
+They can be easily integrated with libraries and tools including most common HPC languages like Fortran, Python, and CUDA.
+This interoperability allows developers to leverage existing software components and take advantage of specialized and optimized libraries for specific computational tasks.
+However, the impact on the performance needs to be considered carefully when interoperating C and C\texttt{++} with other languages.
+
+\subsection{MATLAB}
+MATLAB is a high-level programming language usually used in an interactive development environment (IDE) from the software with the same name.
+Developed by MathWorks, it is widely used for numerical computing, data analysis, visualization, and algorithm development.
+Compared to compiled languages that can generate binary executables running natively on operation systems, MATLAB requires an interpreter (usually by MATLAB) to ``translate'' the code whenever the code is run.
+To avoid ambiguity, we refer to both the language and the IDE as MATLAB here.
+As a proprietary language and tool, MATLAB offers limited access to the source code, and it is prohibitively expensive for people outside of academia without an educational license.
+GNU Octave is used as an open source alternative to MATLAB as it is mostly compatible with MATLAB. Octave is free and lightweight, however, it often comes with the cost of worse performance.
+Despite being a proprietary software, MATLAB is still often used in scientific computing, especially in academia for the following reasons:
+
+MATLAB is easy to use because of its intuitive syntax for mathematicians and comprehensive set of built-in functions for numerical computing, including matrix manipulation, linear algebra, and optimizations. For these functions, MATLAB offers extensive examples and tutorials, making it a great choice for beginners for learning and advanced users for writing code.
+
+MATLAB has an interactive environment with visualization tools that enable users to iterate quickly on algorithms. It offers a command-line interface that is similar to read-evaluate-print-loop (REPL) in interpreted languages like Python, and also integrates many common functionalities via UI buttons in its IDE.
+Like many IDEs, MATLAB provides tools for organizing code, debugging, profiling, and version control.
+More importantly, MATLAB's functionality can be extended through its proprietary and third-party toolboxes, which are collections of specialized functions and algorithms for specific domains of applications such as signal processing, control theory, and statistics.
+
+Because of these features and accessibility via academic licenses through educational institutes, many people start numerical coding in MATLAB and continue to develop in MATLAB for research purposes. 
+Although MATLAB is designed to run numerical calculations efficiently and also provides some limited support for parallel and GPU computing, it was not designed as a HPC language running on clusters, supercomputers, and cloud infrastructures. 
+Researchers often use MATLAB for quick implementation and testing during the prototyping stage and then rewrite their code in HPC languages such as FORTRAN and C/C++. 
+This raises the so-called "two-language" problem which inspires the development of the Julia language.
+
+\section{Julia langauge}
