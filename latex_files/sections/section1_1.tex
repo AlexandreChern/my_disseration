@@ -8,9 +8,27 @@
 % \end{equation}
 
 % This is a sample citation: \cite{schwartz_overview_2012}.
+\section{Introduction to earthquakes}
+An earthquake occurs due to the sudden release of accumulated stress along a fault line, resulting in rapid movement known as fault slip. This movement can be described in terms of several key components:
+
+\subsection{fault rupture}
+The earthquake begins with the rupture of the fault, where the stress accumulated along the fault plane exceeds the strength of the rocks, causing them to fracture and slide past each other. This rupture initiates the seismic event.
+
+\section{Seismic and aseismic slips}
 
 \section{Rate-and-state friction law}
 % \subsection{Rate-and-state friction law}
+Since the recognition that earthquakes probably represent frictional slip instabilities in the 1960s, interest in determining frictional properties has been increased.
+The stability of frictional sliding depends on whether frictional resistance increases or drops during slip.
+Laboratory experiments have shown that frictional sliding is mainly a rate-dependent process in a steady-state regime with constant stress and steady velocity.
+Due to this, a state variable needs to be introduced to describe
+\begin{itemize}
+    \item the transient behavior observed in non-steady-state experiments
+    \item healing in hold-and-stick experiments
+\end{itemize}
+The formulation of such rate-and-state variable has significantly simplified the impacts of several parameters from rheology on the slip rate, which enables the development of numerical models to simulate earthquake cycles.
+
+For most materials, it has been revealed by laboratory experiments on frictional sliding that the following conditions exist:
 
 For most materials, it has been revealed by laboratory experiments on frictional sliding that the following conditions exist:
 
@@ -33,9 +51,9 @@ At steady state, the law is purely rate dependent
     \mu_{ss} = \mu_{*} + (a - b) \ln \frac{V}{V_*}
 \end{equation}
 
-For a single-degree-of-freedom system such as a spring-and-slider system, the stability analysis shows that the slip can be stable only if $a - b > 0$ and that unstable slip requires $a - b < 0$  
+For a single-degree-of-freedom system such as a spring-and-slider system, the stability analysis shows that the slip can be stable only if $a - b > 0$ and that unstable slip requires that $a - b < 0$  
 %(\cite{Priestley_1990}). 
-For unstable slip to occur, it requires $a - b$ is smaller than a critical negative value, defining an intermediate domain of conditional stability.
+For unstable slip to occur, it requires $a - b$ that is smaller than a critical negative value, defining an intermediate domain of conditional stability.
 For a crack with size L embedded in an elastic medium with shear modulus $G$, the condition for unstable slip is 
 \begin{equation}
     a - b < - \lambda \frac{GD_c}{L\sigma_n'}
@@ -45,3 +63,5 @@ $\sigma_n'$ is the effective normal stress with $\sigma_n' - \sigma_n - P$ where
 In the limit when the pore pressure becomes near lithostatic, the critical value becomes infinite.
 This implies that high pore pressure should promote stable slip through the reduction of the effective normal stress.
 The rate-and-state friction and many definitions here are important concepts in the earthquake cycle simulations that are going to be discussed in later chapters.
+
+\cite{NordstromEriksson2010}
