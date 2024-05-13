@@ -1,1 +1,69 @@
 \section{SBP-SAT methods}
+
+
+SBP methods approximate partial derivatives using one-sided differences at all points close to the boundary node, generating a matrix approximating a partial derivative operator. In this work we focus on second-order derivatives which appear in \eqref{eqn:2Dvar}, however the matrix-free methods we derive are applicable to any second-order PDE. We consider SBP finite-difference approximations to boundary-value problem \eqref{eqn:2Dvar}, i.e. on the square computational domain $\bar\Omega$; solutions on the physical domain $\Omega$ are obtained by the inverse coordinate transformation.
+
+In this work, we focus on SBP operators with second-order accuracy which contains abundant complexity at domain boundaries to enable insight into implementation design extendable to higher-order methods.  To provide background on the SBP methods we first describe the 1D operators, as Kronecker products are used to form their multi-dimensional counterparts. 
+
+
+\subsubsection{1D Operators}
+
+We discretize the spatial domain $-1\leq r \leq 1$ with $N+1$ evenly spaced grid points $r_i = -1 + ih, i=0, \dots, N$ with grid spacing $h = 2/N$. A function $u$ projected onto the computational grid is denoted by $\boldsymbol{u} = [u_0, u_1, \dots, u_N]^T$ and is often taken to be the interpolant of $u$ at the grid points. We define the grid basis vector $\vec{e}_j$ to be a vector with value 1 at grid point $j$ and 0 for the rest, which allows us to extract the jth component: $u_j = \vec{e}_j^T\vec{u}$.  
+
+\begin{definition}[First Derivative]
+  A matrix $\boldsymbol{D}_{r}$ is an SBP approximation to the first derivative operator $\partial /\partial
+  r$ if it can be decomposed as $\boldsymbol{H}\boldsymbol{D}_{r} = \boldsymbol{Q}$ with $\boldsymbol{H}$ being SPD and $\boldsymbol{Q}$ satisfying $\vec{u}^{T}(\boldsymbol{Q} +
+  \boldsymbol{Q}^{T})\vec{v} = u_{N}v_{N} - u_{0}v_{0}$.
+\end{definition}
+%
+\noindent Here, $\boldsymbol{H}$ is a diagonal quadrature matrix and  $\boldsymbol{D}_{r}$ is the standard central finite difference operator in the interior which transitions to one-sided at boundaries. 
+
+\begin{definition}[Second Derivative]
+  Letting $c = c(r)$ denote a material coefficient, we define matrix $\boldsymbol{D}^{(c)}_{rr}$ to be an SBP approximation to
+  $\frac{\partial }{\partial r}\left(c \frac{\partial}{\partial r}\right)$ if it
+  can be decomposed as $\boldsymbol{D}^{(c)}_{rr} =\boldsymbol{H}^{-1}(-\boldsymbol{M}^{(c)} +
+  c_N\vec{e}_{N}\vec{d}_{N}^{T} -c_0\vec{e}_{0}\vec{d}_{0}^{T})$ where
+  $\boldsymbol{M}^{(c)}$ is SPD and $\vec{d}_{0}^{T}\vec{u}$ and
+  $\vec{d}_{N}^{T}\vec{u}$ are approximations of the first derivative of $u$ at
+  the boundaries.
+\end{definition}
+%
+
+
+
+With these properties, both $\boldsymbol{D}_{r}$ and $\boldsymbol{D}^{(c)}_{rr}$ mimic integration-by-parts in a discrete form which enables the proof of discrete stability \cite{MN04, Mattsson2009}. 
+
+
+$\boldsymbol{D}^{(c)}_{rr}$ is a centered difference approximation within the interior of the domain, but includes approximations at boundary points as well. For illustrative purposes alone, if $c = 1$ (e. g. a constant coefficient case), the matrix is given by 
+\[
+    \boldsymbol{D}^{(c)}_{rr} = \frac{1}{h^2}\begin{bmatrix}
+    1 & -2 & 1\\
+    {\color{red}1} & {\color{red}-2} & {\color{red}1}\\
+    & {\color{red}\ddots} &{\color{red}\ddots} & {\color{red}\ddots}\\
+    & & {\color{red}1} &{\color{red}-2} &{\color{red} 1}\\
+    & & 1 &-2& \,1 
+    \end{bmatrix},
+\]
+which, as highlighted in red, resembles the traditional (second-order-accurate) Laplacian operator in the domain interior. 
+
+
+
+
+\subsubsection{2D SBP Operators}\label{2d_sbp}
+The 2D domain $\bar\Omega$ is discretized using $N+1$ grid points in each direction, resulting in an  $(N+1) \times (N+1)$
+grid of points where grid point $(i,j)$ is at $(x_i, y_j) = (-1 + ih, -1 + jh)$ for $0
+\leq i, j \leq N$ with $h = 2/N$. Here we have assumed equal grid spacing in each direction, only for notational ease; the generalization to different
+numbers of grid points in each dimension does not
+impact the construction of the method and is implemented in our code. A 2D grid function $\boldsymbol{u}$ is ordered lexicographically and we let $\boldsymbol{C}_{ij} = \text{ diag}(\boldsymbol{c}_{ij})$ define the diagonal matrix of coefficients, see \cite{Kozdon2020HybridizedSF}.
+
+In this work we imply summation notation whenever indices are repeated. Multi-dimensional SBP operators are obtained by applying the Kronecker product to 1D operators, for example, the 2D second derivative operators are given by
+\begin{align}\label{eqn: D2}
+  \frac{\partial }{\partial i} c_{ij} \frac{\partial }{\partial j}&\approx \tilde{\boldsymbol{D}}^{c_{ij}}_{ij} \notag \\&= (\boldsymbol{H} \otimes \boldsymbol{H})^{-1}\left[- \tilde{\boldsymbol{M}}^{(c_{ij})}_{ij} + \boldsymbol{T}\right],
+\end{align}
+for $i, j \in \{r, s\}$.   
+Here $\tilde{\boldsymbol{M}}^{(c_{ij})}_{ij}$ is the sum of SPD matrices approximating integrated second derivatives (i.e. sum over repeated indices $i, j$) for example $\int_{\bar\Omega} \frac{\partial}{\partial r} c_{rr} \frac{\partial}{\partial r}  \approx  \tilde{\boldsymbol{M}}^{(c_{rr})}_{rr}$ and matrix $\boldsymbol{T}$ involves the boundary derivative computations, see \cite{Erickson2022} for complete details.
+ 
+
+\subsubsection{SAT Penalty Terms}
+SBP methods are designed to work with various impositions of boundary conditions that lead to provably stable methods, for example through weak enforcement via the simultaneous-approximation-term (SAT) ~\cite{CarpenterGottliebAbarbanel1994} which we adopt here. As opposed to traditional finite difference methods that ``inject" boundary data by overwriting grid points with the given data, the SAT technique imposes boundary conditions weakly (through penalization), so that all grid points approximate both the PDE and the boundary conditions up to a certain level of accuracy.  The combined approach is known as SBP-SAT.
+Where traditional methods that use injection or strong enforcement of boundary/interface conditions destroy the discrete integration-by-parts property, using SAT terms enables proof of the method's stability (a necessary property for numerical convergence)~\cite{Mattsson2003}.
