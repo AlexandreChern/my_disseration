@@ -1,5 +1,6 @@
 
 %%%%%% Algorithms
+To apply muiltigrid efficiently for the SBP-SAT method on GPUs, we need to develop a geometric multigrid formulation that does not require using algebraic coarsening or Galerkin's condition.
 
 \begin{algorithm}
     \caption{$(k+1)$-level MG for $\boldsymbol{A}_h \boldsymbol{u}_h = \boldsymbol{f}_h$, with smoothing $S_{h_k}^{\nu}$ applied $\nu$ times. SBP-preserving restriction and interpolation operators are applied. Grid coarsening ($k \to k+1$) is done through successive doubling of grid spacing until reaching the coarsest grid. The multigrid cycle can be performed $N_{maxiter}$ times. $\boldsymbol{r}$ represents the residual, and $\boldsymbol{v}$ represents the solution to the residual equation used during the correction step. This algorithm is adapted from \cite{liu2023multigrid}.}\label{alg:MG}
