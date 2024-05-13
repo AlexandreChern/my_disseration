@@ -1,0 +1,348 @@
+% \usepackage{algpseudocode}
+% \usepackage{algorithm}
+
+% The multigrid method is a scheme applied to solving a linear equation system with iterative solvers. It provides a convergence acceleration that improves the performance of these iterative solvers using grid coarsening \cite{fedorenko1973iterative} \cite{trottenberg2000multigrid}. In practice, it can be implemented as a standalone method or as a preconditioner for other iterative methods such as the conjugate gradient method \cite{tatebe1993multigrid}. Various multigrid methods are used in different branches of applied mathematics and engineering. such as electromagnetics \cite{stolk2014multigrid} and fluid dynamics \cite{adler2016monolithic}.  
+
+% The two important components of multigrid methods are the restriction and prolongation operators which transfer information between fine grids and coarse grids. These operators are typically based on linear interpolation procedures and are connected through variational properties \cite{10.5555/357695} to ensure optimal coarse-grid correction in the $A^h$-norm with $A^h$ being the left-hand side of the linear system defined on the fine grid. The multigrid method can be also applied to the SBP-SAT method with specific grid transfer operators. In this section, we will provide a brief review of the multigrid method and its implementation. We consider the following steady-state problem:
+
+% \begin{align}
+%     Lu = f, &\text{ in }  \text{\Omega}  \label{stead-state-problem}\\
+%     Hu = g, &\text{ on } \partial\text{\Omega}
+%     \label{stead-state-problem2}
+% \end{align}
+% where $L$ is a differential operator on domain \text{$\Omega$},  and $H$ is a boundary operator on the boundary $\partial$\text{$\Omega$}. This is a generalization of many linear systems with various boundary conditions. 
+
+% \subsubsection{The multigrid algorithm}
+% In general, the construction of a multigrid consists of the following four basic steps:
+
+% \begin{enumerate}
+%     \item Fine-grid discretization
+%     \item Error smoothing
+%     \item Coarse-grid correction
+%     \item Fine-grid update
+% \end{enumerate}
+
+% Different combinations of these steps result in different multigrid schemes. The most simple scheme is a two-level multigrid V cycle. We will expand these four steps in the following sections.
+
+% \subsubsection{Fine-grid discretization}
+% Consider a \textit{fine grid} meshing \textOmega$_1$ on \textOmega. A discrete linear system associated to \autoref{stead-state-problem} on this fine grid \textOmega$_1$ has the general form 
+
+% \begin{align}
+%     L_1 \mathbf{u} = \mathbf{F}
+%     \label{fine-grid-disc}
+% \end{align}
+
+% where $L_1$ is the discrete version of the operator $L$ in \autoref{stead-state-problem} which also include boundary conditions in \autoref{stead-state-problem2}. The vector \textbf{F} approximates $f$ on the grid points of \textOmega$_1$ which already incorporates data for the boundary condition\textbf{g} in \autoref{stead-state-problem2}. \textbf{u} is the discretization of the solution $u$ in the steady-state problem. We assume $L_1$ to be positive definite which also implies that $L_1$ is invertible. This is property is usually satisfied from discretization methods. 
+
+% \subsubsection{Error smoothing}
+% Error smoothing is required prior to grid coarsening. Suppose we have an initial guess $\mathbf{u}^0$, the iterative approach towards the solution to \autoref{fine-grid-disc} is through solving
+
+% \begin{align}
+%     \mathbf{w}_\tau + L_1 \mathbf{w}(\tau) &= \mathbf{F},\text{ }  0 < \tau < \Delta\tau \label{pseudo-march} \\
+%     \mathbf{w}(0) &= \mathbf{u}^{(0)} 
+% \end{align}
+
+% where $\Delta_t > 0$ is the \textit{smoothing step}. The solution to this equation is 
+% \begin{equation}
+%     \mathbf{w}(\Delta\tau) = e^{-L_1\Delta\tau}\mathbf{u}^{0} + (I_1 - e^{-L_1\Delta\tau})L_1^{-1}\mathbf{F}
+% \end{equation}
+% where $I_1$ is the identity matrix on \textOmega$_1$, and the following condition holds for any norm if $L_1$ is positive definite
+% \begin{equation}
+%     ||\mathbf{w}(\Delta\tau) - \mathbf{u}|| < ||\mathbf{u}^{(0)} - \mathbf{u}||
+% \end{equation}
+
+
+% Smoothing technique for the solution can be defined as follows
+% \begin{equation}
+% \begin{split}
+%     \mathbf{w}^k &= S\mathbf{w}^{k-1} + (I_1 - S)L_1^{-1}\mathbf{F}, k = 1, \dots \nu \\
+%     \mathbf{w}^0 &= \mathbf{u}^0
+% \end{split}
+% \end{equation}
+
+% where $S$ is the smoother. If $S$ is an exponential smoother $S_{\text{exp}} = e^{-L_1\Delta\tau}$, this will yield the pseudo time-marching procedure in \autoref{pseudo-march}. This iterative method would converge after $\nu$ steps to 
+% \begin{equation}
+%     \mathbf{w} = S^{\nu} \mathbf{u}^0 + (I_1 - S^{\nu})L_1^{-1}\mathbf{F}
+%     \label{converged_iter}
+% \end{equation}
+% The convergence criteria for this procedure is mentioned in the overview of iterative methods.
+
+% \subsubsection{Coarse-grid correction}
+
+% Next, consider the error $\mathbf{e} = L_1^{-1}\mathbf{F} - \mathbf{w}$ and the residual problem
+% \begin{equation}
+%     L_1\mathbf{e} = \mathbf{F} - L_1\mathbf{w}    
+%     \label{residual-fine}
+% \end{equation}
+
+% Instead of solving this system directly, we introduce a subset of \textOmega$_1$ called the \textit{coarse grid} \textOmega$_2$, and solve the associated coarse grid problem on \textOmega$_2$
+% \begin{equation}
+%     L_2\mathbf{d} = I_r(\mathbf{F} - L_1\mathbf{w})
+%     \label{correction_problem}
+% \end{equation}
+
+% This problem is obtained from the finer grid problem \autoref{residual-fine} by using the following operators
+
+% \begin{enumerate}
+%     \item a restriction operator $I_r:$ \textOmega$_1$ $\xrightarrow{}$ \textOmega$_2$
+%     \item a coarse-grid operator $L_2$: \textOmega$_2$ $\xrightarrow{}$ \textOmega$_2$
+% \end{enumerate}
+
+% The coarse-grid operator can be built by using the Galerkin condition
+% \begin{equation}
+%     L_2 = I_r L_1 I_p
+%     \label{galerkin-condition}
+% \end{equation}
+% where $I_p: $ \textOmega$_2$ $\xrightarrow{}$ \textOmega$_1$ is a the prolongation operator. In some situations, $L_2$ can be built independently through the direct use of discretization methods, but $I_r$ and $I_p$ needs to be carefully defined so the Galerkin condition \autoref{galerkin-condition} still holds.
+
+% The prolongation operator $I_p$ is commonly chosen through linear interpolation. Assume \textOmega$_1$ had a grid spacing of $\Delta x = 1/N$, and \textOmega$_2$ consists of the even grid points of \textOmega$_1$. This leads to 
+
+% \begin{equation}
+%     (I_p \mathbf{v})_m= 
+% \begin{cases}
+%     v_j,& m = 2j, j = 0,\dots,N/2 \\
+%     \frac{1}{2} (v_j + v_{j+1}),              & m = 2j + 1, j = 0,\dots,N/2
+% \end{cases}
+% \end{equation}
+
+% As we already define the prolongation operator, the restriction operator is given as 
+% \begin{equation}
+%     I_r = I_p^T / C
+% \end{equation}
+% which is called the variational property. The C is a constant determined by the discretization method. In this problem, the value for C is 2.
+
+% \subsubsection{Fine-grid update}
+% Finally, we update the fine grid solution with correction \textbf{d} as
+% \begin{equation}
+%     \mathbf{u}^{(1)} = \mathbf{w} + I_p\mathbf{d}
+%     \label{correction-scheme}
+% \end{equation}
+% The relation \autoref{correction-scheme}, together with \autoref{converged_iter} and \autoref{correction_problem} provides an iterative method for solving the steady-state problem 
+% \begin{align}
+%     \mathbf{u}^{n+1} = M\mathbf{u}^{n} + N\mathbf{F}
+% \end{align}
+% where 
+% \begin{align}
+%     M &= CS^\nu \\
+%     C &= I_1 - I_pL_2^{-1}I_rL_1 \\
+%     N &= (I_1 - M)L_1^{-1}
+% \end{align}
+% M is called the multigrid iteration matrix here and C is referred to as the coarse grid correction operator. Here, M plays a central role in the convergence of the iterative method. We can see this by the definition of the error at step n $\mathbf{e}^{(n)} = \mathbf{u}^{(n)} - L_1^{-1}\mathbf{F}$ as we get
+% \begin{align}
+%     \mathbf{e}^{(n+1)} = M\mathbf{e}^{(n)}
+% \end{align}
+% which again leads to the same convergence criteria for the iterative method depending on the spectral radius of $M$.
+
+% To demonstrate the actual process of a multigrid scheme, we use the following two-grid correction scheme as an example
+
+% \begin{enumerate}
+%     \item Relax $\nu_1$ times on $L_1^h\mathbf{u}^{(1)} = \mathbf{F}^{(1)}$ on \textOmega$_1$ with the initial guess $\mathbf{v}^{1}$
+%     \item Compute the fine-grid residual $\mathbf{r}^{(1)} = \mathbf{F}^(1) - L_1\mathbf{v}^{(1)}$ and restrict it to the coarse grid by $\mathbf{r}^{(2)} = I_r \mathbf{r}^{(1)}$
+%     \item Solve $L_2\mathbf{e}^{(2)} = \mathbf{r}^{(2)}$ (or relax $\nu_1$ times) on \textOmega$_2$
+%     \item Interpolate the coarse-grid error to the fine grid by $\mathbf{e}^{(1)} = I_p\mathbf{e}^{(2)}$ and correct the fine-grid approximation by $\mathbf{v}^{1} \xleftarrow{} \mathbf{v}^{(1)} + \mathbf{e}^{(1)}$
+%     \item Relax $\nu_2$ times on $L_1\mathbf{u}^{(1)} = \mathbf{F}^{(1)}$ on \textOmega$_1$ with the initial guess $\mathbf{v}^{(1)}$
+% \end{enumerate}
+
+% There are more schemes for multigrid, and the main schemes are summarized in\autoref{fig:multigrid_scheme}.
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=\linewidth]{Area_Exam/subfiles/multigrid_scheme.png}
+%     \caption{Schedule of grids for (a) V-cycle, (b) W-cycle, and (c) FMG scheme,
+% all on four levels. \cite{briggs2000multigrid}}
+%     \label{fig:multigrid_scheme}
+% \end{figure}
+
+% Earlier work in multigrid relies on the geometric structure to construct coarse problems, thus this approach is called geometric multigrid.  In problems where the computational domain is not composed of well-structured meshes, the multigrid method can be also applied via algebraic operators rather than a geometric grid.  This approach is called the algebraic multigrid. We will cover this approach in the next subsection.
+
+% \subsection{Algebraic Multigrid}
+%   The classical multigrid formed around the geometric structure has been generalized that the multigrid is analyzed in terms of the matrix properties \cite{mccormick1982multigrid}. This algebraic approach to theory was further extended to form the basis for much of the early development that led to the so-called Ruge-St{\"u}ben or classical algebraic multigrid (CAMG) method \cite{brandt1986algebraic,mandel1988algebraic,ruge1987algebraic}. A detailed overview of the algebraic multigrid can be found in this recent paper \cite{xu2017algebraic}. Here, we want to present it more concisely.
+%   We begin this subsection with the following theorem in linear algebra.
+% \begin{theorem}[Solvability and the Fundamental Theorem of Linear
+% Algebra]
+% Suppose we have a matrix $A \in \mathbf{R}^{m\times n}$. The fundamental theorem of linear algebra states that the range (column space) of the matrix, $\mathcal{R}(A)$, is equal to the orthogonal
+% complement of $\mathcal{N}(A^T)$, the null space of ${A}^{T}$. Thus, spaces $\mathbf{R}^m$ and $\mathbf{R}^n$ can be
+% orthogonally decomposed as follows:
+% \begin{align}
+%     \mathbf{R}^m &= \mathcal{R}(A) \oplus \mathcal{N}(A^T)\\
+%      \mathbf{R}^n &= \mathcal{R}(A) \oplus \mathcal{N}(A)
+% \end{align}
+% For the equation $A\mathbf{u}=\mathbf{f}$ to have a solution, it is necessary that the vector $\mathbf{f}$ lie in $\mathcal{R}(A)$. Thus, an equivalent condition is that $\mathbf{f}$ be orthogonal to every vector in $\mathcal{N}(A^T)$. For the equation $A\mathbf{u}=\mathbf{f}$ to have a \textit{unique} solution, it is necessary that $\mathcal{N}(A) = \{\mathbf{0}\}$. 
+% Otherwise, if $\mathbf{u}$ is a solution and $\mathbf{v} \in \mathcal(A)$, then $A(\mathbf{u} + \mathbf{v}) = A\mathbf{u} + A\mathbf{v} = \mathbf{f} + \mathbf{0} = \mathbf{f}$, so the solution is not unique\cite{briggs2000multigrid}.
+% \end{theorem}
+% This is another point to view the coarse-grid correction scheme, and this leads to the algebraic multigrid. More theories related to this topic and the spectral picture of multigrid can be found in \cite{briggs2000multigrid}.
+
+% The unique aspect of the CAMG is that the coarse problem is defined on a subset of the degrees of freedom of the initial problem, thus resulting in both coarse and fine points, which leads to the term CF-based AMG. A different approach to constructing algebraic multigrid is called \textit{smoothed aggregation} AMG (SA), where collections of degrees-of-freedom define a coarse degree-of-freedom \cite{vanvek1996algebraic}. Together, CF and SA form the basis of AMG and led to several developments that extend AMG to a wider class of problems and architectures.
+
+% AMG does not depend on the geostructure of the problem and discretization schemes, and due to this generalizability, it has been implemented in different forms in many software libraries. The original CAMG algorithm and its variants are available as \texttt{amg1r5} and \texttt{amg1r6} \cite{ruge1987algebraic}. A parallel implementation of the CF-based AMG can be found in the BoomerAMG package in the Hypre library \cite{yang2002boomeramg}. The Trilinos package includes \texttt{ML} as a parallel SA-based AMG solver \cite{gee2006ml}. Finally, PyAMG includes a number of AMG variants for testings, and Cusp distributes with a standard SA implementation for use on a GPU \cite{dalton2014cusp,bell2022pyamg}. 
+
+% \subsection{The Multigrid Method Within the SBP-SAT Scheme}
+% Since the SBP-SAT scheme is a framework for discretization to form a linear system, it is compatible with the multigrid method and can be accelerated using this technique. The key challenge from simply applying the common prolongation and restriction operators with the Galerkin condition \autoref{galerkin-condition} is that the summation-by-parts property would not be preserved for the coarse grid operators. In order to accurately represent the coarse-grid correction problem for the SBP-SAT scheme, a more suitable class of interpolation operators needs to be proposed. Many works have been done to address this issue \cite{ruggiu2018new,RUGGIU2018216}.
+
+% To overcome this issue, consider defining the restriction operator as 
+% \begin{equation}
+%     I_r = H_2^{-1}I_p^TH_1
+%     \label{eqn:interpolation_sbp}
+% \end{equation}
+% which was first introduced in \cite{RUGGIU2018216}. This involves the coarse grid SBP norm $H_2$ and is obtained by enforcing that two scalar products
+% \begin{align}
+%     (\phi_1,\psi_1)_{H_1} &= (\phi_1H_1\psi_1) \\
+%      (\phi_2,\psi_2)_{H_2} &= (\phi_2H_2\psi_2)
+% \end{align}
+% are equal for $\phi_1 = I_p\phi_2$ and $\psi_2 = I_r \psi_1$. $\phi$ and $\psi$ correspond to the $\mm{u}$ and $\mm{v}$ in section \ref{subsection:sbp-sat}. We use these new notations to avoid confusion with the $\mathbf{u}$ used in the previous subsection on the multigrid method. As a result, the interpolation operators $I_r$ and $I_p$ are adjoints to each other with respect to the SBP-based scalar products defined in \cite{hackbusch2013multi}.
+% \begin{align}
+%     (I_p,\xi_2,\xi_1)_{H_1} = (\xi_2,I_r\xi_1)_{H_2}
+%     \label{eqn:adjoint}
+% \end{align}
+
+% by using \autoref{eqn:interpolation_sbp}, it is possible to build pairs of consistent and accurate prolongation and restriction operators. The following definition of the SBP-preserving interpolation operators was given in \cite{RUGGIU2018216}, where the operators were used to couple SBP-SAT formulations on grids with different mesh sizes with numerical stability.
+
+
+
+% \begin{definition}
+%   Let the row-vectors $\mathbf{x}_1^k$ and $\mathbf{x}_2^k$ be the projections of the monomial $x^k$ onto equidistant 1-D grids corresponding to a fine and coarse grid, respectively. $I_r$ and $I_p$ are then called 2$q$-th order accurate SBP-preserving interpolation operators if $I_r\mathbf{x}_1^k - \mathbf{x}_2^k$ and $I_p\mathbf{x}_2^k - \mathbf{x}_1^k$ vanish for $k = 0, ...,2q-1$ in the interior and for $k=0,...,q-1$ at the boundaries.
+% \end{definition}
+
+
+% The sum of the orders of the prolongation and restriction operators should be at least equal to the order of the differential equation. As a consequence, the use of high-order interpolation is not required here to solve the linear system with the multigrid method. However, high-order grid transfer operators can be used in combination with high-order discretization \cite{sundar2015comparison}. 
+
+% SBP-preserving interpolation operators with minimal bandwidth are given in Appendix A. The restriction operator $I_r$, which differs from the conventional one at boundary nodes, is shown in \autoref{fig:sbp_restriction}.
+
+
+% \begin{figure}
+%     \centering
+%     \includegraphics{sbp_restriction.png}
+%     \centering
+%     \caption{The 2nd-order SBP-preserving restriction operator $I_r$}
+%     \label{fig:sbp_restriction}
+% \end{figure}
+
+% \subsubsection{SBP-preserving interpolation applied to the first derivative}
+% Using Galerkin condition \autoref{galerkin-condition} and SBP-preserving operators, we can construct the linear system with the multigrid method. We first consider the first derivative fine-grid SBP operator $D_{1,1}$ and its coarse-grid counterpart $D_{1,2}$ constructed as follow
+% \begin{equation}
+%     D_{1,2} = I_r D_{1,1} I_p
+% \end{equation}
+% We now show that $D_{1,2}$ preserves SBP property in such ways. To start with, we rewrite the left-hand side of the following SBP property
+
+% \begin{equation}
+%     (\phi,D_1\psi)_H = \phi_N\psi_N - \phi_0\psi_0 - (D_1\phi,\psi)_H
+% \end{equation}
+% with the adjoint relation \autoref{eqn:adjoint} as follows
+% \begin{align}
+%     (\phi_2,D_{1,2}\psi_2)_{H_2} &= (\phi_2,I_r(D_{1,1}I_p\phi_2))_{H_2} \nonumber\\&= (I_p\phi_2,D_{1,1}(I_p\psi_2))_{H_1}
+% \end{align}
+
+% Next, the SBP property for the finite-grid operator $D_1$ leads to
+% \begin{align}
+%      (\phi_2,D_{1,2}\psi_2)_{H_2} &= (I_p,\phi_2)_N(I_p,\psi_2)_N \nonumber \\ &- (I_p,\phi_2)_0(I_p,\psi_2)_0 - (D_{1,1}(I_p\phi_2),I_p\psi_2)_{H_1}
+%      \label{eqn:sbp_multigrid}
+% \end{align}
+
+% Both grids are conforming to the domain boundaries, and the prolongation onto the boundary nodes of the fine grid is exact. Furthermore, by applying \autoref{eqn:adjoint} to the right-hand side of \autoref{eqn:sbp_multigrid}, we obtain 
+% \begin{equation}
+%     (\phi_2,D_{1,2}\psi_2)_{H_2} = \phi_{2,N/2}\psi_{2,N/2} - \phi_{2,0}\psi_{2,0} - (D_{1,2}\phi_{2},\psi_{2})_{H_2}
+% \end{equation}
+% And we've shown that the coarse grid operator $D_{1,2}$ constructed in a such way preserves the SBP property. Also, the coarse grid first derivative SBP operator $D_{1,2}$ retains the order of accuracy of the original scheme at the interior nodes if 2$q$th order SBP-preserving interpolations are used. The proof can be found in \cite{ruggiu2018new}.
+
+% \subsubsection{SBP-preserving interpolation applied to the second derivative}
+% The SBP-preserving interpolation can also be applied to the second derivative operator. Similar to the proof for the first derivative operator, we can prove that the coarse grid operator constructed in such ways preserves the SBP property.
+
+% The interpolation operators in \autoref{eqn:interpolation_sbp} lead to a coarse-grid second derivative operator $D_{2,2}$ which preserves the summation-by-parts property \autoref{eqn:2d_sbp}. We can show that by rewriting the left hand side of the \autoref{eqn:2d_sbp} for $D_{2,2}$ and the two coarse-grid functions $\phi_2$ and $\psi_2$ by using \autoref{eqn:adjoint}.
+% \begin{equation}
+%     (\phi_2,D_{2,2}\psi_2)_{H_2} = (\phi_2,I_r,D_{2,1}I_p\psi_2)_{H_2} = (I_p\phi_2,D_{2,1}I_p\psi_2)_{H_1}
+% \end{equation}
+% By applying the SBP property \autoref{eqn:2d_sbp} for the fine-grid second derivative $D_{2,1}$, we have
+% \begin{align}
+%     (\phi_2,D_{2,2}\psi_2)_{H_2} &= (I_p\phi_2)_N(SI_p\psi_2)_N \nonumber \\ &- (I_p\phi_2)_0(SI_p\psi_2)_0 - (SI_p\phi_2)^TA(SI_p\psi_2)_{H_2}
+% \end{align}
+
+% Both grids are conforming to domain boundaries, implying that $(I_p\phi_2)_i = \phi_{2,i/2}$ and $(SI_p\psi_2) = (S\phi_2)_{i/2}$ for $i\in\{0,N\}$. Thus 
+% \begin{align}
+%      (\phi_2,D_{2,2}\psi_2)_{H_2} &= \phi_{2,N/2}(S\phi_2)_{N/2} \nonumber\\ &- \phi_{2,0}(S\phi_2)_0 - (SI_p\phi_2)^TA(SI_p\psi_2)_{H_2}
+% \end{align}
+% where $S$ is equivalent to $\mm{d}_0^T$ in \autoref{subsection:sbp-sat} which approximates the first derivative at the boundaries.
+
+% Additional proofs or propositions to SBP-preserving interpolations can also be found in  \cite{ruggiu2018new}. Furthermore, several model problems have been tested with multigrid iteration schemes using these SBP-preserving interpolations. These problems include a Poisson equation, the anisotropic elliptic problem, and the advection-diffusion problem. Numerical experiments show that the SBP-preserving interpolation improves convergence properties of the multigrid scheme for SBP-SAT discretizations regardless of the order of the discretization and smoother chosen. Moreover, the excellent performance in combination with the smoother SOR, clearly indicates that multigrid algorithms with SBP-preserving interpolation can be designed to get fast convergence. The paper mainly covers the steady model problem to compare the effect of different grid transfer operators. For time-dependent problems, the effectiveness of multigrid algorithms with these SBP-preserving interpolations needs to be tested \cite{ruggiu2018new}.
+
+
+%%%%%% Algorithms
+
+\begin{algorithm}
+    \caption{$(k+1)$-level MG for $\boldsymbol{A}_h \boldsymbol{u}_h = \boldsymbol{f}_h$, with smoothing $S_{h_k}^{\nu}$ applied $\nu$ times. SBP-preserving restriction and interpolation operators are applied. Grid coarsening ($k \to k+1$) is done through successive doubling of grid spacing until reaching the coarsest grid. The multigrid cycle can be performed $N_{maxiter}$ times. $\boldsymbol{r}$ represents the residual, and $\boldsymbol{v}$ represents the solution to the residual equation used during the correction step. This algorithm is adapted from \cite{liu2023multigrid}.}\label{alg:MG}
+    \algrenewcommand\algorithmicprocedure{\textbf{function}}
+    \begin{algorithmic}
+    \Procedure{MG}{$\boldsymbol{f}_{h_k}$, $\boldsymbol{A}_{h_k}$, $\boldsymbol{u}_{h_k}^{(0)}$, $k$, $N_{maxiter}$}
+    \For {$n = 0, 1, 2, \dots, N_{maxiter}$} 
+                
+        \State $\boldsymbol{u}_{h_k}^{(n)}$ $\xleftarrow[]{S_{h_k}^{\nu_1}}$ $\boldsymbol{u}_{h_k}^{(n)}$ \Comment{Pre-smoothing $\nu_1$ times}
+        \State  $\boldsymbol{r}_{h_k}^{(n)} = \boldsymbol{f}_{h_k}^{(n)} - \boldsymbol{A}_{h_k}^{(n)} \boldsymbol{u}_{h_k}^{(n)}$ \Comment{Calculating residual}
+        \State  $\tilde{\boldsymbol{r}}_{h_{k}} =  (\boldsymbol{H}_k \otimes \boldsymbol{H}_k)^{-1} \boldsymbol{r}_{h_k}^{(n)}$  \Comment{Removing grid info}
+    
+        \State     $\boldsymbol{r}_{h_{k+1}} = (\boldsymbol{H}_{k+1} \otimes \boldsymbol{H}_{k+1}) \boldsymbol{I}_{h_{k}}^{h_{k+1}} \tilde{\boldsymbol{r}}_{h_{k}}$ \Comment{Restriction}
+        \If{$k + 1 = k_\text{max}$}
+        \State $\boldsymbol{v}_{h_{k+1}}^{(n)}$ $\xleftarrow[]{S_{h_{k+1}}^{\nu_2}}$ $\boldsymbol{0}_{h_{k+1}}^{}$ 
+                    \Comment{Smoothing on coarsest grid}
+        \Else
+        \State $\boldsymbol{v}_{h_{k+1}}^{(n)}$ = MG({$\boldsymbol{r}_{h_{k+1}}$, $\boldsymbol{A}_{h_{k+1}}$, $\boldsymbol{0}_{h_{k+1}}^{}$, $k + 1$, $1$})
+        \State       \Comment{Recursive definition of MG}   
+        \EndIf
+        \State  $\boldsymbol{v}_{k}^{n} = \boldsymbol{I}_{h_{k+1}}^{h_k} \boldsymbol{v}_{k+1}^{(n)}$
+                 \Comment{Interpolation}
+        \State $\boldsymbol{u}_{k}^{(n+1)} = \boldsymbol{u}_{k}^{(n)} + \boldsymbol{v}_{k}^{n}$ \Comment{Correction}
+        \State   $\boldsymbol{u}_{k}^{(n+1)} \xleftarrow[]{S_{h_k}^{\nu_3}}$ $\boldsymbol{u}_{h_k}^{(n+1)}$ \Comment{Post-smoothing $\nu_3$ times}
+    \EndFor
+    \EndProcedure
+    % \Require
+    \end{algorithmic}
+\end{algorithm}
+
+
+\setcounter{algorithm}{1}
+\begin{algorithm*}
+\caption{Matrix-Free GPU kernel Action of matrix-free A for interior nodes.}\label{alg:mfA-1}
+\algrenewcommand\algorithmicprocedure{\textbf{function}}
+\begin{algorithmic}
+\Procedure{\textnormal{mfA!}}{\textnormal{odata}, \textnormal{idata}, $c_{rr}, c_{rs}, c_{ss}, h_r, h_s$}
+    \State  $i, j = $get\_global\_thread\_IDs()
+    \State $g = (i-1) * (N+1) + j$\Comment{compute global index}
+    \If{$2 \leq i, j \leq N$} \Comment{\textnormal{interior nodes}}
+        \State odata[g] = (\emph{hs}/\emph{hr})(- (0.5$c_{rr}$[$g$-1] + 0.5$c_{rr}$[$g$])\text{idata}[$g$-1] +
+        \State \hspace{25mm}    + (0.5$c_{rr}$[$g$-1]  +  $c_{rr}$[$g$] - 0.5$c_{rr}$[$g$+1])\text{idata}[$g$] + 
+        \State  \hspace{25mm}     - (0.5$c_{rr}$[$g$] + 0.5$c_{rr}$[$g$+1])\text{idata}[$g$+1]) + \\ \Comment{compute $M_{rr}$  stencil}\\
+        \State \hspace{25mm} + 0.5$c_{rs}$[$g$-1](-0.5\text{idata}[$g$-$N$-2] + 0.5\text{idata}[$g$+$N$]) + 
+        \State   \hspace{25mm} - 0.5$c_{rs}$[$g$+1](-0.5\text{idata}[$g$-$N$] + 0.5\text{idata}[$g$+$N$+1]) + \\ \Comment{compute $M_{rs}$  stencil}\\
+        \State  \hspace{25mm} + 0.5$c_{rs}$[$g$-$N$-1](-0.5\text{idata}[$g$-$N$-2] + 0.5\text{idata}[$g$-$N$]) + 
+        \State  \hspace{25mm} - 0.5$c_{rs}$[$g$+$N$+1](-0.5\text{idata}[$g$-$N$] + 0.5\text{idata}[$g$+$N$+2]) + \\ \Comment{compute $M_{sr}$  stencil}\\
+        \State  \hspace{25mm} - (0.5$c_{ss}$[$g$-$N$-1] + 0.5$c_{ss}$[$g$])\text{idata}[$g$-$N$-1] + 
+        \State  \hspace{25mm} + (0.5$c_{ss}$[$g$-$N$-1]  + $c_{ss}$[$g$] + 0.5$c_{ss}$[$g$+$N$+1])\text{idata}[$g$] - 
+        \State  \hspace{25mm}     - (0.5$c_{ss}$[$g$] + 0.5$c_{ss}$[$g$+$N$+1])\text{idata}[$g$+$N$+1])) \\
+        \Comment{compute $M_{ss}$  stencil}
+    \EndIf
+    \State  \dots \Comment{boundary nodes, e.g. Algorithm \ref{alg:mfA-2}}
+    \State \textbf{return} $nothing $ 
+\EndProcedure
+\end{algorithmic}
+\end{algorithm*}
+
+
+\setcounter{algorithm}{2}
+\begin{algorithm*}
+\caption{Matrix-Free GPU kernel Action of matrix-free A for west boundary (face 1).}
+\label{alg:mfA-2}
+\begin{algorithmic}
+\If{$2 \leq i \leq N$ \textnormal{and} $j = 1$} \Comment{\textnormal{interior west nodes}}
+\State odata[$g$] = $\left(M_{rr}^{int} + M_{rs}^{int} + M_{sr}^{int} + M_{sr}^{int} + C_1^{int}\right)(\textnormal{idata})$ \\ \Comment{apply boundary $M$ and $C$ stencils}
+\State  odata[$g$+1] = $C_1^{int}(\textnormal{idata})$\Comment{apply interior $C$ stencil}
+\State odata[$g$+2] = $C_1^{int}(\textnormal{idata})$\Comment{apply interior $C$ stencil}
+\EndIf
+\If{$i = 1$ \textnormal{and} $j = 1$} \Comment{\textnormal{southwest corner node}}
+\State odata[$g$] = $\left(M_{rr}^{sw} + M_{rs}^{sw} + C_1^{sw}\right)(\textnormal{idata})$ \\ \Comment{apply southwest partial $M$ and $C$  stencils}
+\State  odata[$g$+1] = $C_1^{sw}(\textnormal{idata})$\Comment{apply southwest interior boundary $C$  stencil}
+\State odata[$g$+2] = $C_1^{sw}(\textnormal{idata})$\Comment{apply southwest interior boundary $C$  stencil}
+\EndIf
+\If{$i = N+1$ \textnormal{and} $j = 1$}\Comment{\textnormal{northwest corner node}}
+\State odata[$g$] = $\left(M_{rr}^{nw} + M_{rs}^{nw} + C^{nw}\right)(\textnormal{idata})$ \\ \Comment{apply northwest partial $M$ and $C$ stencils}
+\State odata[$g$+1] = $C^{nw}(\textnormal{idata})$\Comment{apply northwest interior boundary $C$  stencil}
+\State odata[$g$+2] = $C^{nw}(\textnormal{idata})$\Comment{apply northwest interior boundary $C$  stencil}
+\EndIf
+\end{algorithmic}
+\end{algorithm*}

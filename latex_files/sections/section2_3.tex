@@ -1,84 +1,199 @@
-% \usepackage{algpseudocode}
-% \usepackage{algorithm}
+
+This section will present a brief review of iterative methods for solving large linear systems in our research.
+\subsection{Stationary Iterative Methods}
+\label{sec:iterative-methods}
+Stationary iterative methods can be expressed in the simple form
+
+\begin{align}
+    \boldsymbol{u}^{k+1} &= \boldsymbol{Q} \boldsymbol{u}^k + \boldsymbol{q}
+    \label{iter:stationary}
+\end{align}
+where $\boldsymbol{Q}$ and $\boldsymbol{q}$ are placeholders for a matrix and a vector respectively, both independent of iteration step $k$. Stationary iterative methods, such as the Gauss-Seidel method, act as smoothers for damping frequency components of the solution vectors. Further backgrounds of these iterative methods can be found in \cite{doi:10.1137/1.9780898718003}
+% [... add reference]
+
+The considered problem for iterative methods is a linear equation system of the form $\boldsymbol{A} \boldsymbol{u} = \boldsymbol{f}$. We introduce splitting matrix $\boldsymbol{S}$ as follows:
+\begin{align}
+    \boldsymbol{A} = \boldsymbol{S} + (\boldsymbol{A} - \boldsymbol{S})
+\end{align}
+With this introduced splitting matrix $\boldsymbol{S}$, we can rewrite the linear equation system as
+\begin{align}
+    \boldsymbol{S}\boldsymbol{u} = (\boldsymbol{S} - \boldsymbol{A}) \boldsymbol{u} + \boldsymbol{f}
+\end{align}
+and the iterative scheme of the splitting method is defined as 
+\begin{align}
+    \boldsymbol{u}^{k+1} = \boldsymbol{S}^{-1}((\boldsymbol{S} - \boldsymbol{A}) \boldsymbol{u}^k + f)
+    \label{eq:iter}
+\end{align}
+For further analysis, it is useful to introduce the iteration matrix $\boldsymbol{M}$ as
+\begin{align}
+    \boldsymbol{M} = \boldsymbol{S}^{-1}(\boldsymbol{S} - \boldsymbol{A})
+\end{align}.
+
+If we define $\boldsymbol{Q} = \boldsymbol{M}$ and $\boldsymbol{q} = \boldsymbol{S}^{-1}\boldsymbol{f}$, then \autoref{eq:iter} can be written as $\boldsymbol{u} = \boldsymbol{Q}\boldsymbol{u} + \boldsymbol{q}$, and it satisfy
+
+\begin{align}
+    \boldsymbol{e}^{k+1} = \boldsymbol{M} \boldsymbol{e}^k
+\end{align}
+
+where $\boldsymbol{e}^k$ is the error $\boldsymbol{u^k} - \boldsymbol{u}$ for the iteration step k. Because $\boldsymbol{M}$ is only determined by the initial linear system and the splitting matrix $\boldsymbol{S}$, and it is not changed in each iteration step, this method is called the stationary iterative method. 
+
+The spectral radius $\rho$ is the largest absolute eigenvalue of a matrix. The stationary iterative method converges if and only if the spectral radius $\rho$ of the iteration matrix $\boldsymbol{M}$ satisfies the following condition
+\begin{align}
+    \rho(\boldsymbol{M}) < 1
+\end{align}
+
+Such convergence holds for any initial guess $\boldsymbol{u}^0$ and any right-hand side $\boldsymbol{f}$. Different stationary iterative methods differ in the choice of splitting matrix $\boldsymbol{S}$. We will present the Jacobi method and the Gauss-Seidel method for comparison here.
 
 
-\begin{algorithm}
-    \caption{$(k+1)$-level MG for $\boldsymbol{A}_h \boldsymbol{u}_h = \boldsymbol{f}_h$, with smoothing $S_{h_k}^{\nu}$ applied $\nu$ times. SBP-preserving restriction and interpolation operators are applied. Grid coarsening ($k \to k+1$) is done through successive doubling of grid spacing until reaching the coarsest grid. The multigrid cycle can be performed $N_{maxiter}$ times. $\boldsymbol{r}$ represents the residual, and $\boldsymbol{v}$ represents the solution to the residual equation used during the correction step. This algorithm is adapted from \cite{liu2023multigrid}.}\label{alg:MG}
-    \algrenewcommand\algorithmicprocedure{\textbf{function}}
-    \begin{algorithmic}
-    \Procedure{MG}{$\boldsymbol{f}_{h_k}$, $\boldsymbol{A}_{h_k}$, $\boldsymbol{u}_{h_k}^{(0)}$, $k$, $N_{maxiter}$}
-    \For {$n = 0, 1, 2, \dots, N_{maxiter}$} 
-                
-        \State $\boldsymbol{u}_{h_k}^{(n)}$ $\xleftarrow[]{S_{h_k}^{\nu_1}}$ $\boldsymbol{u}_{h_k}^{(n)}$ \Comment{Pre-smoothing $\nu_1$ times}
-        \State  $\boldsymbol{r}_{h_k}^{(n)} = \boldsymbol{f}_{h_k}^{(n)} - \boldsymbol{A}_{h_k}^{(n)} \boldsymbol{u}_{h_k}^{(n)}$ \Comment{Calculating residual}
-        \State  $\tilde{\boldsymbol{r}}_{h_{k}} =  (\boldsymbol{H}_k \otimes \boldsymbol{H}_k)^{-1} \boldsymbol{r}_{h_k}^{(n)}$  \Comment{Removing grid info}
-    
-        \State     $\boldsymbol{r}_{h_{k+1}} = (\boldsymbol{H}_{k+1} \otimes \boldsymbol{H}_{k+1}) \boldsymbol{I}_{h_{k}}^{h_{k+1}} \tilde{\boldsymbol{r}}_{h_{k}}$ \Comment{Restriction}
-        \If{$k + 1 = k_\text{max}$}
-        \State $\boldsymbol{v}_{h_{k+1}}^{(n)}$ $\xleftarrow[]{S_{h_{k+1}}^{\nu_2}}$ $\boldsymbol{0}_{h_{k+1}}^{}$ 
-                    \Comment{Smoothing on coarsest grid}
-        \Else
-        \State $\boldsymbol{v}_{h_{k+1}}^{(n)}$ = MG({$\boldsymbol{r}_{h_{k+1}}$, $\boldsymbol{A}_{h_{k+1}}$, $\boldsymbol{0}_{h_{k+1}}^{}$, $k + 1$, $1$})
-        \State       \Comment{Recursive definition of MG}   
-        \EndIf
-        \State  $\boldsymbol{v}_{k}^{n} = \boldsymbol{I}_{h_{k+1}}^{h_k} \boldsymbol{v}_{k+1}^{(n)}$
-                 \Comment{Interpolation}
-        \State $\boldsymbol{u}_{k}^{(n+1)} = \boldsymbol{u}_{k}^{(n)} + \boldsymbol{v}_{k}^{n}$ \Comment{Correction}
-        \State   $\boldsymbol{u}_{k}^{(n+1)} \xleftarrow[]{S_{h_k}^{\nu_3}}$ $\boldsymbol{u}_{h_k}^{(n+1)}$ \Comment{Post-smoothing $\nu_3$ times}
-    \EndFor
-    \EndProcedure
-    % \Require
-    \end{algorithmic}
-\end{algorithm}
+\subsubsection{The Jacobi Method}
+In the Jacobi method, the diagonal $\boldsymbol{D}$ of the matrix $\boldsymbol{A}$ for the linear system is chosen as the splitting matrix $\boldsymbol{S}$. Hence the decomposition is expressed as
+\begin{align}
+    \boldsymbol{A} &= \boldsymbol{D} + (\boldsymbol{A} - \boldsymbol{D})  \text{ or } \boldsymbol{A} = \boldsymbol{D} + (-\boldsymbol{L} - \boldsymbol{U})
+\end{align}
+Where $-\boldsymbol{L}$ denotes the strictly lower triangle and $-\boldsymbol{U}$ denotes the strictly upper triangle of the matrix $\boldsymbol{A}$. Similar to \autoref{eq:iter}, the Jacobi method is then
+\begin{align}
+    \boldsymbol{u}^{k+1} = \boldsymbol{D}^{-1}((\boldsymbol{L} + \boldsymbol{U})\boldsymbol{u}^k + \boldsymbol{f})
+\end{align}
+
+In terms of matrix indices, the Jacobi method can be written as 
+\begin{align}
+    u_i^{k+1} = \frac{1}{A_{ii}} (f_i - \sum_{j=1,i\neq j}A_{ij}u_j^k)
+\end{align}
+For matrix-free forms, similar results can be obtained via slight modifications to this form.
+
+\subsubsection{The Gauss-Seidel Method}
+In the Gauss-Seidel method, the splitting matrix is chosen as $\boldsymbol{S} = (\boldsymbol{D} - \boldsymbol{L})$. The decomposition is then expressed as
+\begin{align}
+    \boldsymbol{A} &= (\boldsymbol{D} - \boldsymbol{L}) + (\boldsymbol{A} - (\boldsymbol{D} - \boldsymbol{L}))  \text{ or } \boldsymbol{A} = \boldsymbol{D} -\boldsymbol{L} + (- \boldsymbol{U})
+\end{align}
+
+Similar to \autoref{eq:iter}, the Gauss-Seidel method is then
+\begin{align}
+    \boldsymbol{u}^{k+1} = (\boldsymbol{D} - \boldsymbol{L})^{-1}( \boldsymbol{U}\boldsymbol{u}^k + \boldsymbol{f})
+\end{align}
+
+To derive the index form of the Gauss-Seidel method, some further transformations are needed.
+
+\begin{align}
+    \boldsymbol{D}\boldsymbol{u}^{k+1} - \boldsymbol{L}\boldsymbol{u}^{k+1} = \boldsymbol{U}\boldsymbol{u}^k + \boldsymbol{f}
+\end{align}
+and
+\begin{align}
+    \boldsymbol{u}^{k+1} = \boldsymbol{D}^{-1} (\boldsymbol{L}\boldsymbol{u}^{k+1} + \boldsymbol{U}\boldsymbol{u}^{k} + \boldsymbol{f}) 
+    \label{iter:gs}
+\end{align}
+and the index form is given as
+\begin{align}
+    u_i^{k+1} = \frac{1}{A_{ii}} (f_i - \sum_{j=1}^{i-1}A_{ij}u_j^{k+1} -  \sum_{i+1}^{n}A_{ij}u_j^{k})
+    \label{iter:gs-index}
+\end{align}
+
+\subsubsection{Comparison of the Jacobi and the Gauss-Seidel Method}
+It might seem that in \autoref{iter:gs} the right-hand side contains the result from the iteration step k+1 and such an iterative scheme would fail. However, a closer observation would notice that the $\boldsymbol{u}^{k+1}$ is multiplied by the negation of the lower triangle $-\boldsymbol{L}$ of the matrix $\boldsymbol{A}$. This means for each element j in the vector $\boldsymbol{u}^{k+1}$, only newly updated elements before index j are used, hence there is no logical problem in this iterative scheme. This is more obvious in the index form \autoref{iter:gs-index}
+
+This is the most important difference between the Jacobi and the Gauss-Seidel method. When computing the $i$-th element $u_i^{k+1}$ in the iteration step k+1, the Gauss-Seidel method already uses all available iterates $u_j^{k+1}$ with $j=1\dots(i-1)$, while the Jacobi method only uses the iterates from the previous iteration step k. In other words, while the Jacobi method adds all increments \textit{simultaneously} only after cycling through all degrees of freedom, the Gauss-Seidel method adds all increments \textit{successively} as soon as available. As a result, the Gauss-Seidel method has the advantage that one vector is sufficient to update its vector elements $i$ successively, in contrast to the Jacobi method where an additional vector is required. However, in terms of computational cost, the difference in memory requirement is negligible in practice. 
+
+On the other hand, the operations for the iteration of different vector elements do not coincide in the Jacobi method, which means the parallelization for the Jacobi method is straightforward. However, in the Gauss-Seidel method, the nodal ordering influences the convergence behavior. There are various nodal orderings summarized in \cite{hackbusch2013multi}, such as red-black, lexicographical, zebra-line, and four-color ordering. More advanced algorithms are required for the successful parallelization of the Gauss-Seidel method. Otherwise, uncontrolled splitting of the process leads to the so-called \textit{chaotic} Gauss-Seidel method.  
+
+In terms of convergence, both stationary methods depend on the spectral radius of the corresponding iteration matrix $\boldsymbol{Q}$, which is affected by the splitting matrix $\boldsymbol{S}$ chosen for each of these two methods. If both methods converge, the convergence rate of the Gauss-Seidel method is better as each iteration would use the updated data as soon as available. 
+
+Specifically, it is sufficient for the Jacobi method to converge if the system Matrix $\boldsymbol{A}$ is strictly diagonally dominant 
+\cite{https://doi.org/10.1002/zamm.19940740205}
+\begin{align}
+    |A_{ii}| > \sum_{j=1,j\neq i}^{n}|A_{ij}| \text{ for all }i
+    \label{cond:jacobi}
+\end{align}
+
+For a linear system that doesn't satisfy this condition, convergence can be achieved by additional damping. For the Gauss-Seidel method, other than the given condition in \autoref{cond:jacobi}, the convergence is also guaranteed if the system matrix $A$ is positive definite. The second condition is usually satisfied for the finite difference method or the finite element method if properly restrained and stabilized. \cite{bathe2006finite} Other than directly used as standalone iterative solvers, the damped Jacobi method or the Gauss-Seidel method can be applied as smoothers within the multigrid method.
+
+\subsubsection{Relaxation methods}
+Relaxation methods are also stationary iterative methods, thus they can also be presented in the form \autoref{iter:stationary}. For each of the methods introduced previously, there also exists a corresponding relaxation method.
+In comparison to the precedent methods, the relaxation methods scale each increment by a constant relaxation factor $\omega$. The general form of the relaxation methods is given by the following simplified algorithmic expression
+\begin{align}
+    u_{i}^{k+1} := (1-\omega)u_i^k + \omega \Breve{u}_i^{k+1}
+\end{align}
+where for each individual index $i$, the temporary variable $\Breve{u}_i^{k+1}$ is computed as the $u_i^{k+1}$ of the Jacobi method in the case of the simultaneous over-relaxation method (JOR method) or as the $u_i^{k+1}$ of the Gauss-Seidel method in the case of the successive over-relaxation method (SOR method). Thus when $\omega = 1$, the relaxation scheme is identical to the Jacobi or the Gauss-Seidel method.
+
+The optimum relaxation factor can be derived theoretically from the spectral radius of the iteration matrix. However, this is expensive. For more practical use, several methods for the determination of $\omega$ were proposed in \cite{https://doi.org/10.1002/zamm.19940740205} and \cite{young2014iterative}.
 
 
-\setcounter{algorithm}{1}
-\begin{algorithm*}
-\caption{Matrix-Free GPU kernel Action of matrix-free A for interior nodes.}\label{alg:mfA-1}
-\algrenewcommand\algorithmicprocedure{\textbf{function}}
-\begin{algorithmic}
-\Procedure{\textnormal{mfA!}}{\textnormal{odata}, \textnormal{idata}, $c_{rr}, c_{rs}, c_{ss}, h_r, h_s$}
-    \State  $i, j = $get\_global\_thread\_IDs()
-    \State $g = (i-1) * (N+1) + j$\Comment{compute global index}
-    \If{$2 \leq i, j \leq N$} \Comment{\textnormal{interior nodes}}
-        \State odata[g] = (\emph{hs}/\emph{hr})(- (0.5$c_{rr}$[$g$-1] + 0.5$c_{rr}$[$g$])\text{idata}[$g$-1] +
-        \State \hspace{25mm}    + (0.5$c_{rr}$[$g$-1]  +  $c_{rr}$[$g$] - 0.5$c_{rr}$[$g$+1])\text{idata}[$g$] + 
-        \State  \hspace{25mm}     - (0.5$c_{rr}$[$g$] + 0.5$c_{rr}$[$g$+1])\text{idata}[$g$+1]) + \\ \Comment{compute $M_{rr}$  stencil}\\
-        \State \hspace{25mm} + 0.5$c_{rs}$[$g$-1](-0.5\text{idata}[$g$-$N$-2] + 0.5\text{idata}[$g$+$N$]) + 
-        \State   \hspace{25mm} - 0.5$c_{rs}$[$g$+1](-0.5\text{idata}[$g$-$N$] + 0.5\text{idata}[$g$+$N$+1]) + \\ \Comment{compute $M_{rs}$  stencil}\\
-        \State  \hspace{25mm} + 0.5$c_{rs}$[$g$-$N$-1](-0.5\text{idata}[$g$-$N$-2] + 0.5\text{idata}[$g$-$N$]) + 
-        \State  \hspace{25mm} - 0.5$c_{rs}$[$g$+$N$+1](-0.5\text{idata}[$g$-$N$] + 0.5\text{idata}[$g$+$N$+2]) + \\ \Comment{compute $M_{sr}$  stencil}\\
-        \State  \hspace{25mm} - (0.5$c_{ss}$[$g$-$N$-1] + 0.5$c_{ss}$[$g$])\text{idata}[$g$-$N$-1] + 
-        \State  \hspace{25mm} + (0.5$c_{ss}$[$g$-$N$-1]  + $c_{ss}$[$g$] + 0.5$c_{ss}$[$g$+$N$+1])\text{idata}[$g$] - 
-        \State  \hspace{25mm}     - (0.5$c_{ss}$[$g$] + 0.5$c_{ss}$[$g$+$N$+1])\text{idata}[$g$+$N$+1])) \\
-        \Comment{compute $M_{ss}$  stencil}
-    \EndIf
-    \State  \dots \Comment{boundary nodes, e.g. Algorithm \ref{alg:mfA-2}}
-    \State \textbf{return} $nothing $ 
-\EndProcedure
-\end{algorithmic}
-\end{algorithm*}
+\subsection{Krylov Subspace Methods}
+\label{section:krylov_subspace}
+Stationary iterative methods have been applied for a long time in history, but over the last few decades, Krylov subspace methods become more popular. These methods focus on building Krylov subspaces, named after Aleksei Nikolaevich Krylov who used these spaces to analyze oscillations of mechanical systems \cite{krylov1931numerical}. The Krylov subspace takes the form
+\begin{equation}
+    \mathcal{K}_k(A,\boldsymbol{v}) := \text{span}\{\boldsymbol{v},A\boldsymbol{v},\dots,A^{k-1}\boldsymbol{v}\}
+\end{equation}
+
+where $A \in \mathbb{C}^{n\times n}$ and $\boldsymbol{v} \in \mathbb{C}^n$
 
 
-\setcounter{algorithm}{2}
-\begin{algorithm*}
-\caption{Matrix-Free GPU kernel Action of matrix-free A for west boundary (face 1).}
-\label{alg:mfA-2}
-\begin{algorithmic}
-\If{$2 \leq i \leq N$ \textnormal{and} $j = 1$} \Comment{\textnormal{interior west nodes}}
-\State odata[$g$] = $\left(M_{rr}^{int} + M_{rs}^{int} + M_{sr}^{int} + M_{sr}^{int} + C_1^{int}\right)(\textnormal{idata})$ \\ \Comment{apply boundary $M$ and $C$ stencils}
-\State  odata[$g$+1] = $C_1^{int}(\textnormal{idata})$\Comment{apply interior $C$ stencil}
-\State odata[$g$+2] = $C_1^{int}(\textnormal{idata})$\Comment{apply interior $C$ stencil}
-\EndIf
-\If{$i = 1$ \textnormal{and} $j = 1$} \Comment{\textnormal{southwest corner node}}
-\State odata[$g$] = $\left(M_{rr}^{sw} + M_{rs}^{sw} + C_1^{sw}\right)(\textnormal{idata})$ \\ \Comment{apply southwest partial $M$ and $C$  stencils}
-\State  odata[$g$+1] = $C_1^{sw}(\textnormal{idata})$\Comment{apply southwest interior boundary $C$  stencil}
-\State odata[$g$+2] = $C_1^{sw}(\textnormal{idata})$\Comment{apply southwest interior boundary $C$  stencil}
-\EndIf
-\If{$i = N+1$ \textnormal{and} $j = 1$}\Comment{\textnormal{northwest corner node}}
-\State odata[$g$] = $\left(M_{rr}^{nw} + M_{rs}^{nw} + C^{nw}\right)(\textnormal{idata})$ \\ \Comment{apply northwest partial $M$ and $C$ stencils}
-\State odata[$g$+1] = $C^{nw}(\textnormal{idata})$\Comment{apply northwest interior boundary $C$  stencil}
-\State odata[$g$+2] = $C^{nw}(\textnormal{idata})$\Comment{apply northwest interior boundary $C$  stencil}
-\EndIf
-\end{algorithmic}
-\end{algorithm*}
+\subsubsection{Conjugate Gradient Method}
+The conjugate gradient (CG) method was developed by \textit{Hestenes \& Stiefel} \cite{hestenes1952methods} as the first Krylov subspace method, and has been one of the most popular iterative methods in solving linear systems. Compared to the iterative methods mentioned in previous sections which are known to be stationary, the CG method is non-stationary. Let $\boldsymbol{A} \in \mathbb{R}^{n\times n}$ be a symmetric positive definite (SPD) matrix, and $\boldsymbol{f} \in \mathbb{R}^n$ be a real vector, then the minimization problem of the quadratic form $F(x) = min$
+\begin{equation}
+    F(\boldsymbol{u}) = \frac{1}{2}\boldsymbol{u}^T\boldsymbol{A}\boldsymbol{u} - \boldsymbol{f}^T\boldsymbol{u}
+\end{equation}
+is equivalent to getting its derivative 
+\begin{align}
+    \text{grad} F(\boldsymbol{u}) = \boldsymbol{Au - f}
+\end{align}
+equal to the zero vector
+\begin{equation}
+    \text{grad} F(\boldsymbol{u}) = 0
+    \label{eqn:cg_grad}
+\end{equation}
+
+The CG method is an iterative minimizer of the given quadratic form and therefore an iterative solver for the linear equation system $\boldsymbol{Au=f}$ when $\boldsymbol{A}$ is SPD. The quadratic form is always minimized from an approximate vector $\boldsymbol{u}^k$ in the direction of a provided search vector $\boldsymbol{p}^k \neq 0$, which can be written as
+\begin{equation}
+    F(\boldsymbol{u}^k + \lambda\boldsymbol{p}^k) = min
+\end{equation}
+where both $\boldsymbol{u}^k$ and $\boldsymbol{p}^k$ are constant vectors $\in \mathbb{R}$ and a scalar variable $\lambda \in \mathbb{R}$. This leads to the following parabola function of $\lambda$
+\begin{align}
+    (\frac{1}{2}{\boldsymbol{p}^{k}}^{T} \boldsymbol{A} \boldsymbol{p}^k) \lambda^2 &+ ({\boldsymbol{p}^{k}}^{T} \boldsymbol{A} \boldsymbol{u}^k - {\boldsymbol{p}^{k}}^T\boldsymbol{f})\lambda \nonumber \\
+    &+ ((\frac{1}{2}{\boldsymbol{u}^{k}}^{T} \boldsymbol{A} \boldsymbol{u}^k) - {\boldsymbol{u}^k}^T) = min
+\end{align}
+
+This quadratic form is minimized for 
+\begin{equation}
+    \lambda = \frac{{\boldsymbol{p}^k}^T(\boldsymbol{f} - \boldsymbol{A}\boldsymbol{u}^k)}
+    {{\boldsymbol{p}^k}^{T}\boldsymbol{A}\boldsymbol{p}^k}
+\end{equation}
+
+The ideal search direction $\boldsymbol{p}^k$ would be the error $\boldsymbol{e}$, however, this would require us to know the exact solution $\boldsymbol{u}$. As a compromise, the negative gradient of the quadratic form at $\boldsymbol{u}^k$ is the best intuitive search direction from the local view of $\boldsymbol{u}^k$. The search direction corresponds to the residual $\boldsymbol{r}^k$ is now
+\begin{equation}
+    -\text{grad} F(u^k) = \boldsymbol{f} - \boldsymbol{A}\boldsymbol{u}^k = \boldsymbol{r}^k
+\end{equation}
+with $\boldsymbol{p}^k = \boldsymbol{r}^k$. We define the following equations
+\begin{align}
+    \lambda_k &= \frac{{\boldsymbol{r}^k}^T\boldsymbol{r}^k}{{\boldsymbol{r}^k}^T\boldsymbol{A}\boldsymbol{r}^k} \\
+    \boldsymbol{u}^{k+1} &= \boldsymbol{u}^k + \lambda_k\boldsymbol{r}^k
+\end{align}
+to describe the iterative process for one iterative step, which is called the method of steepest descent due to the fact that for any iteration step $k$, the search direction $\boldsymbol{p}^k$ is defined by (-grad$F(\boldsymbol{u}^k)$).
+
+The method of the steepest descent is a key step in the CG method, but the choice of search directions $\boldsymbol{p}^k$ is not the optimal one. As $\boldsymbol{u}^{k+1}$ is optimized with respect to the previous search direction $\boldsymbol{p}^k = \boldsymbol{r}^k$, it is clear that the successive search directions are not orthogonal ($-\text{grad}F(\boldsymbol{u}^{k+1}) \perp \boldsymbol{p}^k$). It can be shown that $\boldsymbol{r}^k \perp \boldsymbol{r}^{k+1}$ and $\boldsymbol{r}^{k+1} \perp \boldsymbol{r}^{k+2}$, but it is general not true for $\boldsymbol{r}^k \perp \boldsymbol{r}^{k+2}$. Therefore, $\boldsymbol{u}^{k+1}$ has lost its optimum with respect to the previously optimized direction $\boldsymbol{r}^k$.
+
+If $\boldsymbol{u}^{k+1}$ is optimal with respect to $\boldsymbol{p}^k \neq 0$, then this property is passed to $\boldsymbol{u}^{k+1}$ if and only if 
+\begin{equation}
+    A\boldsymbol{p}^{k+1} \perp \boldsymbol{p}^k
+\end{equation}
+
+The vectors $\boldsymbol{p}^{k+1}$ and $\boldsymbol{p}^k$ are called $conjugate$. In the conjugate gradient method, the search directions are pairwise conjugate. Each time a new search direction is derived from the actual residual and conjugated with the prior search direction. It is also conjugate to all previous search directions. Thus a system of conjugate search directions is obtained or equivalent to a system of orthogonal residuals. This can be proven by induction.
+The initial values are defined as
+\begin{align}
+    \boldsymbol{r}^0 &= \boldsymbol{f} - \boldsymbol{A}\boldsymbol{u}^0 \nonumber \\ \boldsymbol{p}^0 &= \boldsymbol{r}^0
+\end{align}
+
+The following equations describe the algorithm of the conjugate gradient method
+\begin{align}
+    \lambda_k &= \frac{{\boldsymbol{r}^k}^T\boldsymbol{p}^k}{{\boldsymbol{p}^k}^T\boldsymbol{A}\boldsymbol{p}^k} \\
+    \boldsymbol{u}^{k+1} &= \boldsymbol{u}^k + \lambda_k\boldsymbol{p}^k \\
+    \boldsymbol{r}^{k+1} &= \boldsymbol{r}^k - \lambda_k\boldsymbol{A}\boldsymbol{p}^k \\
+    \boldsymbol{p}^{k+1} &= \boldsymbol{r}^k - \frac{{\boldsymbol{r}^{k+1}}^T\boldsymbol{A}\boldsymbol{p}^k}{{\boldsymbol{p}^k}^T \boldsymbol{A}\boldsymbol{p}^k} \boldsymbol{p}^k % something wrong with the spacing here
+\end{align}
+
+As shown in \cite{https://doi.org/10.1002/zamm.19940740205}, for an efficient implementation, it is possible to use an alternative form for $\lambda_k$ and $p^{k+1}$
+\begin{align}
+     \lambda_k &= \frac{{\boldsymbol{r}^k}^T\boldsymbol{r}^k}{{\boldsymbol{p}^k}^T\boldsymbol{A}\boldsymbol{p}^k} \\
+     \boldsymbol{p}^{k+1} &= \boldsymbol{r}^k + \frac{{\boldsymbol{r}^{k+1}}^T\boldsymbol{r}^k}{{\boldsymbol{r}^k}^T\boldsymbol{r}^k}\boldsymbol{p}^k
+\end{align}
+
+It can be proven that the CG method will converge to the exact solution after given finite steps. In theory, this method can achieve the same level of accuracy as a direct solver. However, due to numerical round-off errors, the orthogonality is often lost and such ideal theoretical results can not be achieved. In practice, given reasonable error tolerance, the CG method can generally be terminated after the convergence criteria have been met. This supports the view of the CG method as an iterative method, while an iterative method often would not converge to the exact solution, especially in theory. Thus the CG method is sometimes treated as a semi-iterative method.

@@ -67,3 +67,66 @@ Here $\tilde{\boldsymbol{M}}^{(c_{ij})}_{ij}$ is the sum of SPD matrices approxi
 \subsubsection{SAT Penalty Terms}
 SBP methods are designed to work with various impositions of boundary conditions that lead to provably stable methods, for example through weak enforcement via the simultaneous-approximation-term (SAT) ~\cite{CarpenterGottliebAbarbanel1994} which we adopt here. As opposed to traditional finite difference methods that ``inject" boundary data by overwriting grid points with the given data, the SAT technique imposes boundary conditions weakly (through penalization), so that all grid points approximate both the PDE and the boundary conditions up to a certain level of accuracy.  The combined approach is known as SBP-SAT.
 Where traditional methods that use injection or strong enforcement of boundary/interface conditions destroy the discrete integration-by-parts property, using SAT terms enables proof of the method's stability (a necessary property for numerical convergence)~\cite{Mattsson2003}.
+
+\subsection{An example of the SBP-SAT technique for PDE}
+We use the following example from \cite{RUGGIU2018216} to showcase an example of applying the SBP-SAT method for PDEs. Let's consider the advection problem in 1D.
+\begin{align}
+    \begin{split}
+    \boldsymbol{u}_t + \boldsymbol{u}_x &= 0, \quad 0 < x < 1,  t > 0 \\
+    \boldsymbol{u}(0,t) &=  \boldsymbol{g}(t),  \quad  t > 0 \\
+    \boldsymbol{u}(x,t) &= \boldsymbol{h}(x), \quad 0 < x < 1
+    \end{split}
+     \label{eqn:1d_sbp_problem}
+\end{align}
+
+where both g and h are known for initial and boundary conditions. The problem \autoref{eqn:1d_sbp_problem} has an energy-estimate and is well-posed. We can easily learn that the analytical solution for this equation is a right-traveling wave.
+
+We discretize 1D domain with $N+1$ points in a uniform grid on $[0,1]$ using the method described in \autoref{section:1d-sbp}. By applying SBP-SAT discretization in space to \autoref{eqn:1d_sbp_problem}, we get
+\begin{align}
+    \begin{split}
+        \boldsymbol{u}_t + D_1\boldsymbol{u} &= P^{-1}\sigma(\boldsymbol{u}_0 - \boldsymbol{g}) \boldsymbol{e}_0, \quad t > 0\\
+        \boldsymbol{u}(0) &= \boldsymbol{h}
+    \end{split}
+    \label{eqn:1d_sbp_problem_discretized}
+\end{align}
+where $\boldsymbol{u} = [u_0,\dots,u_N]^T, \boldsymbol{h} = [h_0,\dots,h_N]^T, \sigma \in \mathbb{R}$ is a penalty parameter which is determined through stability condition. $\boldsymbol{e}_0 = [1,0,\dots,0]^T\in\mathbb{R}^{N+1}$. To determine the value for $\sigma$ so that the problem \autoref{eqn:1d_sbp_problem_discretized} is strongly stable, we have 
+\begin{align}
+    \begin{split}
+        ||\boldsymbol{u}(t)||^2 \leq K(t)(||\boldsymbol{h}||^2 + \underset{\tau \in [0,t]}{\text{max}}|\boldsymbol{g}(\tau)|^2)
+    \end{split}
+    \label{eqn:stability}
+\end{align}
+The $K(t)$ in \autoref{eqn:stability} is independent of the data and bounded for any finite $t$ and meshsize $\Delta x$. Further details about $K(t)$ are given in \cite{SVARD201417,gustafsson1995time}.
+Applying the energy method by multiplying the equation \autoref{eqn:1d_sbp_problem_discretized} with $\boldsymbol{u}^TP$ and adding the transpose with the SBP property \autoref{eqn:1d_sbp}, we find
+\begin{equation}
+    \frac{d}{dt}||\boldsymbol{u}||_P^2 = - \frac{\sigma^2}{1+2\sigma}\boldsymbol{g}^2 - \boldsymbol{u}_N^2 + \frac{[(1+2\sigma)\boldsymbol{u}_0 - \sigma\boldsymbol{g}]^2}{1+2\sigma}
+\end{equation}
+By time-integration, this leads to an estimate of the form \autoref{eqn:stability} for $\sigma < -1/2$.
+
+\subsection{Poisson's equation with SBP-SAT Methods}
+We consider the 2D Poisson equation on the unit square $\Omega$ with both Dirichlet and Neumann conditions for generality, as each appears in earthquake problems (e.g. Earth's free surface manifests as a Neumann condition, and the slow motion of tectonic plates is usually enforced via a Dirichlet condition). This is an important and necessary first step before additional complexities such as variable material properties, complex geometries, and fully 3D problems. The governing equations are given by
+\begin{subequations}\label{eqn:poisson_eqn}
+\begin{alignat}{3}
+-\Delta u &= f,  &&\quad{\text {for } (x, y) \in \Omega}, \\ 
+u &= g_{\text{W}},  &&\quad x = 0,\\ 
+u&= g_{\text{E}}, &&\quad x = 1,\\ 
+\boldsymbol{n} \cdot \nabla u&=g_{\text{S}}, &&\quad y = 0, \\
+\boldsymbol{n} \cdot \nabla u&=g_{\text{N}}, &&\quad y = 1,
+\end{alignat}
+\end{subequations}
+where $\Delta u = \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2}$, the field $u(x, y)$ is the unknown particle displacement, the scalar function $f(x,y)$ is the source function,
+ and vector $\boldsymbol{n}$ is the outward pointing normal to the domain boundary $\partial\Omega$. The $g$'s represent boundary data on the west, east, south, and north boundaries.
+ 
+ 
+The SBP-SAT discretization of (\ref{eqn:poisson_eqn}) is given by
+\begin{equation}\label{eqn:discrete}
+-\boldsymbol{D}_2\boldsymbol{u} = \boldsymbol{f} + \boldsymbol{b}^{N} + \boldsymbol{b}^{S} + \boldsymbol{b}^{W} + \boldsymbol{b}^{E},
+\end{equation}
+%
+where $\boldsymbol{D}_2 = \left(\boldsymbol{I} \otimes \boldsymbol{D}_{xx}\right) +  \left(\boldsymbol{D}_{yy}  \otimes \boldsymbol{I}\right)$ is the discrete Laplacian operator and $\boldsymbol{u}$ is the grid function approximating the solution, formed as a stacked vector of vectors. The SAT terms $\boldsymbol{b}^{N}, \boldsymbol{b}^{S}, \boldsymbol{b}^{W}, \boldsymbol{b}^{E}$ enforce all boundary conditions weakly. To illustrate the structure of these vectors, the SAT term enforcing Dirichlet data on the west boundary is given by 
+\begin{align}
+\boldsymbol{b}^{W} &= \alpha \left(\boldsymbol{H}^{-1} \otimes \boldsymbol{I}\right) (\boldsymbol{E}_\text{W}\boldsymbol{u} - \boldsymbol{e}^T_\text{W}\boldsymbol{g}_\text{W}) \\ 
+&- \left(\boldsymbol{H}^{-1}\boldsymbol{e_0}\boldsymbol{d_0}^T \otimes \boldsymbol{I}\right) (\boldsymbol{E}_\text{W}\boldsymbol{u} - \boldsymbol{e}^T_\text{W}\boldsymbol{g}_\text{W}),
+\end{align}
+where $\alpha$ again represents a penalty parameter, $\boldsymbol{E}_\text{W}$ is a sparse boundary extraction operator, and $\boldsymbol{e}^T_\text{W}$ is an operator that lifts the boundary data to the whole domain. Details of all the SAT terms can be found in \cite{Erickson2014}.
+System (\ref{eqn:discrete}) can be rendered SPD by multiplying from the left by $\left(\boldsymbol{H} \otimes \boldsymbol{H}\right)$,  producing the sparse linear system $\boldsymbol{Au} = \boldsymbol{b}$.
