@@ -54,56 +54,7 @@ One feature that differentiates our problem formulation from those in \citet{Rug
 \end{algorithm}
 
 
-\setcounter{algorithm}{1}
-\begin{algorithm*}
-\caption{Matrix-Free GPU kernel Action of matrix-free A for interior nodes.}\label{alg:mfA-1}
-\algrenewcommand\algorithmicprocedure{\textbf{function}}
-\begin{algorithmic}
-\Procedure{\textnormal{mfA!}}{\textnormal{odata}, \textnormal{idata}, $c_{rr}, c_{rs}, c_{ss}, h_r, h_s$}
-    \State  $i, j = $get\_global\_thread\_IDs()
-    \State $g = (i-1) * (N+1) + j$\Comment{compute global index}
-    \If{$2 \leq i, j \leq N$} \Comment{\textnormal{interior nodes}}
-        \State odata[g] = (\emph{hs}/\emph{hr})(- (0.5$c_{rr}$[$g$-1] + 0.5$c_{rr}$[$g$])\text{idata}[$g$-1] +
-        \State \hspace{25mm}    + (0.5$c_{rr}$[$g$-1]  +  $c_{rr}$[$g$] - 0.5$c_{rr}$[$g$+1])\text{idata}[$g$] + 
-        \State  \hspace{25mm}     - (0.5$c_{rr}$[$g$] + 0.5$c_{rr}$[$g$+1])\text{idata}[$g$+1]) + \\ \Comment{compute $M_{rr}$  stencil}\\
-        \State \hspace{25mm} + 0.5$c_{rs}$[$g$-1](-0.5\text{idata}[$g$-$N$-2] + 0.5\text{idata}[$g$+$N$]) + 
-        \State   \hspace{25mm} - 0.5$c_{rs}$[$g$+1](-0.5\text{idata}[$g$-$N$] + 0.5\text{idata}[$g$+$N$+1]) + \\ \Comment{compute $M_{rs}$  stencil}\\
-        \State  \hspace{25mm} + 0.5$c_{rs}$[$g$-$N$-1](-0.5\text{idata}[$g$-$N$-2] + 0.5\text{idata}[$g$-$N$]) + 
-        \State  \hspace{25mm} - 0.5$c_{rs}$[$g$+$N$+1](-0.5\text{idata}[$g$-$N$] + 0.5\text{idata}[$g$+$N$+2]) + \\ \Comment{compute $M_{sr}$  stencil}\\
-        \State  \hspace{25mm} - (0.5$c_{ss}$[$g$-$N$-1] + 0.5$c_{ss}$[$g$])\text{idata}[$g$-$N$-1] + 
-        \State  \hspace{25mm} + (0.5$c_{ss}$[$g$-$N$-1]  + $c_{ss}$[$g$] + 0.5$c_{ss}$[$g$+$N$+1])\text{idata}[$g$] - 
-        \State  \hspace{25mm}     - (0.5$c_{ss}$[$g$] + 0.5$c_{ss}$[$g$+$N$+1])\text{idata}[$g$+$N$+1])) \\
-        \Comment{compute $M_{ss}$  stencil}
-    \EndIf
-    \State  \dots \Comment{boundary nodes, e.g. Algorithm \ref{alg:mfA-2}}
-    \State \textbf{return} $nothing $ 
-\EndProcedure
-\end{algorithmic}
-\end{algorithm*}
 
-
-\setcounter{algorithm}{2}
-\begin{algorithm*}
-\caption{Matrix-Free GPU kernel Action of matrix-free A for west boundary (face 1).}
-\label{alg:mfA-2}
-\begin{algorithmic}
-\If{$2 \leq i \leq N$ \textnormal{and} $j = 1$} \Comment{\textnormal{interior west nodes}}
-\State odata[$g$] = $\left(M_{rr}^{int} + M_{rs}^{int} + M_{sr}^{int} + M_{sr}^{int} + C_1^{int}\right)(\textnormal{idata})$ \\ \Comment{apply boundary $M$ and $C$ stencils}
-\State  odata[$g$+1] = $C_1^{int}(\textnormal{idata})$\Comment{apply interior $C$ stencil}
-\State odata[$g$+2] = $C_1^{int}(\textnormal{idata})$\Comment{apply interior $C$ stencil}
-\EndIf
-\If{$i = 1$ \textnormal{and} $j = 1$} \Comment{\textnormal{southwest corner node}}
-\State odata[$g$] = $\left(M_{rr}^{sw} + M_{rs}^{sw} + C_1^{sw}\right)(\textnormal{idata})$ \\ \Comment{apply southwest partial $M$ and $C$  stencils}
-\State  odata[$g$+1] = $C_1^{sw}(\textnormal{idata})$\Comment{apply southwest interior boundary $C$  stencil}
-\State odata[$g$+2] = $C_1^{sw}(\textnormal{idata})$\Comment{apply southwest interior boundary $C$  stencil}
-\EndIf
-\If{$i = N+1$ \textnormal{and} $j = 1$}\Comment{\textnormal{northwest corner node}}
-\State odata[$g$] = $\left(M_{rr}^{nw} + M_{rs}^{nw} + C^{nw}\right)(\textnormal{idata})$ \\ \Comment{apply northwest partial $M$ and $C$ stencils}
-\State odata[$g$+1] = $C^{nw}(\textnormal{idata})$\Comment{apply northwest interior boundary $C$  stencil}
-\State odata[$g$+2] = $C^{nw}(\textnormal{idata})$\Comment{apply northwest interior boundary $C$  stencil}
-\EndIf
-\end{algorithmic}
-\end{algorithm*}
 
 
 
