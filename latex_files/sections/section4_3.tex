@@ -1,6 +1,74 @@
-\section{Performance: Matrix-free MGCG on GPUs}\label{sec: conjugate}
+\section{Performance: Matrix-free MGCG}\label{sec: conjugate}
+\subsection{Preconditioning performance}
+MG methods have many tunable parameters. For this initial study, we explored the MGCG performance varying the number of Richardson pre- and post-smoothing steps on every level between 1 and 5. We considered a single V-cycle (i.e. taking $\nu_1 = \nu_2 = \nu_3 = 5$ and $N_{maxiter} = 1$ in Algorithm 1), including on the coarsest grid (5 grid points in each direction). For all tests in this work we initialize the iterative scheme with the zero vector.
+All algorithms stop when the relative residual is reduced to less than $10^{-6}$ times the initial residual.
 
 
+\begin{table}
+\caption{Iterations and time to converge for $N=2^{10}$ using 1 smoothing step in PETSc PAMGCG with V cycle (first three rows) vs. our MGCG using Richardson's iteration as smoother (last row)}
+\begin{center}
+\small\sf\centering
+\begin{tabular}{llll}
+\toprule
+mg\_levels\_ksp\_type & mg\_levels\_pc\_type & iters & time \\
+\midrule
+\multirow{3}{*}{chebyshev}  & sor     & 18 & 4.105 s  \\ 
+                            & jacobi  & 22 & 3.382 s \\ 
+                            & bjacobi & 17 & 3.945 s  \\ \midrule
+\multirow{3}{*}{richardson} & sor     & 18 & 3.581 s \\ 
+                            & jacobi  & 49 & 3.729 s \\  
+                            & bjacobi & 16 & 3.729 s \\ \midrule
+\multirow{3}{*}{cg}         & sor     & 17 & 4.081 s \\ 
+                            & jacobi  & 23 & 3.849 s\\ 
+                            & bjacobi & 16 & 3.971 s \\ \midrule
+ richardson & none & 11 & 0.086 s \\
+\bottomrule
+\end{tabular}
+\end{center}
+\label{table:petsc_1}
+\end{table}
+
+\begin{table}
+\caption{Iterations and time to converge for $N=2^{10}$ using 5 smoothing steps in PETSc PAMGCG with V cycle (first three rows) vs. our MGCG using Richardson's iteration as smoother (last row)}
+\begin{center}
+\small\sf\centering
+\begin{tabular}{llll}
+\toprule
+mg\_levels\_ksp\_type & mg\_levels\_pc\_type & iters & time \\
+\midrule
+\multirow{3}{*}{chebyshev}  & sor     & 10 & 10.76 s \\ 
+                            & jacobi  & 14 & 10.20 s \\ 
+                            & bjacobi & 9 & 10.58 s \\ \midrule
+\multirow{3}{*}{richardson} & sor     & 9 & 10.13 s \\ 
+                            & jacobi  & DV & 9.24 s \\  
+                            & bjacobi & 8 & 10.28 s \\ \midrule
+\multirow{3}{*}{cg}         & sor     & 9 & 10.47 s \\ 
+                            & jacobi  & 13 & 10.54 s \\ 
+                            & bjacobi & 8 & 10.45 s \\ \midrule
+ richardson & none & 8 & 0.069s\\
+\bottomrule
+\end{tabular}
+\end{center}
+\label{table:petsc_5}
+\end{table}
+
+
+
+
+Comparisons against an unpreconditioned CG are not generally appropriate as most real-world applications require preconditioning to make any solution tractable. The Portable, Extensible Toolkit for Scientific Computing (PETSc) \cite{petsc-web-page} is one of the most widely used parallel numerical software libraries, featuring extensive preconditioning methods, many of which can be tested by users via relatively simple command-line options.  We experimented with several of PETSc's off-the-shelf algebraic multigrid preconditioned CG solvers (denoted PAMGCG). PETSc's PAMGCG is similar to our MGCG and only requires loading PETSc formatted $\mathbf{A}$ and $\mathbf{b}$ (from which it forms the coarse grid operators). 
+
+
+We tested PAMGCG with various configurations against our custom MGCG, applying the same stopping criterion (here based on the relative norm of the residual vector reduced to 1E-6), with results provided in Tables \ref{table:petsc_1} and \ref{table:petsc_5}.
+The \texttt{mg\_levels\_ksp\_type} and \texttt{mg\_levels\_pc\_type} in the tables stand for Krylov subspace method types and preconditioner types used at each level of the multigrid in PAMGCG. When classical iterative methods are used as smoothers, \texttt{mg\_levels\_ksp\_type} is set as \texttt{richardson} and the particular smoother (e.g. Jacobi) is set by \texttt{mg\_levels\_pc\_type}.
+Since our MGCG uses Richardson's iteration as the smoother for multigrid, we report \texttt{mg\_levels\_ksp\_type} as \texttt{richardson} and \\
+\texttt{mg\_levels\_pc\_type} as \texttt{none} to maintain coherence across the columns. Iterations and total time to converge are reported.
+We found that the Jacobi iteration is not a good choice as smoother in PAMGCG. 
+When using 1 smoothing step, it takes more iterations than other configurations.
+It does not converge (denoted as DV) when using 5 smoothing steps.
+Aside from this configuration, other PETSc configurations in the table exhibit comparable performance in both the number of iterations and the convergence time. We found that additional options within PAMGCG play relatively minor roles in performance. Our MGCG results (reported in the last rows), however, show superior performance in terms of both iteration counts and overall time. 
+
+
+\subsection{Performance on GPUs}
 \begin{table*}
     \caption{Time to perform a direct solve after LU factorization on CPUs vs PCG on GPUs. We report time in seconds and iterations to converge. For AmgX, we report setup + solve time. For our MGCG, setup time is negligible. ``$\mathrm{ns}$'' is short for the number of smoothing steps. GPU results are tested on A100.}
     \small

@@ -103,5 +103,3 @@ In this section we present a new formulation multigrid preconditioned conjugate 
 % The MGCG algorithm achieves nearly constant iteration steps to converge for various problem sizes, reducing iteration steps by up to $4000\times$ and total runtime by up to $600\times$.
 
 
-This work is a fundamental first step towards high-performance implementations of SBP-SAT methods.  Future work will target higher order $p$ in 3D, as well as explorations of performance increases using texture memory to store matrices arising from coordinate transformations (or expressing such transformations as functions passed to GPU kernels) to reduce the memory cost of the matrix-free kernel. We also plan to improve the performance of the preconditioner by applying second-order smoothers that have exhibited improved performance in the multigrid method as well as the mixed-precision strategies \citep{golub1961chebyshev,gutknecht2002chebyshev,abdelfattah2021survey}.
-
