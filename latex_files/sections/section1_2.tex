@@ -1,0 +1,21 @@
+\section{SEAS project}
+The progress in understanding earthquake behaviors from rate-and-state friction laws makes numerical modeling of earthquakes possible. Many numerical models have been proposed to understand earthquake behaviors from single earthquakes to multiple earthquake simulations.
+
+\subsection{The limits of dynamic ruptures and earthquake simulators}
+For individual earthquakes, dynamic rupture simulations have been applied to study the influence of fault structure, geometry, constitutive laws, and prestress on earthquake rupture propagation and associated ground motion.
+These simulations are limited to single-event scenarios with limited timescales (seconds to minutes) and are affected by artificial prestress conditions and ad hoc nucleation procedures.
+The other approach uses earthquake simulators aiming to produce complex spatiotemporal characteristics of seismicity over millennial time scales, but these simulators simplify and approximate several key physical features that could influence or dominate earthquake and fault interactions to make these large-scale simulations computationally tractable \cite{10.1785/0220120093}. 
+The missing physical effects, such as seismic slip, wave-mediated dynamic stress transfers, and inelastic bulk response have the potential to dominate earthquake and fault interactions but are failed to be captured by these earthquake simulators
+
+\subsection{The importance of earthquake cycle simulations}
+A modeling framework to capture features and missing parts of the dynamic rupture simulations and earthquake simulators are simulations of sequences of earthquakes and seismic slip (SEAS).
+These SEAS models focus on smaller, regional-scale fault zones and are designed to figure out physical factors that control the full range of observations of seismic slip, nucleation locations and actual earthquakes (dynamic rupture), ground shaking, etc.
+Such SEAS models can reveal initial conditions and earthquake nucleation for dynamic ruptures and identify important physical ingredients, as well as appropriate numerical approximations that could be later used in larger-scale, longer-term earthquake simulators.
+
+Earlier methods for SEAS simulations have simplified assumptions including a linear elastic material response, approximate elastodynamic effects, and simple fault geometries in the 2D domain to ease computational demands.
+The first two benchmark problems proposed, BP1-QD and BP2-QD, use a relatively simple setup (2D anti-plane problem, with a vertically embedded, planar fault).
+They are designed to test the capabilities of different computational methods in correctly solving a mathematically well-defined basic problem.
+Good agreements across codes are obtained in terms of the number of characteristic events and recurrence times, as well as short-term processes (maximum slip rates, stress drops, and rupture speeds) when numerical parameters are chosen properly, especially when the computational domain is chosen large enough with sufficient resolution (small enough cell size).
+During these code tests, pure volume-based codes need to discretize a 2D domain and determine values for dimensions in 2D that are sufficiently large. Because of this, the exploration of computational domain size is an expensive task.
+To ease computations, grid stretching is applied to allow higher resolution around the fault or in the vicinity of the frictional portion of the fault.
+However, this does not propose a generic approach to tackle the computational challenge for these volume-based numerical methods, and the issue will be more challenging in simulations for 3D benchmark problems.

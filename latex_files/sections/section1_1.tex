@@ -70,7 +70,12 @@ When the friction resistance decreases with increasing velocity, the fault becom
 Velocity weakening regions are often associated with materials or conditions that exhibit unstable slip behavior, such as fault gouge, pore pressure, and fluids.
 
 \subsection{Velocity strengthening region}
+In contrast to velocity weakening region, a velocity strengthening region is characterized by an increase in frictional resistance with increasing slip velocity.
+The velocity strengthening regions tend to promote stable fault behavior, resisting slip and preventing rapid release of stress that leads to earthquakes.
+Instead, fault slip in these regions may occur aseismically.
 
+Velocity strengthening is typically observed in the shallow crust and at greater depths where ductile deformation mechanisms dominate. 
+Conditions such as high confining pressure and high temperature, which promote stable creep and plastic deformation, contribute to this behavior.
 \section{Rate-and-state friction law}
 % \subsection{Rate-and-state friction law}
 Since the recognition that earthquakes probably represent frictional slip instabilities in the 1960s, interest in determining frictional properties has been increased.
@@ -78,9 +83,11 @@ The stability of frictional sliding depends on whether frictional resistance inc
 Laboratory experiments have shown that frictional sliding is mainly a rate-dependent process in a steady-state regime with constant stress and steady velocity.
 Due to this, a state variable needs to be introduced to describe
 \begin{itemize}
-    \item the transient behavior observed in non-steady-state experiments
-    \item healing in hold-and-stick experiments
+    \item the transient behavior observed in non-steady-state experiments, denoted as $a$. This parameter presents the direct effect of the fault slip rate on the frictional resistance. In many rate-and-state friction laws, an increase in slip rate tends to increase the frictional resistance, and $a$ quantifies the strength of this effect. A higher value of $a$ means that the frictional resistance increases more rapidly with slip rate
+    \item healing in hold-and-stick experiments denoted as $b$. This parameter represents the evolutionary effect of the fault slip on the frictional resistance. It quantifies how the frictional resistance evolves over time due to slip history. A positive value of $b$ means that slip tends to decrease the frictional resistance over time, making fault slip easier in the future. A negative value of $b$ implies the opposite, where slip tends to increase the frictional resistance over time, making fault slips harder.
 \end{itemize}
+These parameters are often determined empirically through laboratory experiments. They play a crucial role in modeling the dynamics of earthquakes.
+
 The formulation of such rate-and-state variable has significantly simplified the impacts of several parameters from rheology on the slip rate, which enables the development of numerical models to simulate earthquake cycles.
 
 For most materials, it has been revealed by laboratory experiments on frictional sliding that the following conditions exist:

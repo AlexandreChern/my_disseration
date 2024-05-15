@@ -1,0 +1,44 @@
+\section{Performance: Matrix-free MGCG on GPUs}\label{sec: conjugate}
+
+
+\begin{table*}
+    \caption{Time to perform a direct solve after LU factorization on CPUs vs PCG on GPUs. We report time in seconds and iterations to converge. For AmgX, we report setup + solve time. For our MGCG, setup time is negligible. ``$\mathrm{ns}$'' is short for the number of smoothing steps. GPU results are tested on A100.}
+    \small
+    \centering
+    \begin{tabular}{rrrrrr}
+    \toprule
+    $N$     & Direct Solve  & AmgX (ns = 1) & AmgX (ns = 5)  & SpMV-MGCG (ns = 5)   & MF-MGCG (ns = 5)\\
+    \midrule
+    $2^{10}$  &   0.912 s & (0.0319 s + 0.0243 s) / 25  & (0.0321 s + 0.0435 s) / 17  & 7.019E-2 s / 8   & 2.851E-2 s / 8       \\
+    $2^{11}$ & 6.007 s &  (0.086 s + 0.161 s) / 55   &  (0.086 s + 0.311 s) / 38   & 0.158 s / 7  & 0.0605 s / 7     \\
+    $2^{12}$ & 22.382 s  & (0.310 s + 0.235 s) / 24  &  (0.323 s + 0.488 s) / 15      & 0.564 s / 7  & 0.207 s / 7         \\
+    $2^{13}$ & 134.697 s  & (1.334 s + 1.643 s) / 24   & (1.217 s + 1.865 s) / 16   & 5.028 s / 7   & 0.865 s / 7      \\
+    \bottomrule
+    \end{tabular}
+    \label{tab:mgcg}
+    
+\end{table*}
+
+With the matrix-free action of $\boldsymbol{A}$ established, we can solve system \eqref{eqn: final} with a matrix-free version of our custom MGCG method (MF-MGCG). 
+Other than low-level GPU kernels, Julia also supports high-level vectorization for GPU computing, which we utilize extensively in our MGCG code for convenience.
+In this section, we compare its performance against MGCG using the cuSPARSE (matrix-explicit) SpMV (SpMV-MGCG) and also against the state-of-the-art off-the-shelf methods offered by NVIDIA, namely, AmgX - the GPU accelerated algebraic multigrid. The solvers and preconditioners used by AmgX are stored as JSON files. 
+We explored different sample JSON configuration files for AmgX in the source code and found that CG preconditioned by classical AMG performed best for our problem. 
+To maintain a multigrid setup comparable to our MGCG, we modified the \texttt{PCG\_CLASSICAL\_V\_JACOBI.json} to use 1 and 5 smoothing steps with block Jacobi as the smoother.
+% and remove aggressive coarsening. 
+All algorithms stop when the relative residual is reduced to less than $10^{-6}$ times the initial residual.
+We report our results in Table \ref{tab:mgcg}. Also included in the table are results using a direct solve (using LU factorization in LAPACK in Julia) only because it is so often used in the earthquake cycle community for volume based codes \cite{erickson2020community} and our developed methods offer promising alternatives. As illustrated, the GPU-accelerated iteratives schemes achieve much better performance for the problem sizes tested.
+
+Table \ref{tab:mgcg} illustrates that our MGCG method uses fewer iterations to converge compared to AmgX, while iterations for both remain generally constant with increasing problem size. When we increase smoothing steps from 1 to 5, the AmgX sees reduced iterations, but the time to solve also increases by roughly $3\times$.
+%This increase in time to solve is more noticeable for smaller problems with $N=2^{10}, 2^{11}, 2^{12}$.
+Because we apply rediscretization (rather than Galerkin coarsening) for MGCG, the setup time is negligible.
+The setup time in the AmgX is comparable to the solve time however, which adds additional cost to use AmgX as a solver.
+Our SpMV-MGCG is roughly 2$\times$ slower than the AmgX using 1 smoothing step, but our MF-MGCG is faster than AmgX, up to $2\times$ speedup for $N = 2^{13}$.
+Compared to our SpMV-MGCG, our MF-MGCG achieves more than $2\times$ speedup, and the speedup is more obvious at $N=2^{13}$, indicating that the MF-MGCG is suitable for large problems.
+
+
+In this chapter, we present a matrix-free implementation of the multigrid preconditioned conjugate gradient in order to solve 2D, variable coefficient elliptic problems discretized with an SBP-SAT method.
+Our customed multigrid preconditioner achieves similar preconditioning performance against the multigrid using Galerkin's condition from previous work, and it is more suitable for GPU code.
+The MGCG algorithm requires a nearly constant number of iterations to converge for various problem sizes. 
+We used Nsight Compute to analyze the performance of our matrix-free kernel. This offers us more insights into the achieved computation and memory performance, which points to directions for future kernel-level optimizations on newer GPU architectures.
+
+This work is a fundamental first step towards high-performance implementations to solve linear systems using SBP-SAT methods. Future work will target SBP-SAT methods with higher-order accuracy in 3D, as well as explorations of additional GPU kernel optimization and multi-GPU implementation. We also plan to improve the performance of the preconditioner by systematic experiments with different preconditioner configurations using PETSc and applying second-order smoothers that have exhibited improved performance in the multigrid method as well as the mixed-precision techniques ~\cite{golub1961chebyshev,gutknecht2002chebyshev,abdelfattah2021survey}.

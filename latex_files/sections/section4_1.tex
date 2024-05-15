@@ -101,15 +101,16 @@ is SPD \citep{Erickson2022}, and matrices
 \begin{equation}
     \boldsymbol{C}_k = -{\bf L}_k^T {\bf G}_k - {\bf G}_k^T {\bf L}_k + {\bf L}_k^T \boldsymbol{H}_k \boldsymbol{\tau}_k {\bf L}_k.
 \end{equation}
-% Right-hand side vector $\boldsymbol{b}$ is given by
-% \begin{equation}
-%    {\boldsymbol{b}} = \left(\boldsymbol{H} \otimes \boldsymbol{H} \right)\left[\boldsymbol{J}\boldsymbol{f} + \sum_k \boldsymbol{K}_k \boldsymbol{g}_{k}\right]
-% \end{equation}
-% which encodes the source term and boundary data.  Here matrices $\boldsymbol{K}$ depend on boundary conditions; for those given in \eqref{eqn:2Dvar} they are
-% \begin{align}
-%     \boldsymbol{K}_1 &= \boldsymbol{L}_1^T  \boldsymbol{H}_1  {\boldsymbol\tau}_1 - \boldsymbol{G}_1^T \\
-%  \boldsymbol{K}_2 &= \boldsymbol{L}_2^T  \boldsymbol{H}_2  {\boldsymbol\tau}_2 - \boldsymbol{G}_2^T \\
-%   \boldsymbol{K}_3 &= \boldsymbol{L}_3^T \boldsymbol{H}_3\\
-%     \boldsymbol{K}_4 &= \boldsymbol{L}_4^T \boldsymbol{H}_4.
-% \end{align}
-%  Note that $\boldsymbol{A}$ includes contributions from both volume operators ($\tilde{\boldsymbol{M}}^{c_{ij}}_{ij}$) and from the SAT enforcement of boundary terms ($\boldsymbol{C}_k$), and differs from the traditional discrete Laplacian near all domain boundaries; see Figure \ref{fig:sparsity_A}. At Dirichlet boundaries (faces 1 and 2), $\boldsymbol{C}_k$ modifies the layer of three points normal to the face (i.e. the SAT imposition penalizes all points used in the computation of the derivative normal to the face).
+
+Right-hand side vector $\boldsymbol{b}$ is given by
+\begin{equation}
+   {\boldsymbol{b}} = \left(\boldsymbol{H} \otimes \boldsymbol{H} \right)\left[\boldsymbol{J}\boldsymbol{f} + \sum_k \boldsymbol{K}_k \boldsymbol{g}_{k}\right]
+\end{equation}
+which encodes the source term and boundary data.  Here matrices $\boldsymbol{K}$ depend on boundary conditions; for those given in \eqref{eqn:2Dvar} they are
+\begin{align}
+    \boldsymbol{K}_1 &= \boldsymbol{L}_1^T  \boldsymbol{H}_1  {\boldsymbol\tau}_1 - \boldsymbol{G}_1^T \\
+ \boldsymbol{K}_2 &= \boldsymbol{L}_2^T  \boldsymbol{H}_2  {\boldsymbol\tau}_2 - \boldsymbol{G}_2^T \\
+  \boldsymbol{K}_3 &= \boldsymbol{L}_3^T \boldsymbol{H}_3\\
+    \boldsymbol{K}_4 &= \boldsymbol{L}_4^T \boldsymbol{H}_4.
+\end{align}
+ Note that $\boldsymbol{A}$ includes contributions from both volume operators ($\tilde{\boldsymbol{M}}^{c_{ij}}_{ij}$) and from the SAT enforcement of boundary terms ($\boldsymbol{C}_k$), and differs from the traditional discrete Laplacian near all domain boundaries; see Figure \ref{fig:sparsity_A}. At Dirichlet boundaries (faces 1 and 2), $\boldsymbol{C}_k$ modifies the layer of three points normal to the face (i.e. the SAT imposition penalizes all points used in the computation of the derivative normal to the face).
