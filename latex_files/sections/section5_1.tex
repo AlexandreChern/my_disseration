@@ -47,6 +47,34 @@ for bulk modulus $K$ and shear modulus $\mu$. The strain-displacement relations 
     \epsilon_{ij} = \frac{1}{2} \left[\frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i}\right]
 \end{equation}
 
-In next two sections, we apply HPC algorithms to two SEAS benchmark problems to accelerate simulations.
-It's difficult to apply direct methods due to their high memory requirements and computational inefficiency. 
 The description of these benchmark problems can be found in \cite{erickson2018seas,jiang2020seas}.
+
+To simulate the SEAS problems using the quasi-static method, it usually follows these steps.
+
+\begin{algorithm}
+    \caption{Quasi-static Formulation Algorithm}
+    \begin{algorithmic}[1]
+        \State \textbf{Step 1:} Initialize boundary conditions and state variables
+        
+        \While{simulation time not reached}
+            \State \textbf{Step 2:} Solve steady-state problems to obtain displacements
+            \State \hspace{1em} In 2D, Solve Poisson's equation
+            \State \hspace{1em} In 3D Solve linear elasticity
+            
+            \State \textbf{Step 3:} Calculate stress from displacements
+            
+            \State \textbf{Step 4:} Calculate displacement velocity using stress and rate-and-state frictions
+            
+            \State \textbf{Step 5:} Determine time step size ($dt$) using ODE solver
+            
+            \State \textbf{Step 6:} Calculate state variables using aging law and $dt$
+            
+            \State \textbf{Step 7:} Update boundary conditions using velocity and $dt$
+        \EndWhile
+    \end{algorithmic}
+\end{algorithm}
+
+The DifferentialEquations.jl package provides powerful adapted ODE solvers based on Runge-Kutta methods and useful ODE interfaces that allow us to modify data and write to outputs.
+The key challenge here is step 2 which requires solving a large linear system that is formed with the SBP-SAT methods.
+It's difficult to apply direct methods due to their high memory requirements and computational inefficiency. 
+In the next two chapters, we will go into detail to first formulate the linear systems using the SBP-SAT methods and then apply HPC algorithms to solve such problems.
