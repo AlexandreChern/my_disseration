@@ -78,3 +78,117 @@ The DifferentialEquations.jl package provides powerful adapted ODE solvers based
 The key challenge here is step 2 which requires solving a large linear system that is formed with the SBP-SAT methods.
 It's difficult to apply direct methods due to their high memory requirements and computational inefficiency. 
 In the next two chapters, we will go into detail to first formulate the linear systems using the SBP-SAT methods and then apply HPC algorithms to solve such problems.
+
+
+\subsection{Solving for rate-and-state friction}
+Rate-and-state friction plays a central role in all SEAS problems. 
+The friction coefficient function $f$ in SEAS problems is given as a regularized formulation
+\begin{equation}
+    f(V, \theta) = a \sinh^{-1} [\frac{V}{V_0} \exp{\frac{f_0 + b \ln(V_0 \theta / L)}{a}}]
+    \label{eqn:friction-coefficient}
+\end{equation}
+
+$f_0$ represents the reference friction coefficient. $V_0$ represents slip rate, and $a$ and $b$ are rate-and-state parameters. For benchmark problem 1 and 5, $b$ is constant as $b_0$, but $a$ varies throughout computational domain \text{$\Omega$}{$_f$} in order to define velocity-weakening and velocity-strengthening regions. We will define them in respective sections differently.
+
+The state variable $\theta$ evolves according to the aging law
+\begin{equation}
+    \frac{d\theta}{dt} = 1 - \frac{V\theta}{L}
+    \label{eqn:aging-law}
+\end{equation}
+
+The fault strength is given as 
+\begin{equation}
+    \textbf{F} = \bar{\sigma}_n f(V,\theta) \frac{\textbf{V}}{V}
+    \label{eqn:fault-strength}
+\end{equation}
+where \textbf{F} and \textbf{V} are vectors and $V$ is the norm of the \textbf{V}.
+The rate-and-state friction where shear stress on fault is equal to fault strength \textbf{F}.
+In Quadsi-static simulations, fault displacements are solved given governing equations and boundary conditions. 
+Shear stress is calculated using displacements on fault.
+In equation \ref{eqn:fault-strength} and \ref{eqn:friction-coefficient}, we can solve for $V$ and then calculate components of $V$ based on components of \textbf{F}. 
+This significantly simplifies the calculation and improves numerical accuracy due to the magnitude differences between different components of \textbf{F} and \textbf{V}.
+
+Once all parameters in Equation \ref{eqn:friction-coefficient} and \ref{eqn:fault-strength} are known along shear stress calculated from displacements, it is common to apply Newton's method given in Algorithm \ref{alg:newton} to solve the non-linear equation to obtain $V$.
+\begin{algorithm}
+\caption{Newton's Method}
+\begin{algorithmic}[1]
+\State Initialize $x_0$
+\State Set tolerance $\epsilon$
+\State Set maximum number of iterations $N_{\max}$
+\For{$k = 0, 1, 2, \ldots, N_{\max}$}
+    \State Compute $f(x_k)$ gradient $\nabla f(x_k)$
+    % \State Compute Hessian $\nabla^2 f(x_k)$
+    % \If{$\nabla^2 f(x_k)$ is not positive definite}
+    %     \State Modify Hessian to be positive definite (e.g., $\nabla^2 f(x_k) + \lambda I$ where $\lambda > 0$)
+    % \EndIf
+    \State Determine search direction $d_k = -(\nabla f(x_k))^{-1}f(x_k)$
+    \State Perform line search to find step size $\alpha_k$ such that $f(x_k + \alpha_k d_k) < f(x_k)$
+    \State Update $x_{k+1} = x_k + \alpha_k d_k$
+    \If{$\|\nabla f(x_{k+1})\| < \epsilon$}
+        \State Convergence achieved
+        \State \textbf{break}
+    \EndIf
+\EndFor
+\Return $x_{k+1}$
+\end{algorithmic}
+\label{alg:newton}
+\end{algorithm}
+
+In our problem with high nonlinearity from the $\sinh^{-1}$ function, to improve numerical stability, we also need to apply the ``safe-guarded'' method.
+One commonly used method is called bisection, it uses a similar approach to binary search. 
+Based on the functional values of a close range $[x_L, x_r]$, it updates the search range of the root $x$.
+Newton's method modified with Bisection is given in Algorithm \ref{agl:newton-bisec}.
+
+\begin{algorithm}
+\caption{Newton's Method with Bisection}
+\begin{algorithmic}[1]
+\State Initialize $x_0$, bounds [$x_L$, $x_R$], and $x = (x_L + x_R) / 2$
+\State Set tolerance $\epsilon_a$, $\epsilon_r$ and step size $\alpha_k = x_R - x_L$
+\State Set maximum number of iterations $N_{\max}$
+\For{$k = 0, 1, 2, \ldots, N_{\max}$}
+    \State Compute $f(x_k)$ and gradient $\nabla f(x_k)$
+    % \State Compute Hessian $\nabla^2 f(x_k)$
+    \State Compute $f_L$, $f_R$ as $f(x_L), f(x_R)$  
+    % \If{$\nabla^2 f(x_k)$ is not positive definite}
+    %     \State Modify Hessian to be positive definite (e.g., $\nabla^2 f(x_k) + \lambda I$ where $\lambda > 0$)
+    % \EndIf
+    \State Determine search direction $d_k = -(\nabla f(x_k))^{-1} f(x_k)$
+    \State Perform line search to find step size $\alpha_k$ such that $f(x_k + \alpha_k d_k) < f(x_k)$
+    \State Update $x_{k+1} = x_k + \alpha_k d_k$
+    \If{$x_k < x_L$ or $x_k > x_R$}
+        \State $x_k = (x_L + x_R) / 2$
+        \State $\alpha_k = (x_R - x_L) / 2$
+    \EndIf
+    \If{$f(x_k) * f_L > 0$  }
+        \State $(f_L, x_L) = (f, x_k)$
+    \Else
+        \State $(f_R, x_R) = (f, x_k)$
+    \EndIf
+    
+    
+    \If{$\|\nabla f(x_{k+1})\| < \epsilon_a$ and $\|\alpha_k\| < \epsilon_a + \epsilon_r * (\|\alpha_k\| + \|x\|))$}
+        \State Convergence achieved
+        \State \textbf{break}
+    \EndIf
+\EndFor
+\Return $x_{k+1}$
+\end{algorithmic}
+\label{agl:newton-bisec}
+\end{algorithm}
+
+Because $V$ is solved for each grid point independently, the above methods can be implemented using vectorized approach either on CPUs or GPUs.
+Logical operations used in the control branch can be implemented using $masks$, which is a common technique in parallelization. 
+The above calculations, although complex in numerical form and involving key concepts in earthquake cycle simulations and rate-and-state friction laws are actually very cheap and can be accelerated easily using vectorized operations. It is not the focus of this thesis.
+
+\subsection{Methods of Lines}
+Governing equations in SEAS problems, like many other PDEs, involve both time and space.
+Methods of Lines (MOL) is a common approach to solving these PDEs.
+The basic idea of MOL is to replace the spatial derivatives in PDE with algebraic approximations such as the SBP-SAT method in our work.
+Once this is done, the spatial derivatives are no longer explicitly dependent on spatial independent variables.
+Thus, the only variable left is $t$.
+In other words, we have a system of ODEs that approximate the original PDE and use various ODE solvers to solve the original PDE.
+Since ODE solver is not the focus of this thesis, we use the default and the mostly recommended ODE solver \texttt{tsit5()} provided in DifferentialEquations.jl \cite{TSITOURAS2011770}.
+This is an adaptive ODE solver based on the Runge-Kutta pair of orders 5(4).
+The numerical stability of ODE solvers plays an important role in numerical solutions to PDEs, and they affect the simulation results and running time significantly in our research. 
+However, this thesis is on the spatial discretization part of the MOL using the SBP-SAT method, which we will discuss in the next section in detail for BP1 and BP5 separately.
+Contents related to ODE solvers will only be briefly mentioned without detailed discussion and analysis.
