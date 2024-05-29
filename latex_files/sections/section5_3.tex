@@ -1,4 +1,80 @@
-\section{BP5-QD}
+\section{BP5-QD problem}
+\subsection{Problem description}
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/BP5-figure.png}
+    \caption{This benchmark considers 3D motion with a planar fault embedded vertically in a homogeneous, linear elastic whole-space. The fault is governed by rate-and-state friction in the region $0 \leq x_3 \leq W_\text{f}$ and $|x_2| \leq l_f/2$, outside of which it creeps at an imposed constant horizontal rate Vp (gray). The velocity weakening region (the rectangle in light and dark green; $h_s + h_t \leq x_3 \leq h_s + h_t + H$ and $|x_2| \leq l/2)$ is surrounded by a transition zone (yellow) of width ht to velocity strengthening regions (blue). A favorable nucleation zone (dark green square with width $w$) is located at one end of the velocity-weakening patch. \cite{jiang2020seas}}
+    \label{fig:BP5-figure}
+\end{figure}
+
+
+\subsection{Boundary and Interface conditions}
+At $x_1 = 0$, the fault defines the interfaces.
+A free surface lies at $x_3 = 0$, where all components of traction have $0$ value.
+This condition is written in the following form
+\begin{equation}
+    \sigma_{j3}(x_1, x_2, 0, t) = 0,\quad j = 1,2,3
+\end{equation}
+We assume a "non-opening condition" on the fault
+\begin{equation}
+    u_1(0^+, x_2, x_3, t) = u_1(0^-, x_2, x_3, t)
+\end{equation}
+For $j=2,3$, we define the slip vector as the jump in horizontal and vertical displacements across the fault.
+\begin{equation}
+    s_j(x_2, x_3, t) = u_j(0^+, x_2, x_3, t) - u_j(0^-, x_2, x_3, t),\quad j = 2,3
+\end{equation}
+We require that components of the traction vector be equal and opposite across the fault, which yields three conditions
+\begin{align}
+    -\sigma_{11} \left(0^+, x_2, x_3, t\right) &= -\sigma_{11} \left(0^-, x_2, x_3, t\right), \\
+    \sigma_{21} \left(0^+, x_2, x_3, t\right) &= \sigma_{21} \left(0^-, x_2, x_3, t\right), \\
+    \sigma_{31} \left(0^+, x_2, x_3, t\right) &= \sigma_{31} \left(0^-, x_2, x_3, t\right),
+\end{align}
+We denote these three common values as $\sigma$ (positive means compression), $\tau$ and $\tau_z$ respectively. 
+In the simulation, $\tau$ and $\tau_z$ are key values calculated from the displacements and are used in the rate-and-state friction.
+We also export the log of these two values to the output files.
+
+Most parameters are given in the problem description. The key value is the rate-and-state friction $a$, given in the following form
+
+\begin{equation}
+    a(x_2, x_3) =
+\begin{cases} 
+a_0, & (h_s + h_t \leq x_3 \leq h_s + h_t + H) \cap (|x_2| \leq l/2) \\
+a_{\text{max}}, & (0 \leq x_3 \leq h_s) \cup (h_s + 2h_t + H \leq x_3 \leq W_f) \\ & \cup (l/2 + h_t \leq |x_2| \leq l_f/2) \\
+a_0 + r(a_{\text{max}} - a_0), & \text{other regions}
+\end{cases}
+\end{equation}
+where $r = \max(|x_3 - h_s - h_t - H/2| - H/2, |x_2| - l/2)/h_t$.
+
+
+Outside the domain $\Sigma_f$ ($|x_3| > W_\text{f}$ or $|x_2| > l_\text{f} / 2$ as denoted in the grey region in the Figure \ref{fig:BP5-figure}), the fault creeps horizontally at an imposed constant rate
+\begin{align}
+    V_2(x_2, x_3, t) &= V_\text{p} \\
+    V_3(x_2, x_3, t) &= 0
+\end{align}
+where $V_\text{p}$ is the plate rate.
+
+We also need to specify the initial conditions for the simulation.
+We assume that slip on the fault separating identical materials does not change normal traction, so $\sigma_n$ remains constant.
+
+The initial state and prestress on the fault is chosen so that the model can start with a uniform fault slip rate, given by $\textbf{V} = [V_\text{init}, V_\text{zero}]$ where $V_\text{zero}$ is chosen as $10^{-20}m/s$ to avoid infinite log values in the output, and $\boldsymbol{\tau}^0 = \tau^0 \textbf{V} / V$.
+
+The initial state variable is chosen as the steady state at slip rate $V_\text{init}$ over the entire fault 
+\begin{equation}
+    \theta(x_2, x_3, 0) = L / V_\text{init}
+\end{equation}
+
+For the BP5-QD problem, we also need to specify an initial value for the slip, which we set to be zero.
+\begin{equation}
+    s_j(x_2, x_3, t) = 0, j = 2, 3
+\end{equation}
+The scalar pre-stress $\tau^0$ is chosen as the steady-state stress
+\begin{equation}
+    \tau^0 = \bar{\sigma}_\text{n} a \sinh^{-1}[\frac{V_\text{init}}{2V_0}\exp(\frac{f_0 + b\ln(V_0/V_\text{init}}{a})] + \eta V_\text{init}
+\end{equation}
+To break the symmetry of the problem and facilitate comparisons of different simulations, we choose a small region as a favorable location for nucleation to impose a smaller critical slip distance ($L=0.13m$) and higher initial slip rate along the $x_2$-direction ($V_i = 0.03 m/s$) while keeping the initial state variable $\theta(x_2, x_3, 0)$ unchanged. The means we impose higher pre-stress along the $x_2$-direction.
+
+We use the recommended parameters from the problem description and perform initial simulations for 1800 years.
+
 \subsection{SBP-SAT formulations for BP5-QD}
 For this 3D problem, we use SBP-SAT methods similar to \cite{ALMQUIST2021109842} to formulate our linear system.
 To solve the linear elasticity in 3D, we need to solve for the displacements in $x$, $y$, and $z$ directions for each point.
@@ -92,34 +168,31 @@ For Dirichlet conditions, we have
 
 
 \subsection{Discretization and parameters selection}
-We discretize the problem on a truncated 128km $\times$ 128km $\times$ 128 km domain. The simulation parameters are chosen to be the values in \cite{jiang2020seas}. We run our simulations for 3000 years and compare our results with results from other researchers on similar problems.
+We discretize the problem on a truncated 128km $\times$ 128km $\times$ 128 km domain. The simulation parameters are chosen to be the values in \cite{jiang2020seas}. We run our simulations for 1800 years and compare our results with results from other researchers on similar problems.
 
 To add more content ... 
 
 \subsection{Results comparison}
 We first compare our results using BEMs. This method only requires solving problems on the fault surface, and does not require domain truncation. Previous results have shown that domain truncation in volume-based methods would affect earthquake cycles
 
-We first look at the changes in shear stress along the slip direction for a sample location on the fault. We can compare our results with Cattania's group using boundary element methods. We see similar ranges of state variables and similar behaviors of jumps in state variables during the transition between aseismic slips and seismic slips.
+We first look at the changes in shear stress along the slip direction for a sample location on the fault. We compare our results with Cattania's group using boundary element methods and plot the result in Figure \ref{fig:bp5-shearstress}. We see similar ranges of state variables and similar behaviors of jumps in state variables during the transition between aseismic slips and seismic slips. We then compare the slip for the same location on the fault and plot them in Figure \ref{fig:bp5-slip2}.
 
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figures/sample-shearstress.png}
     \caption{Comparison of shear stress along slip directions}
-    \label{fig:enter-label}
+    \label{fig:bp5-shearstress}
 \end{figure}
-
-We then compare the slip for the same location on the fault.
 
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figures/sample-slip-2.png}
     \caption{Comparison of shear stress along slip directions}
-    \label{fig:enter-label}
+    \label{fig:bp5-slip2}
 \end{figure}
 
 Preliminary results have shown agreement in the modeling of the same problems using different methods.
 Current results from other simulations are mainly based on boundary element methods, which take hours to run.
 Our methods are volume-based and have more than 100 times higher degrees of freedom.
-With the GPU-accelerated approach, our simulation time is cut to around ~4 hours, this is down from weeks and months of estimated time using direct methods if we have sufficient large enough memory for matrix factorization.
-
-More results will be added to this subsection ...
+With the GPU-accelerated MGCG as a solver, our simulation time is cut to around ~8 hours, with around $0.2s$ for each round of solving linear system and updating values. 
+This is down from weeks and months of estimated time using direct methods if we have sufficient large enough memory for matrix factorization.
