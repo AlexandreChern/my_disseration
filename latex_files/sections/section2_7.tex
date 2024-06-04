@@ -1,6 +1,6 @@
 
 %%%%%% Algorithms
-To apply muiltigrid efficiently for the SBP-SAT method on GPUs, we need to develop a new geometric multigrid formulation that does not require using algebraic coarsening or Galerkin's condition.
+To apply multigrid efficiently for the SBP-SAT method on GPUs, we need to develop a new geometric multigrid formulation that does not require using algebraic coarsening or Galerkin's condition.
 
 Matrix-free iterative methods enable the solution to larger problems compared to a direct solve that requires storing a matrix factorization.  However, the convergence of CG depends predominantly on the condition number and quality of the initial guess. The condition number can be reduced through preconditioning techniques, but the preconditioning matrix $\mathbf{M}$ has to be SPD and fixed, and although it need not be explicitly assembled nor inverted, good preconditioners should satisfy $\mathbf{M} \approx \mathbf{A}^{-1}$. 
 

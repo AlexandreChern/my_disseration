@@ -1,11 +1,11 @@
 \subsection{Parallel Implementation of Iterative Methods}
 \label{section:parallel}
-The iterative methods are ideal for their low memory requirements, and this becomes extremely important as the simulations in many fields of study have moved towards three-dimensional models. Another appealing part of iterative methods is that they are far easier to implement in parallel than sparse direct methods because they only require a small set of computational kernels. However, iterative methods are usually slower than direct methods, requiring suitable preconditioning techniques for accelerated convergence. The parallel aspect of preconditioners also becomes very important naturally.
+The iterative methods are ideal for their low memory requirements, and this becomes extremely important as the simulations in many fields of study have moved towards three-dimensional models. Another appealing part of iterative methods is that they are far easier to implement in parallel than sparse direct methods because they only require a small set of computational kernels. However, iterative methods are usually slower than direct methods, especially for smaller problems, requiring suitable preconditioning techniques for accelerated convergence. The parallel aspect of preconditioners also becomes very important naturally.
 
 This subsection gives a short overview of various parallel architectures as well as different types of operations in iterative methods that can be parallelized.
 
 % \subsubsection{Different Parallel Architectures}
-There are currently three leading architectures of parallel models around which modern parallel processors are designed. These are
+There are currently three leading architectures of parallel models around which modern parallel computers are designed. These are
 \begin{itemize}
     \item The shared-memory model
     \item Single-instruction-multiple-data (SIMD)
@@ -49,7 +49,7 @@ The \textit{distributed memory} model can refer to distributed memory SIMD archi
 
 In the SIMD model, a different approach is used. A host processor stores the program and each slave processor holds different data. The host broadcasts instructions to each processor to execute them simultaneously. One advantage of this approach is that there is no need for large memories in each node to store the main program since the same instructions are broadcast to each processor.
 
-Unlike the shared-memory model, distributed memory computers can easily exploit the data locality of data to reduce communication costs. Modern GPUs are designed with the SIMD model \cite{owens2008gpu}, and clusters with multiple CPUs are connected using a message passing interface (MPI) \cite{barker2015message}.
+Unlike the shared-memory model, distributed memory computers can easily exploit the data locality of data to reduce communication costs. Modern GPUs are designed with the SIMD model (more accelerately Single-instruction-multiple-threads, SIMT) \cite{owens2008gpu}, and clusters with multiple CPUs are connected using a message passing interface (MPI) \cite{barker2015message}.
 
 
 \subsection{Key Operations in Parallel Implementation}
@@ -64,7 +64,7 @@ We use the preconditioned Conjugate Gradient to demonstrate the typical operatio
     \item Preconditioning operations
 \end{itemize}
 
-Matrix-vector multiplications, vector updates, and dot products are common operations in so-called Basic Linear Algebra Subprograms (BLAS) that can be easily parallelized and have been well studied and implemented \cite{10.1145/77626.79170,chtchelkanova1997parallel,freeman1992parallel}. In terms of the computational costs, the vector update and dot product are much lower compared to the matrix-vector multiplication, which can still be carried out very quickly on the latest GPUs. The tricky part or the bottleneck for both memory and the runtime lies in the first step of preconditioner setup and the last step of preconditioning operations. We will discuss these two key operations in the next subsection. For now, let's focus on the Matrix-vector multiplication that has much higher computational costs than the vector update and the dot product.
+Matrix-vector multiplications, vector updates, and dot products are common operations in so-called Basic Linear Algebra Subprograms (BLAS) that can be easily parallelized and have been well studied and implemented for dense matrices\cite{10.1145/77626.79170,chtchelkanova1997parallel,freeman1992parallel}. In terms of the computational costs, the vector update and dot product are much lower compared to the matrix-vector multiplication, which can still be carried out very quickly on the latest GPUs. The tricky part or the bottleneck for both memory and the runtime lies in the first step of preconditioner setup and the last step of preconditioning operations. We will discuss these two key operations in the next subsection. For now, let's focus on the Matrix-vector multiplication that has much higher computational costs than the vector update and the dot product.
 
 \subsubsection{Sparse Matrix-vector Products}
 The linear system coming from the discretization in the finite difference method is often sparse, which allows us to store them efficiently and use sparse matrix-vector products (SpMVs) for efficient computation. Different formats for storing sparse matrices can be found in \cite{saad2003iterative}. Compressed Sparse Row (CSR) sparse matrix format is one of the earliest sparse formats developed. It is ideal for parallelization since the data from each row can be handled independently. The SpMV algorithm for CSR format as well as the demonstration of the storage scheme of the CSR format is shown in \autoref{fig:csr}
@@ -228,7 +228,7 @@ Other polynomials include least-squares polynomials. A comparison of Chebyshev p
 Multicolor preconditioners are similar to ILU preconditioners in the sense that the construction and factorization of the matrices are required. Methods like these can be done in parallel, but they are not suitable for GPUs.
 
 
-\subsection{CUDA architecture and CUDA}
+\subsection{GPU architecture and CUDA}
 Given the increasing importance and popularity of GPUs in modern supercomputers, this subsection is dedicated to GPU architecture. As NVIDIA GPUs are mostly used in the industry for scientific computing and machine learning, the GPU programming model will be focused on CUDA (Compute Unified Device Architecture) toolkit.
 
 A GPU is built as a scalable array of multithreaded \textit{Streaming Multiprocessors} (SMs), each of which consists of multiple \textit{Scalar Processor} (SP) cores. To manage hundreds or thousands of threads, the multiprocessors employ a \textit{Single Instruction Multiple Threads} (SIMT) model with each thread mapped into one SP core and executing independently with its own instruction address and register state \cite{wilt2013cuda}. 

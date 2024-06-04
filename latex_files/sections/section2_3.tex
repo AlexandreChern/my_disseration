@@ -1,5 +1,4 @@
-
-This section will present a brief review of iterative methods for solving large linear systems in our research.
+This section will present a brief review of iterative methods for solving large linear systems in our research. Many concepts and theorems are presented in \cite{doi:10.1137/1.9780898718003} and we will point the detailed information and proofs to the book.
 \subsection{Stationary Iterative Methods}
 \label{sec:iterative-methods}
 Stationary iterative methods can be expressed in the simple form
@@ -128,7 +127,7 @@ where $A \in \mathbb{C}^{n\times n}$ and $\boldsymbol{v} \in \mathbb{C}^n$
 
 
 \subsubsection{Conjugate Gradient Method}
-The conjugate gradient (CG) method was developed by \textit{Hestenes \& Stiefel} \cite{hestenes1952methods} as the first Krylov subspace method, and has been one of the most popular iterative methods in solving linear systems. Compared to the iterative methods mentioned in previous sections which are known to be stationary, the CG method is non-stationary. Let $\boldsymbol{A} \in \mathbb{R}^{n\times n}$ be a symmetric positive definite (SPD) matrix, and $\boldsymbol{f} \in \mathbb{R}^n$ be a real vector, then the minimization problem of the quadratic form $F(x) = min$
+The conjugate gradient (CG) method was developed by \textit{Hestenes \& Stiefel} \cite{hestenes1952methods} as one of the first Krylov subspace methods, and has been one of the most popular iterative methods in solving linear systems. Compared to the iterative methods mentioned in previous sections which are known to be stationary, the CG method is non-stationary. Let $\boldsymbol{A} \in \mathbb{R}^{n\times n}$ be a symmetric positive definite (SPD) matrix, and $\boldsymbol{f} \in \mathbb{R}^n$ be a real vector, then the minimization problem of the quadratic form $F(x) = min$
 \begin{equation}
     F(\boldsymbol{u}) = \frac{1}{2}\boldsymbol{u}^T\boldsymbol{A}\boldsymbol{u} - \boldsymbol{f}^T\boldsymbol{u}
 \end{equation}

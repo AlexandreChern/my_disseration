@@ -61,7 +61,7 @@ The matrix $\boldsymbol{M}^{-1}$ should be symmetric and positive definite. Even
 
 \subsection{General Convergence Results}
 \label{section:convergence-analysis}
-In this section, we examine the convergence behaviors of the general preconditioners above. The detailed analysis can be found in \cite{saad2003iterative}. We choose the most important results to present here with notations adapted to match the other sections of the paper.
+In this section, we examine the convergence behaviors of the general preconditioners above. The detailed analysis can be found in \cite{doi:10.1137/1.9780898718003}. We choose the most important results to present here with notations adapted to match the other sections of the paper.
 All methods seen in the previous section define a sequence of iterates of the form
 \begin{equation}
     \boldsymbol{u}^{k+1} = \boldsymbol{Q}\boldsymbol{u}^k + \boldsymbol{q}
@@ -94,10 +94,11 @@ If the spectral radius of the iteration matrix $\boldsymbol{Q}$ is less than 1, 
 
 shows that if the iteration converges for any $\boldsymbol{u}^0$ and $\boldsymbol{q}$, then $\boldsymbol{Q}^k\boldsymbol{b}$ converges to zero for any vector $\boldsymbol{b}$. As a result, $\rho(\boldsymbol{Q})$ must be less than 1. The following theorem is proved:
 \begin{theorem}
-Let $\boldsymbol{Q}$ be a square matrix such that $\boldsymbol{Q} < 1$. Then $\boldsymbol{I} - \boldsymbol{Q}$ is non-singular and iteration \autoref{eqn:iter-eqn-1} converges for any $
+Let $\boldsymbol{Q}$ be a square matrix such that $\rho(\boldsymbol{Q}) < 1$. Then $\boldsymbol{I} - \boldsymbol{Q}$ is non-singular and iteration \autoref{eqn:iter-eqn-1} converges for any $
 \boldsymbol{q}$ and $\boldsymbol{u}^0$. Conversely, if the iteration \autoref{eqn:iter-eqn-1} converges for any $\boldsymbol{q}$ and $\boldsymbol{u}^0$, then $\rho(\boldsymbol{Q}) < 1$
 \end{theorem}
-Since it is often expensive to compute the spectral radius of a matrix, sufficient conditions that guarantee convergence can be useful in practice. One such sufficient condition could be obtained by utilizing the inequality $\rho(\boldsymbol{Q} \leq ||\boldsymbol{Q}||)$ for any matrix norm.
+The theorem and its proof can be found in \cite{doi:10.1137/1.9780898718003}
+Since it is often expensive to compute the spectral radius of a matrix, sufficient conditions that guarantee convergence can be useful in practice. One such sufficient condition could be obtained by utilizing the inequality $\rho(\boldsymbol{Q} \leq ||\boldsymbol{Q}||)$ for any matrix norm \cite{doi:10.1137/1.9780898718003}.
 \begin{corollary}
 Let $\boldsymbol{Q}$ be a square matrix such that $||\boldsymbol{Q}|| < 1$  for some matrix norm $||\cdot||_\cdot$. Then $\boldsymbol{I} - \boldsymbol{Q}$ is non-singular and the iteration \autoref{eqn:iter-eqn-1} converges for any initial vector $\boldsymbol{u}^0$
 \end{corollary}
@@ -106,45 +107,49 @@ Other than knowing that \autoref{eqn:iter-eqn-1} converges, we can also know how
 \begin{equation}
     \boldsymbol{e}^k = \boldsymbol{Q}^k \boldsymbol{e}^0
 \end{equation}
-We can prove this by expressing $\boldsymbol{Q}$ in Jordan canonical form
-\begin{equation}
-    \boldsymbol{Q} = \boldsymbol{X}\boldsymbol{J}\boldsymbol{X}^{-1}
-\end{equation}
-For simplicity, we assume that there is only one eigenvalue of $\boldsymbol{Q}$ of the largest modulus denoted by $\lambda$. Then
-\begin{equation}
-    \boldsymbol{e}^k = \lambda^k\boldsymbol{X}(\frac{\boldsymbol{J}}{\lambda})^k\boldsymbol{X}^{-1}\boldsymbol{e}^0    
-\end{equation}
-The matrix $\boldsymbol{J}/\lambda$ shows that all its blocks, except the block associated with the eigenvalue $\lambda$, converge to zero as $k \to \infty$. Let this Jordan block be of size $p$, and of the form $\boldsymbol{J}_\lambda = \lambda \boldsymbol{I} + \boldsymbol{L}$. Here $\boldsymbol{L}$ is nilpotent of $p$, i.e. $\boldsymbol{L}^p = 0$. Then for $k \geq p$
-\begin{equation}
-    \boldsymbol{J}_\lambda^k =  (\lambda \boldsymbol{I} + \boldsymbol{L})^k = \lambda^k(\boldsymbol{I} + \lambda^{-1}\boldsymbol{L})^{k} = \lambda^k(\sum_{i=0}^{p-1}{\lambda^{-i}{k \choose i}\boldsymbol{L}^i})
-\end{equation}
+The proof can be found in \cite{doi:10.1137/1.9780898718003}
 
-If $k$ is large enough, then for any $\lambda$ the dominant term in the above sum is the last term, i.e.,
-\begin{equation}
-    \boldsymbol{J}_\lambda^k \approx \lambda^{k-p+1}{k \choose p-1}\boldsymbol{L}^{p-1}
-\end{equation}
-Thus, the norm of $\boldsymbol{e}^k = \boldsymbol{Q}^k\boldsymbol{e}^0$ has the asymptotical form
-\begin{equation}
-    ||\boldsymbol{e}^k|| \approx C \times |\lambda^{k-p+1}|{k \choose p-1}
-\end{equation}
-where C is some constant. The \textit{convergence factor} of a sequence is the limit
-\begin{equation}
-    \rho = \lim_{k\to\infty}(\frac{||\boldsymbol{e}^k||}{||\boldsymbol{e}^0||})^{1/k}
-\end{equation}
-From above analysis, $\rho = \rho(\boldsymbol{Q})$. The \textit{convergence rate} $\tau$ is the natural logarithm of the inverse of the convergence factor
-\begin{equation}
-    \tau = - \ln \rho
-\end{equation}
-Note that the above definition depends on the initial vector $\boldsymbol{e}^0$, so it maybe be termed a \textit{specific} convergence factor. A \textit{general} convergence factor can be defined by
-\begin{equation}
-    \phi = \lim_{k\to\infty}(\max_{\boldsymbol{u}^0\in\mathbb{R}^n}\frac{||\boldsymbol{e}^k||}{||\boldsymbol{e}^0||})^{1/k}
-\end{equation}
-This satisfies
-\begin{align}
-\phi &= \lim_{k\to\infty}(\max_{\boldsymbol{u}^0\in\mathbb{R}^n}\frac{||\boldsymbol{Q}^k\boldsymbol{e}^0||}{||\boldsymbol{e}^0||})^{1/k} \\
-&= \lim_{k\to\infty}(||\boldsymbol{Q}^k||)^{1/k} = \rho(\boldsymbol{Q})
-\end{align}
-Thus, the global asymptotic convergence factor is equal to the spectral radius of the iteration matrix $\boldsymbol{G}$. The general convergence rate differs from the specific rate only when the initial error does not have any components in the invariant subspace associated with the dominant eigenvalues. Since it is hard to know a priori, the general convergence factor is more useful in practice.
+% We can prove this by expressing $\boldsymbol{Q}$ in Jordan canonical form
+% \begin{equation}
+%     \boldsymbol{Q} = \boldsymbol{X}\boldsymbol{J}\boldsymbol{X}^{-1}
+% \end{equation}
+% For simplicity, we assume that there is only one eigenvalue of $\boldsymbol{Q}$ of the largest modulus denoted by $\lambda$. Then
+% \begin{equation}
+%     \boldsymbol{e}^k = \lambda^k\boldsymbol{X}(\frac{\boldsymbol{J}}{\lambda})^k\boldsymbol{X}^{-1}\boldsymbol{e}^0    
+% \end{equation}
+% The matrix $\boldsymbol{J}/\lambda$ shows that all its blocks, except the block associated with the eigenvalue $\lambda$, converge to zero as $k \to \infty$. Let this Jordan block be of size $p$, and of the form $\boldsymbol{J}_\lambda = \lambda \boldsymbol{I} + \boldsymbol{L}$. Here $\boldsymbol{L}$ is nilpotent of $p$, i.e. $\boldsymbol{L}^p = 0$. Then for $k \geq p$
+% \begin{equation}
+%     \boldsymbol{J}_\lambda^k =  (\lambda \boldsymbol{I} + \boldsymbol{L})^k = \lambda^k(\boldsymbol{I} + \lambda^{-1}\boldsymbol{L})^{k} = \lambda^k(\sum_{i=0}^{p-1}{\lambda^{-i}{k \choose i}\boldsymbol{L}^i})
+% \end{equation}
+
+% If $k$ is large enough, then for any $\lambda$ the dominant term in the above sum is the last term, i.e.,
+% \begin{equation}
+%     \boldsymbol{J}_\lambda^k \approx \lambda^{k-p+1}{k \choose p-1}\boldsymbol{L}^{p-1}
+% \end{equation}
+% Thus, the norm of $\boldsymbol{e}^k = \boldsymbol{Q}^k\boldsymbol{e}^0$ has the asymptotical form
+% \begin{equation}
+%     ||\boldsymbol{e}^k|| \approx C \times |\lambda^{k-p+1}|{k \choose p-1}
+% \end{equation}
+% where C is some constant. The \textit{convergence factor} of a sequence is the limit
+% \begin{equation}
+%     \rho = \lim_{k\to\infty}(\frac{||\boldsymbol{e}^k||}{||\boldsymbol{e}^0||})^{1/k}
+% \end{equation}
+% From above analysis, $\rho = \rho(\boldsymbol{Q})$. The \textit{convergence rate} $\tau$ is the natural logarithm of the inverse of the convergence factor
+% \begin{equation}
+%     \tau = - \ln \rho
+% \end{equation}
+% Note that the above definition depends on the initial vector $\boldsymbol{e}^0$, so it maybe be termed a \textit{specific} convergence factor. A \textit{general} convergence factor can be defined by
+% \begin{equation}
+%     \phi = \lim_{k\to\infty}(\max_{\boldsymbol{u}^0\in\mathbb{R}^n}\frac{||\boldsymbol{e}^k||}{||\boldsymbol{e}^0||})^{1/k}
+% \end{equation}
+% This satisfies
+% \begin{align}
+% \phi &= \lim_{k\to\infty}(\max_{\boldsymbol{u}^0\in\mathbb{R}^n}\frac{||\boldsymbol{Q}^k\boldsymbol{e}^0||}{||\boldsymbol{e}^0||})^{1/k} \\
+% &= \lim_{k\to\infty}(||\boldsymbol{Q}^k||)^{1/k} = \rho(\boldsymbol{Q})
+% \end{align}
+% Thus, 
+The global asymptotic convergence factor is equal to the spectral radius of the iteration matrix. 
+The general convergence rate differs from the specific rate only when the initial error does not have any components in the invariant subspace associated with the dominant eigenvalues. Since it is hard to know a priori, the general convergence factor is more useful in practice. The above analysis can be found in \cite{doi:10.1137/1.9780898718003}.
 
 Using convergence analysis here, the convergence criteria for several iterative methods such as Richardson's Iteration, and regular splitting can be derived with simpler forms. One type of matrices that is worth notice is diagonally dominant matrices. We begin with a few standard definitions
 \begin{definition}
@@ -177,24 +182,24 @@ In other words,
     \forall \lambda \in \sigma(\boldsymbol{A}), \exists  i \text{ such that} |\lambda - a_{i,i}| \leq \sum_{j = 1, j \neq i}^{j = n}|a_{i,j}|
 \end{equation}
 \end{theorem}
-
-\begin{proof}
-Let $x$ be an eigenvector associated with an eigenvalue $\lambda$, and let $m$ be an index of the component of largest modulus in $\boldsymbol{x}$, scale $\boldsymbol{x}$ so that $|\xi_m| = 1$, and $\xi_i \leq 1, \forall i \neq m$. Since $\boldsymbol{x}$ is an eigenvector, then
-\begin{equation}
-    (\lambda - a_{m,m})\xi_m = - \sum_{j = 1, j \neq m}^{n}a_{m,j}\xi_j
-\end{equation}
-which gives
-\begin{equation}
-    |\lambda - a_{m,m}| \leq \sum_{j = 1, j \neq m}^{n}|a_{m,j}||\xi_j| \leq \sum_{j = 1, j \neq m}^{n}|a_{m,j}| = \rho_m
-\end{equation}
-\end{proof}
-This result also holds for the transpose of $\boldsymbol{A}$, so this theorem can also be formulated based on column sums instead of row sums.
+The theorem and its proof can be found in \cite{doi:10.1137/1.9780898718003}
+% \begin{proof}
+% Let $x$ be an eigenvector associated with an eigenvalue $\lambda$, and let $m$ be an index of the component of largest modulus in $\boldsymbol{x}$, scale $\boldsymbol{x}$ so that $|\xi_m| = 1$, and $\xi_i \leq 1, \forall i \neq m$. Since $\boldsymbol{x}$ is an eigenvector, then
+% \begin{equation}
+%     (\lambda - a_{m,m})\xi_m = - \sum_{j = 1, j \neq m}^{n}a_{m,j}\xi_j
+% \end{equation}
+% which gives
+% \begin{equation}
+%     |\lambda - a_{m,m}| \leq \sum_{j = 1, j \neq m}^{n}|a_{m,j}||\xi_j| \leq \sum_{j = 1, j \neq m}^{n}|a_{m,j}| = \rho_m
+% \end{equation}
+% \end{proof}
+This result also holds for the transpose of $\boldsymbol{A}$, so this theorem can also be formulated either based on column sums or row sums.
 The $n$ discs defined in the theorem are called Gershgorin discs. The theorem states that the union of these n discs contains the spectrum of $\boldsymbol{A}$. It can also be shown that if there are $m$ Gershgorin discs whose union $S$ is disjoint from all other discs, then $S$ contains exactly $m$ eigenvalues (with multiplicities counted). 
 Additional refinement which has important consequences concerns of a particular case when $\boldsymbol{A}$ is irreducible is given here.
 \begin{theorem}
 Let $\boldsymbol{A}$ be an irreducible matrix and assume that an eigenvalue $\lambda$ of $\boldsymbol{A}$ lies on the boundary of the union of the $n$ Gershgorin discs. Then $\lambda$ lies on the boundary of all Gershgorin discs
 \end{theorem}
-This theorem and its proof can be found in \cite{saad2003iterative} where an immediate corollary of the Gershgorin theorem and this theorem follows
+This theorem and its proof can be found in \cite{doi:10.1137/1.9780898718003} where an immediate corollary of the Gershgorin theorem and this theorem follows
 \begin{corollary}
 If a matrix $\boldsymbol{A}$ is strictly diagonally dominant or irreducibly diagonally dominant, then it is nonsingular.
 \end{corollary}
@@ -206,4 +211,5 @@ The convergence condition for SPD matrices is given as follows
 \begin{theorem}
 if $\boldsymbol{A}$ is symmetric with positive diagonal elements and for $0 < \omega < 2$, SOR converges for any $\boldsymbol{u}^0$ if and only if $\boldsymbol{A}$ is positive definite. 
 \end{theorem}
-These theorems for convergence play an important role in the study of various preconditioners. That's why we dedicate a huge portion of the paper to them. More iterative methods and preconditioners as well as their convergence criteria can be found in \cite{saad2003iterative}.
+These theorems for convergence play an important role in the study of various preconditioners and can be found in \cite{doi:10.1137/1.9780898718003}.
+More iterative methods and preconditioners as well as their convergence criteria can be found in \cite{doi:10.1137/1.9780898718003}.
