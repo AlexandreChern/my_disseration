@@ -22,14 +22,14 @@ A shared memory computer has processors connected to a large global memory, and 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\linewidth]{figures/bus-based-shared-memory.png}
-    \caption{A bus-based shared memory computer \cite{saad2003iterative}}
+    \caption{A bus-based shared memory computer \cite{doi:10.1137/1.9780898718003}}
     \label{fig:bus-shared}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\linewidth]{figures/switch-based-shared-memory.png}
-    \caption{A switch-based shared memory machine \cite{saad2003iterative}}
+    \caption{A switch-based shared memory machine \cite{doi:10.1137/1.9780898718003}}
     \label{fig:switch-shared}
 \end{figure}
 
@@ -41,7 +41,7 @@ The \textit{distributed memory} model can refer to distributed memory SIMD archi
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figures/distributed-memory.png}
-    \caption{An eight-processing ring (left) and 4 $\times$ 4 multiprocessor mesh (right) \cite{saad2003iterative}}
+    \caption{An eight-processing ring (left) and 4 $\times$ 4 multiprocessor mesh (right) \cite{doi:10.1137/1.9780898718003}}
     \label{fig:distributed-memory}
 \end{figure}
 
@@ -67,7 +67,7 @@ We use the preconditioned Conjugate Gradient to demonstrate the typical operatio
 Matrix-vector multiplications, vector updates, and dot products are common operations in so-called Basic Linear Algebra Subprograms (BLAS) that can be easily parallelized and have been well studied and implemented for dense matrices\cite{10.1145/77626.79170,chtchelkanova1997parallel,freeman1992parallel}. In terms of the computational costs, the vector update and dot product are much lower compared to the matrix-vector multiplication, which can still be carried out very quickly on the latest GPUs. The tricky part or the bottleneck for both memory and the runtime lies in the first step of preconditioner setup and the last step of preconditioning operations. We will discuss these two key operations in the next subsection. For now, let's focus on the Matrix-vector multiplication that has much higher computational costs than the vector update and the dot product.
 
 \subsubsection{Sparse Matrix-vector Products}
-The linear system coming from the discretization in the finite difference method is often sparse, which allows us to store them efficiently and use sparse matrix-vector products (SpMVs) for efficient computation. Different formats for storing sparse matrices can be found in \cite{saad2003iterative}. Compressed Sparse Row (CSR) sparse matrix format is one of the earliest sparse formats developed. It is ideal for parallelization since the data from each row can be handled independently. The SpMV algorithm for CSR format as well as the demonstration of the storage scheme of the CSR format is shown in \autoref{fig:csr}
+The linear system coming from the discretization in the finite difference method is often sparse, which allows us to store them efficiently and use sparse matrix-vector products (SpMVs) for efficient computation. Different formats for storing sparse matrices can be found in \cite{doi:10.1137/1.9780898718003}. Compressed Sparse Row (CSR) sparse matrix format is one of the earliest sparse formats developed. It is ideal for parallelization since the data from each row can be handled independently. The SpMV algorithm for CSR format as well as the demonstration of the storage scheme of the CSR format is shown in \autoref{fig:csr}
 
 \begin{figure}[h!]
     \centering
@@ -130,7 +130,6 @@ Here $A(i,j)$ refers to the element in the sparse matrix. The different sparse m
 \subsubsection{Parallel preconditioners}
 Several techniques can be for parallel implementations of the preconditioners. They can be summarized into three types of techniques.
 The simplest approach is to use a Jacobi or block Jacobi approach. In this case, a Jacobi preconditioner may be consist of a diagonal or a block-diagonal of $A$
-
 To improve the performance, these preconditioners can be accelerated by polynomial iterations. For example, the second level of preconditioning is called \textit{polynomial preconditioning}.
 
 A different strategy is to enhance parallelism by using graph algorithms, such as graph-coloring techniques. The gist of this approach is that all unknowns associated with the same color can be determined simultaneously in the forward or backward sweeps.
@@ -143,7 +142,7 @@ Overlapping block-Jacobi preconditioning is a parallel preconditioner similar to
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\linewidth]{figures/block-jacobi.png}
-    \caption{The block-Jacobi matrix with overlapping blocks \cite{saad2003iterative}}
+    \caption{The block-Jacobi matrix with overlapping blocks \cite{doi:10.1137/1.9780898718003}}
     \label{fig:overlap-block-jacobi}
 \end{figure}
 
@@ -155,83 +154,81 @@ Polynomial preconditioners are another family of parallel preconditioners. In po
 Note that the $\boldsymbol{s(A)}$ and $\boldsymbol{A}$ commute, and as a result, the preconditioned matrix is the same for left or right preconditioning. In addition, the matrix $\boldsymbol{s(A)}$ or $\boldsymbol{As(A)}$ does not need to be formed explicitly in matrix form, which allows the use of matrix-free methods.
 This approach was initially motivated by the good performance of matrix-vector operations on vector computers. It has now become more popular on iterative methods for GPU computing because of the similar SIMD architecture. 
 There are several ways to construct polynomials in this method.
-The simplest polynomial $s$ is the polynomial of the Neumann series expansion
-\begin{equation}
-    I + N + N^2 + \cdots + N^s
-\end{equation}
-In which
-\begin{equation}
-    N = I - \omega A
-\end{equation}
-$\omega$ is called the scaling parameter. The series above comes from expanding the inverse of $\omega A$ using the splitting
-\begin{equation}
-    \omega A = I - (I - \omega A)
-\end{equation}
-This approach can be generalized using the splitting of the form
-\begin{equation}
-    \omega A = D - (D - \omega A)
-\end{equation}
-where $D$ can be a diagonal of A, or a block diagonal of A.
-Then
-\begin{align}
-    (\omega A)^{-1} &= [D(I - (I - \omega D^{-1}A))]^{-1} \nonumber \\
-    &= [I - (I - \omega D^{-1}A)]^{-1}D^{-1}
-\end{align}
-Thus, setting
-\begin{equation}
-    N = I - \omega D^{-1}A
-\end{equation}
-results in the approximate $s$-term expansion
-\begin{equation}
-    (\omega A)^{-1} \approx M^{-1} = [I + N + \cdots + N^s]D^{-1}
-\end{equation}
-Since $D^{-1}A = \omega^{-1}[I - N]$, note that
+% The simplest polynomial $s$ is the polynomial of the Neumann series expansion
+% \begin{equation}
+%     I + N + N^2 + \cdots + N^s
+% \end{equation}
+% In which
+% \begin{equation}
+%     N = I - \omega A
+% \end{equation}
+% $\omega$ is called the scaling parameter. The series above comes from expanding the inverse of $\omega A$ using the splitting
+% \begin{equation}
+%     \omega A = I - (I - \omega A)
+% \end{equation}
+% This approach can be generalized using the splitting of the form
+% \begin{equation}
+%     \omega A = D - (D - \omega A)
+% \end{equation}
+% where $D$ can be a diagonal of A, or a block diagonal of A.
+% Then
+% \begin{align}
+%     (\omega A)^{-1} &= [D(I - (I - \omega D^{-1}A))]^{-1} \nonumber \\
+%     &= [I - (I - \omega D^{-1}A)]^{-1}D^{-1}
+% \end{align}
+% Thus, setting
+% \begin{equation}
+%     N = I - \omega D^{-1}A
+% \end{equation}
+% results in the approximate $s$-term expansion
+% \begin{equation}
+%     (\omega A)^{-1} \approx M^{-1} = [I + N + \cdots + N^s]D^{-1}
+% \end{equation}
+% Since $D^{-1}A = \omega^{-1}[I - N]$, note that
 
-\begin{align}
-    M^{-1}A & = [I + N + \cdots + N^s]D^{-1}A \nonumber \\
-    &= \frac{1}{\omega}[I + N + \cdots + N^2](I - N) \nonumber \\
-    &= \frac{1}{\omega}(I - N^{s+1})
-\end{align}
+% \begin{align}
+%     M^{-1}A & = [I + N + \cdots + N^s]D^{-1}A \nonumber \\
+%     &= \frac{1}{\omega}[I + N + \cdots + N^2](I - N) \nonumber \\
+%     &= \frac{1}{\omega}(I - N^{s+1})
+% \end{align}
 
 
-The matrix operation with the preconditioned matrix can be difficult numerically for large $s$. If the original matrix is SPD, then even though $M^{-1}A$ is not symmetric, it is self-adjoint with respect to the $D-inner$ product.
+% The matrix operation with the preconditioned matrix can be difficult numerically for large $s$. If the original matrix is SPD, then even though $M^{-1}A$ is not symmetric, it is self-adjoint with respect to the $D-inner$ product.
 
-The polynomial $s$ can be selected to be optimal in some sense, and this leads to the Chebyshev polynomials. The criterion used to make the preconditioned matrix $s(A)A$ as close as possible to the identity matrix in some sense. For example, the spectrum of the preconditioned matrix can be made as close as possible to that of the identity. We denote the spectrum of $A$ by $\sigma(A)$, and by $\mathbb{P}_k$ the space of polynomials of degree not exceeding $k$. We need to solve the following problem
-\begin{align}
-    &\text{Find} s \in \mathbb{P}_k \text{ which minimizes:} \\
-    &\max\limits_{\lambda \in \sigma(A)}|1 - \lambda s(\lambda)| 
-\end{align}
-This problem involves all eigenvalues of $A$, and is hard to solve than the original problem. It can be replaced by the following problem
-\begin{align}
-    &\text{Find} s \in \mathbb{P}_k \text{ which minimizes:} \\
-    &\max\limits_{\lambda \in E}|1 - \lambda s(\lambda)| 
-\end{align}
-which is obtained by replacing the set $\sigma(A)$ by some continuous set $E$ that encloses it. Thus, a rough idea of the spectrum of matrix $A$ is needed. If $A$ is SPD, then $E$ can be taken as an interval $[\alpha,\beta]$ containing the eigenvalues of $A$.
-A variation of the approximation theorem says for any real scalar $\gamma$ such that $\gamma \leq \alpha$
-the minimum
-\begin{equation}
-    \min\limits_{p \in \mathbb{P}_k,p(\gamma)=1} \max\limits_{t \in [\alpha,\beta]}|p(t)|
-\end{equation}
-is reached for the shifted and scaled Chebyshev polynomial of the first kind
-\begin{equation}
-    \hat{C}_k(t) = \frac{C_k(1+2\frac{\alpha - t}{\beta - \alpha})}{C_k (1+2\frac{\alpha - \gamma}{\beta - \alpha})}
-\end{equation}
-When $\gamma = 0$, this gives the polynomial 
-\begin{equation}
-    T_k(t) = \frac{1}{\sigma_k}C_k(\frac{\beta + \alpha - 2t}{\beta - \alpha}) \text{ with } \sigma_k = C_k(\frac{\beta+\alpha}{\beta - \alpha})
-\end{equation}
-
-The Chebyshev iteration can be found in \cite{saad2003iterative}. One nice feature of the Chebyshev iteration is that it does not require inner products, and this is very attractive for parallel implementation as it does not require reductions.
+% The polynomial $s$ can be selected to be optimal in some sense, and this leads to the Chebyshev polynomials. The criterion used to make the preconditioned matrix $s(A)A$ as close as possible to the identity matrix in some sense. For example, the spectrum of the preconditioned matrix can be made as close as possible to that of the identity. We denote the spectrum of $A$ by $\sigma(A)$, and by $\mathbb{P}_k$ the space of polynomials of degree not exceeding $k$. We need to solve the following problem
+% \begin{align}
+%     &\text{Find} s \in \mathbb{P}_k \text{ which minimizes:} \\
+%     &\max\limits_{\lambda \in \sigma(A)}|1 - \lambda s(\lambda)| 
+% \end{align}
+% This problem involves all eigenvalues of $A$, and is hard to solve than the original problem. It can be replaced by the following problem
+% \begin{align}
+%     &\text{Find} s \in \mathbb{P}_k \text{ which minimizes:} \\
+%     &\max\limits_{\lambda \in E}|1 - \lambda s(\lambda)| 
+% \end{align}
+% which is obtained by replacing the set $\sigma(A)$ by some continuous set $E$ that encloses it. Thus, a rough idea of the spectrum of matrix $A$ is needed. If $A$ is SPD, then $E$ can be taken as an interval $[\alpha,\beta]$ containing the eigenvalues of $A$.
+% A variation of the approximation theorem says for any real scalar $\gamma$ such that $\gamma \leq \alpha$
+% the minimum
+% \begin{equation}
+%     \min\limits_{p \in \mathbb{P}_k,p(\gamma)=1} \max\limits_{t \in [\alpha,\beta]}|p(t)|
+% \end{equation}
+% is reached for the shifted and scaled Chebyshev polynomial of the first kind
+% \begin{equation}
+%     \hat{C}_k(t) = \frac{C_k(1+2\frac{\alpha - t}{\beta - \alpha})}{C_k (1+2\frac{\alpha - \gamma}{\beta - \alpha})}
+% \end{equation}
+% When $\gamma = 0$, this gives the polynomial 
+% \begin{equation}
+%     T_k(t) = \frac{1}{\sigma_k}C_k(\frac{\beta + \alpha - 2t}{\beta - \alpha}) \text{ with } \sigma_k = C_k(\frac{\beta+\alpha}{\beta - \alpha})
+% \end{equation}
+One of the most commonly studied approach is called the Chebyshev iteration that can be found in \cite{doi:10.1137/1.9780898718003}. One nice feature of the Chebyshev iteration is that it does not require inner products, and this is very attractive for parallel implementation as it does not require reductions.
 
 Other polynomials include least-squares polynomials. A comparison of Chebyshev polynomials and least-square polynomials can be found in \cite{ashby1992comparison}. So far, Chebyshev polynomials have been the most popular for parallel implementation, especially in the matrix-free setting where the assembly of the matrix can be very expensive.
-
 Multicolor preconditioners are similar to ILU preconditioners in the sense that the construction and factorization of the matrices are required. Methods like these can be done in parallel, but they are not suitable for GPUs.
-
 
 \subsection{GPU architecture and CUDA}
 Given the increasing importance and popularity of GPUs in modern supercomputers, this subsection is dedicated to GPU architecture. As NVIDIA GPUs are mostly used in the industry for scientific computing and machine learning, the GPU programming model will be focused on CUDA (Compute Unified Device Architecture) toolkit.
 
-A GPU is built as a scalable array of multithreaded \textit{Streaming Multiprocessors} (SMs), each of which consists of multiple \textit{Scalar Processor} (SP) cores. To manage hundreds or thousands of threads, the multiprocessors employ a \textit{Single Instruction Multiple Threads} (SIMT) model with each thread mapped into one SP core and executing independently with its own instruction address and register state \cite{wilt2013cuda}. 
+A GPU is built as a scalable array of multithreaded \textit{Streaming Multiprocessors} (SMs), each of which consists of multiple \textit{Scalar Processor} (SP) cores. To manage hundreds or thousands of threads, the multiprocessors employ a \textit{Single Instruction Multiple Threads} (SIMT) model with each thread mapped into one SP core and executing independently with its own instruction address and register state.
+Threads are organized in \textit{warps}. A warp is defined as a group of 32 threads of consecutive thread IDs. More detailed information on optimizing memory access patterns can be found in \cite{wilt2013cuda}.
 
 The NVIDIA GPU platform has various memory architectures. The types of memory can be classified as follows:
 \begin{itemize}
@@ -244,7 +241,6 @@ The NVIDIA GPU platform has various memory architectures. The types of memory ca
 
 The effective bandwidth of each type of memory depends significantly on the access pattern. Global memory is relatively large but has a much higher latency. Using the right access pattern such as memory coalescing and avoiding bank conflicts will help achieve good memory bandwidth.
 
-Threads are organized in \textit{warps}. A warp is defined as a group of 32 threads of consecutive thread IDs. More detailed information on optimizing memory access patterns can be found in \cite{wilt2013cuda}.
 
 GPUs were initially designed for graphics-related calculations such as image rendering. General-purpose GPU programming on NVIDIA GPUs is supported by the NVIDIA CUDA toolkit. CUDA programs use similar syntax to C++. The main code on the host (CPU) would invoke a \textit{kernel grid} that runs on the device (GPU). The same parallel kernel is executed by many threads. These threads are organized into thread blocks. Blocks and threads are the logical division of the GPU and are mapped to the actual SMs. Thread blocks are split into warps scheduled by SIMT units. All threads in the same block share the same shared memory and can be synchronized by a barrier. Threads in a warp execute one common instruction at a time. This is referred as warp-level synchronization \cite{wilt2013cuda}. It's most efficient when 32 threads of a warp follow the same execution path. Branch divergence in which threads within the same warp are executing different instructions often causes worse performance/
 

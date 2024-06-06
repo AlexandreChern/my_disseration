@@ -157,7 +157,7 @@ Earlier work in multigrid relies on the geometric structure to construct coarse 
 
 \subsection{Algebraic Multigrid}
   The classical multigrid formed around the geometric structure has been generalized that the multigrid is analyzed in terms of the matrix properties \cite{mccormick1982multigrid}. This algebraic approach to theory was further extended to form the basis for much of the early development that led to the so-called Ruge-St{\"u}ben or classical algebraic multigrid (CAMG) method \cite{brandt1986algebraic,mandel1988algebraic,ruge1987algebraic}. A detailed overview of the algebraic multigrid can be found in this recent paper \cite{xu2017algebraic}. Here, we want to present it more concisely.
-  We begin this subsection with the following theorem in linear algebra.
+  We begin this subsection with the following theorem in linear algebra taken from \cite{briggs2000multigrid}.
 \begin{theorem}[Solvability and the Fundamental Theorem of Linear
 Algebra]
 Suppose we have a matrix $A \in \mathbf{R}^{m\times n}$. The fundamental theorem of linear algebra states that the range (column space) of the matrix, $\mathcal{R}(A)$, is equal to the orthogonal
@@ -168,7 +168,7 @@ orthogonally decomposed as follows:
      \mathbf{R}^n &= \mathcal{R}(A) \oplus \mathcal{N}(A)
 \end{align}
 For the equation $A\mathbf{u}=\mathbf{f}$ to have a solution, it is necessary that the vector $\mathbf{f}$ lie in $\mathcal{R}(A)$. Thus, an equivalent condition is that $\mathbf{f}$ be orthogonal to every vector in $\mathcal{N}(A^T)$. For the equation $A\mathbf{u}=\mathbf{f}$ to have a \textit{unique} solution, it is necessary that $\mathcal{N}(A) = \{\mathbf{0}\}$. 
-Otherwise, if $\mathbf{u}$ is a solution and $\mathbf{v} \in \mathcal(A)$, then $A(\mathbf{u} + \mathbf{v}) = A\mathbf{u} + A\mathbf{v} = \mathbf{f} + \mathbf{0} = \mathbf{f}$, so the solution is not unique\cite{briggs2000multigrid}.
+Otherwise, if $\mathbf{u}$ is a solution and $\mathbf{v} \in \mathcal(A)$, then $A(\mathbf{u} + \mathbf{v}) = A\mathbf{u} + A\mathbf{v} = \mathbf{f} + \mathbf{0} = \mathbf{f}$, so the solution is not unique.
 \end{theorem}
 This is another point to view the coarse-grid correction scheme, and this leads to the algebraic multigrid. More theories related to this topic and the spectral picture of multigrid can be found in \cite{briggs2000multigrid}.
 
@@ -189,7 +189,7 @@ which was first introduced in \cite{RUGGIU2018216}. This involves the coarse gri
     (\phi_1,\psi_1)_{H_1} &= (\phi_1H_1\psi_1) \\
      (\phi_2,\psi_2)_{H_2} &= (\phi_2H_2\psi_2)
 \end{align}
-are equal for $\phi_1 = I_p\phi_2$ and $\psi_2 = I_r \psi_1$. $\phi$ and $\psi$ correspond to the $\boldsymbol{u}$ and $\boldsymbol{v}$ in section \ref{subsection:sbp-sat}. We use these new notations to avoid confusion with the $\mathbf{u}$ used in the previous subsection on the multigrid method. As a result, the interpolation operators $I_r$ and $I_p$ are adjoints to each other with respect to the SBP-based scalar products defined in \cite{hackbusch2013multi}.
+are equal for $\phi_1 = I_p\phi_2$ and $\psi_2 = I_r \psi_1$. $\phi$ and $\psi$ correspond to the $\boldsymbol{u}$ and $\boldsymbol{v}$ in the previous section that describes the SBP-SAT methods in detail. We use these new notations to avoid confusion with the $\mathbf{u}$ used in the previous subsection on the multigrid method. As a result, the interpolation operators $I_r$ and $I_p$ are adjoints to each other with respect to the SBP-based scalar products defined in \cite{hackbusch2013multi}.
 \begin{align}
     (I_p,\xi_2,\xi_1)_{H_1} = (\xi_2,I_r\xi_1)_{H_2}
     \label{eqn:adjoint}
