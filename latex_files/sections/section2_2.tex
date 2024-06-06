@@ -16,7 +16,23 @@ We discretize the spatial domain $-1\leq r \leq 1$ with $N+1$ evenly spaced grid
   \boldsymbol{Q}^{T})\vec{v} = u_{N}v_{N} - u_{0}v_{0}$.
 \end{definition}
 %
-\noindent Here, $\boldsymbol{H}$ is a diagonal quadrature matrix and  $\boldsymbol{D}_{r}$ is the standard central finite difference operator in the interior which transitions to one-sided at boundaries. 
+\noindent Here, $\boldsymbol{H}$ is a diagonal quadrature matrix and  $\boldsymbol{D}_{r}$ is the standard central finite difference operator in the interior which transitions to one-sided at boundaries.
+The reason why the operator $\emph{D}_x$ is called SBP is that it mimics the integration-by-part property 
+\begin{equation}
+  \int_0^1 u \frac{\partial v}{\partial x} + \int_0^1 \frac{\partial u}{\partial x} v = uv\bigg|_0^1,
+  \label{eqn:1d_ibp}
+\end{equation}
+
+\noindent in a discrete form
+
+\begin{equation}
+  \vec{u}^T \boldsymbol{H} \boldsymbol{D}_{x}\vec{v} + \vec{u}^T \boldsymbol{D}_{x}^{T} \boldsymbol{H}\vec{v}
+  =
+  \vec{u}^T\left( \boldsymbol{Q} + \boldsymbol{Q}^T\right)\vec{v}
+  =
+  u_{N}v_{N} - u_{0}v_{0}.
+  \label{eqn:1d_sbp}
+\end{equation} 
 
 \begin{definition}[Second Derivative]
   Letting $c = c(r)$ denote a material coefficient, we define matrix $\boldsymbol{D}^{(c)}_{rr}$ to be an SBP approximation to
@@ -28,6 +44,23 @@ We discretize the spatial domain $-1\leq r \leq 1$ with $N+1$ evenly spaced grid
   the boundaries.
 \end{definition}
 %
+Similarly, the operator $\boldsymbol{D}_{xx}^{(c)}$ mimics the integration-by-parts property
+\begin{equation}
+  \int_0^1 u \frac{\partial}{\partial x}\left(c\frac{\partial v}{\partial x}\right)
+ + \int_0^1 \frac{\partial u}{\partial x} c\frac{\partial v}{\partial x}
+  =
+    u c \frac{\partial v}{\partial x} \bigg|_0^1,
+    \label{eqn:2d_ibp}
+\end{equation}
+in a discrete form
+\begin{equation}
+  \vec{u}^T \boldsymbol{H} \boldsymbol{D}^{(c)}_{xx}\vec{v}
+  +\vec{u}^T\boldsymbol{A}^{(c)}\vec{v}
+  =
+    c_{N}u_{N} \vec{d}_{N}^{T}\vec{v}
+  - c_{0}u_{0} \vec{d}_{0}^{T}\vec{v}.
+  \label{eqn:2d_sbp}
+\end{equation}
 
 
 

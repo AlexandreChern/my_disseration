@@ -46,7 +46,7 @@ a_0 + r(a_{\text{max}} - a_0), & \text{other regions}
 where $r = \max(|x_3 - h_s - h_t - H/2| - H/2, |x_2| - l/2)/h_t$.
 
 
-Outside the domain $\Sigma_f$ ($|x_3| > W_\text{f}$ or $|x_2| > l_\text{f} / 2$ as denoted in the grey region in the Figure \ref{fig:BP5-figure}), the fault creeps horizontally at an imposed constant rate
+Outside the domain $\Sigma_f$ ($|x_3| > W_\text{f}$ or $|x_2| > l_\text{f} / 2$ as denoted in the grey region in the \autoref{fig:BP5-figure}), the fault creeps horizontally at an imposed constant rate
 \begin{align}
     V_2(x_2, x_3, t) &= V_\text{p} \\
     V_3(x_2, x_3, t) &= 0
@@ -80,7 +80,7 @@ For this 3D problem, we use SBP-SAT methods similar to \cite{ALMQUIST2021109842}
 To solve the linear elasticity in 3D, we need to solve for the displacements in $x$, $y$, and $z$ directions for each point.
 We denote the displacement vector as $\boldsymbol{u} = [u_1, u_2, u_3]$.
 To turn the tensor formulation from \cite{ALMQUIST2021109842} into a matrix formulation for iterative solvers,  we first stack the displacements for a point in $x$, $y$, $z$ directions, and then for all points in $x$, $y$, and $z$ directions.
-We label the faces for 3D simulation in the following order as shown in Figure \ref{fig:3d_problem}
+We label the faces for 3D simulation in the following order as shown in \autoref{fig:3d_problem}
 
 \begin{figure}
     \centering
@@ -175,7 +175,7 @@ We discretize the problem on a truncated 128km $\times$ 128km $\times$ 128 km do
 We export results on stations on the fault according to the problem description. We run our simulations for 1800 years and compare our results with results from other researchers on similar problems.
 
 We compare our results using BEMs from Cattania's group. This method only requires solving problems on the fault surface, and does not require domain truncation. Previous results have shown that domain truncation in volume-based methods would affect earthquake cycles
-We first look at the changes in shear stress along the slip direction for a sample location on the fault. We compare our results with Cattania's group using boundary element methods and plot the result in Figure \ref{fig:bp5-shearstress}. We see similar ranges of state variables and similar behaviors of jumps in state variables during the transition between aseismic slips and seismic slips. We then compare the slip for the same location on the fault and plot them in Figure \ref{fig:bp5-slip2}.
+We first look at the changes in shear stress along the slip direction for a sample location on the fault. We compare our results with Cattania's group using boundary element methods and plot the result in \autoref{fig:bp5-shearstress}. We see similar ranges of state variables and similar behaviors of jumps in state variables during the transition between aseismic slips and seismic slips. We then compare the slip for the same location on the fault and plot them in \autoref{fig:bp5-slip2}.
 
 \begin{figure}
     \centering

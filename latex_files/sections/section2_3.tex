@@ -7,7 +7,7 @@ Stationary iterative methods can be expressed in the simple form
     \boldsymbol{u}^{k+1} &= \boldsymbol{Q} \boldsymbol{u}^k + \boldsymbol{q}
     \label{iter:stationary}
 \end{align}
-where $\boldsymbol{Q}$ and $\boldsymbol{q}$ are placeholders for a matrix and a vector respectively, both independent of iteration step $k$. Stationary iterative methods, such as the Gauss-Seidel method, act as smoothers for damping frequency components of the solution vectors. Further backgrounds of these iterative methods can be found in \cite{doi:10.1137/1.9780898718003}
+where $\boldsymbol{Q}$ and $\boldsymbol{q}$ are placeholders for a matrix and a vector respectively, both independent of iteration step $k$. Stationary iterative methods, such as the Gauss-Seidel method, act as smoothers for damping high-frequency components of the solution vectors. Further backgrounds of these iterative methods can be found in \cite{doi:10.1137/1.9780898718003}
 % [... add reference]
 
 The considered problem for iterative methods is a linear equation system of the form $\boldsymbol{A} \boldsymbol{u} = \boldsymbol{f}$. We introduce splitting matrix $\boldsymbol{S}$ as follows:
@@ -28,7 +28,7 @@ For further analysis, it is useful to introduce the iteration matrix $\boldsymbo
     \boldsymbol{M} = \boldsymbol{S}^{-1}(\boldsymbol{S} - \boldsymbol{A})
 \end{align}.
 
-If we define $\boldsymbol{Q} = \boldsymbol{M}$ and $\boldsymbol{q} = \boldsymbol{S}^{-1}\boldsymbol{f}$, then \autoref{eq:iter} can be written as $\boldsymbol{u} = \boldsymbol{Q}\boldsymbol{u} + \boldsymbol{q}$, and it satisfy
+If we define $\boldsymbol{Q} = \boldsymbol{M}$ and $\boldsymbol{q} = \boldsymbol{S}^{-1}\boldsymbol{f}$, then \autoref{eq:iter} can be written as $\boldsymbol{u} = \boldsymbol{Q}\boldsymbol{u} + \boldsymbol{q}$, and it satisfies
 
 \begin{align}
     \boldsymbol{e}^{k+1} = \boldsymbol{M} \boldsymbol{e}^k
@@ -36,7 +36,7 @@ If we define $\boldsymbol{Q} = \boldsymbol{M}$ and $\boldsymbol{q} = \boldsymbol
 
 where $\boldsymbol{e}^k$ is the error $\boldsymbol{u^k} - \boldsymbol{u}$ for the iteration step k. Because $\boldsymbol{M}$ is only determined by the initial linear system and the splitting matrix $\boldsymbol{S}$, and it is not changed in each iteration step, this method is called the stationary iterative method. 
 
-The spectral radius $\rho$ is the largest absolute eigenvalue of a matrix. The stationary iterative method converges if and only if the spectral radius $\rho$ of the iteration matrix $\boldsymbol{M}$ satisfies the following condition
+The spectral radius $\rho$ is defined as the largest absolute eigenvalue of a matrix. The stationary iterative method converges if and only if the spectral radius $\rho$ of the iteration matrix $\boldsymbol{M}$ satisfies the following condition
 \begin{align}
     \rho(\boldsymbol{M}) < 1
 \end{align}

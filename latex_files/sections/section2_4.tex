@@ -56,7 +56,7 @@ The preconditioning matrices can be easily derived for the Jacobi, Gauss-Seidel,
 %     \label{eqn:preconditioned_system}
 % \end{equation}
 
-The matrix $\boldsymbol{M}^{-1}$ should be symmetric and positive definite. Even though $\boldsymbol{M}$ is sparse most of the time, there is no guarantee that the $\boldsymbol{M}^{-1}$ is sparse. And this limits the number of techniques that can be applied to solve the preconditioned system. Also the computation of $\boldsymbol{M}^{-1}\boldsymbol{b}$ for any vector $\boldsymbol{b}$ so the actual solution to the problem can be easily obtained from the solution to the preconditioned system.
+The matrix $\boldsymbol{M}^{-1}$ should be symmetric and positive definite. Even though $\boldsymbol{M}$ is sparse most of the time, there is no guarantee that the $\boldsymbol{M}^{-1}$ is sparse. And this limits the number of techniques that can be applied to solve the preconditioned system. The computation of $\boldsymbol{M}^{-1}\boldsymbol{b}$ for any vector $\boldsymbol{b}$ should be small so the actual solution to the problem can be easily obtained from the solution to the preconditioned system.
 
 
 \subsection{General Convergence Results}
@@ -108,7 +108,6 @@ Other than knowing that \autoref{eqn:iter-eqn-1} converges, we can also know how
     \boldsymbol{e}^k = \boldsymbol{Q}^k \boldsymbol{e}^0
 \end{equation}
 The proof can be found in \cite{doi:10.1137/1.9780898718003}
-
 % We can prove this by expressing $\boldsymbol{Q}$ in Jordan canonical form
 % \begin{equation}
 %     \boldsymbol{Q} = \boldsymbol{X}\boldsymbol{J}\boldsymbol{X}^{-1}
@@ -168,7 +167,8 @@ Using convergence analysis here, the convergence criteria for several iterative 
     \end{itemize}
 \end{definition}
 
-The diagonally dominant matrices are important as many matrices from the discretization of PDEs are diagonally dominant. When solving these linear systems with iterative methods, the spectral radius can be estimated using Gershgorin's theorem. Gershgorin's theorem allows rough locations for all eigenvalues of $\boldsymbol{A}$ to be determined. In situations where $\boldsymbol{A}$ is so large that the eigenvalues of $\boldsymbol{A}$ are unable to obtain, for example, a linear system from extremely fine discretization, the spectral radius can be directly obtained via the entries of the matrix $\boldsymbol{A}$. The simplest such result is the bound \begin{equation}
+The diagonally dominant matrices are important as many matrices from the discretization of PDEs are diagonally dominant. When solving these linear systems with iterative methods, the spectral radius can be estimated using Gershgorin's theorem. Gershgorin's theorem allows determination of rough locations for all eigenvalues of $\boldsymbol{A}$. 
+In situations where $\boldsymbol{A}$ is so large that the eigenvalues of $\boldsymbol{A}$ are unable to obtain, for example, a linear system from extremely fine discretization, the spectral radius can be directly obtained via the entries of the matrix $\boldsymbol{A}$. The simplest such result is the bound \begin{equation}
     |\lambda_i| \leq ||\boldsymbol{A}||
 \end{equation}
 for any matrix norm. Gershgorin's theorem provides a more precise localization result
@@ -207,7 +207,7 @@ This leads to the following theorem
 \begin{theorem}
 If $\boldsymbol{A}$ is a strictly diagonally dominant or an irreducibly diagonally dominant matrix, then the associated Jacobi and Gauss-Seidel iterations converge for any $\boldsymbol{u}^0$.
 \end{theorem}
-The convergence condition for SPD matrices is given as follows
+For SPD matrices, the convergence condition is given as follows
 \begin{theorem}
 if $\boldsymbol{A}$ is symmetric with positive diagonal elements and for $0 < \omega < 2$, SOR converges for any $\boldsymbol{u}^0$ if and only if $\boldsymbol{A}$ is positive definite. 
 \end{theorem}
