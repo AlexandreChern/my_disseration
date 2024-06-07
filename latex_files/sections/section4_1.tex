@@ -1,13 +1,13 @@
 \section{Partial Differential Equations for the Solid Earth}
 \subsection{Governing equations and boundary conditions}
-Static deformation of the solid Earth over the time-scales of earthquake cycles is governed by the equilibrium equation and a constitutive relationship describing the material properties.  The standard assumption is that the Earth is linear elastic, defined on a sub-domain of $\mathbb{R}^3$.  While solutions to the 3D elasticity equations are the eventual target, 2D problems are considered in this work in order to sort out implementation details with reduced computational costs.  The 2D anti-plane shear problem \cite{antiplaneshear} is particularly ubiquitous in earthquake applications, where a vertical cross-section of a 3D problem (assuming invariance in one-direction) gives rise to an elliptic equation, where only one non-zero component of the displacement vector exists and depends on two spatial variables, namely,
+Static deformation of the solid Earth over the time-scales of earthquake cycles is governed by the equilibrium equation and a constitutive relationship describing the material properties.  The standard assumption is that the Earth is linear elastic, defined on a sub-domain of $\mathbb{R}^3$.  While solutions to the 3D elasticity equations are the eventual target, 2D problems are considered in this work in order to sort out implementation details with reduced computational costs.  The 2D anti-plane shear problem \citep{antiplaneshear} is particularly ubiquitous in earthquake applications, where a vertical cross-section of a 3D problem (assuming invariance in one-direction) gives rise to an elliptic equation, where only one non-zero component of the displacement vector exists and depends on two spatial variables, namely,
 \begin{equation}
     -\nabla \cdot \left({\mu} \nabla u\right) = f \quad \text{ for } (x, y) \in \Omega, 
     \label{eqn: 2D}
 \end{equation}
-where ${\mu}(x, y)$ is the spatially-varying shear modulus, $u$ is Earth's material displacement in the $z$-direction, and $f$ comprises body forces. In order to enable complex fault geometries and topography, we assume that $\Omega$ is a curved quadrilateral in $\mathbb{R}^2$, which enables extensions to arbitrary domains partitioned into computational blocks, \cite[e.g.][]{Kozdon2020HybridizedSF}. As \autoref{fig:trans}(a) illustrates, the boundary can be partitioned into four curves $\partial\Omega_i, \,\, i = 1, ..., 4$, where (for example), $\partial \Omega_3$ represents Earth's surface. The shear modulus $\mu(x, y)$ can vary in order to represent heterogeneities in the crust, for example, a sedimentary basin, which is known to trap waves, extend shaking, and increase earthquake magnitudes, \cite[e.g.][]{Boue2016}. 
+where ${\mu}(x, y)$ is the spatially-varying shear modulus, $u$ is Earth's material displacement in the $z$-direction, and $f$ comprises body forces. In order to enable complex fault geometries and topography, we assume that $\Omega$ is a curved quadrilateral in $\mathbb{R}^2$, which enables extensions to arbitrary domains partitioned into computational blocks, \citep[e.g.][]{Kozdon2020HybridizedSF}. As \autoref{fig:trans}(a) illustrates, the boundary can be partitioned into four curves $\partial\Omega_i, \,\, i = 1, ..., 4$, where (for example), $\partial \Omega_3$ represents Earth's surface. The shear modulus $\mu(x, y)$ can vary in order to represent heterogeneities in the crust, for example, a sedimentary basin, which is known to trap waves, extend shaking, and increase earthquake magnitudes, \citep[e.g.][]{Boue2016}. 
 
-In this work both Dirichlet and Neumann boundary conditions are considered for generality, as each appears in earthquake problems. For example Earth's free surface manifests as a Neumann condition and slow motion of tectonic plates is usually enforced via a Dirichlet condition \cite{Erickson2014}. As proof of concept, we consider boundary conditions
+In this work both Dirichlet and Neumann boundary conditions are considered for generality, as each appears in earthquake problems. For example Earth's free surface manifests as a Neumann condition and slow motion of tectonic plates is usually enforced via a Dirichlet condition \citep{Erickson2014}. As proof of concept, we consider boundary conditions
 \begin{subequations}\label{eqn:2Dbc}
 \begin{alignat}{3}
 u &= g_{1},  &&\quad \partial\Omega_1,\\ 
@@ -30,7 +30,7 @@ u&= g_{2}, &&\quad \text{face 2},\\
 \end{alignat}
 \end{subequations}
 where $\bar\nabla u = \left[\frac{\partial u}{\partial r}, \,  \frac{\partial u}{\partial s}\right]^T$, face $k$  for $k = 1, ... 4$ define the domain boundaries of $\bar{\Omega}$, given in \autoref{fig:trans}(b). $J >0 $ is the Jacobian and  $S^{k}_J$ is the surface Jacobian on face $k$.
-Vector $\hat{\boldsymbol{n}}^k$ is the outward pointing normal to the face and $2 \times 2$ matrix ${\bf c}$ is symmetric positive definite (SPD) and encodes the variable material properties $\mu(x, y)$ and the coordinate transform, see \cite{Kozdon2020HybridizedSF, Erickson2022} for more details.
+Vector $\hat{\boldsymbol{n}}^k$ is the outward pointing normal to the face and $2 \times 2$ matrix ${\bf c}$ is symmetric positive definite (SPD) and encodes the variable material properties $\mu(x, y)$ and the coordinate transform, see \citep{Kozdon2020HybridizedSF, Erickson2022} for more details.
 
 \begin{figure}
     \centering
@@ -78,7 +78,7 @@ Matrix $\boldsymbol{\tau}_k$ = $\hat{n}^k_i \boldsymbol{C}^k_{ij}\hat{n}^k_j{\bo
 {\boldsymbol{C}}^{k}_{ss} ({\boldsymbol{C}}_{ss}^{k, min})^{-1}, \quad $k = 3, 4$.
 \end{cases}
 \end{equation}
-Here ${\boldsymbol{C}}^{k, min}$ is the minimum value of $c$ in the two points orthogonal to the boundary and $h_\perp^k$ is the grid spacing orthogonal to face $k$ \cite{Erickson2022}. 
+Here ${\boldsymbol{C}}^{k, min}$ is the minimum value of $c$ in the two points orthogonal to the boundary and $h_\perp^k$ is the grid spacing orthogonal to face $k$ \citep{Erickson2022}. 
 
 
 Imposing Neumann conditions on faces $k = 3, 4$ corresponds to SAT vectors
@@ -97,7 +97,7 @@ In order to render the linear system \autoref{eqn:2Ddiscrete} SPD, we multiply b
 \end{equation}
 %
 
-is SPD \cite{Erickson2022}, and matrices
+is SPD \citep{Erickson2022}, and matrices
 \begin{equation}
     \boldsymbol{C}_k = -{\bf L}_k^T {\bf G}_k - {\bf G}_k^T {\bf L}_k + {\bf L}_k^T \boldsymbol{H}_k \boldsymbol{\tau}_k {\bf L}_k.
 \end{equation}

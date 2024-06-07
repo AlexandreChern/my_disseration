@@ -3,7 +3,7 @@
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figures/BP5-figure.png}
-    \caption{This benchmark considers 3D motion with a planar fault embedded vertically in a homogeneous, linear elastic whole-space. The fault is governed by rate-and-state friction in the region $0 \leq x_3 \leq W_\text{f}$ and $|x_2| \leq l_f/2$, outside of which it creeps at an imposed constant horizontal rate Vp (gray). The velocity weakening region (the rectangle in light and dark green; $h_s + h_t \leq x_3 \leq h_s + h_t + H$ and $|x_2| \leq l/2)$ is surrounded by a transition zone (yellow) of width ht to velocity strengthening regions (blue). A favorable nucleation zone (dark green square with width $w$) is located at one end of the velocity-weakening patch. \cite{jiang2020seas}}
+    \caption{This benchmark considers 3D motion with a planar fault embedded vertically in a homogeneous, linear elastic whole-space. The fault is governed by rate-and-state friction in the region $0 \leq x_3 \leq W_\text{f}$ and $|x_2| \leq l_f/2$, outside of which it creeps at an imposed constant horizontal rate Vp (gray). The velocity weakening region (the rectangle in light and dark green; $h_s + h_t \leq x_3 \leq h_s + h_t + H$ and $|x_2| \leq l/2)$ is surrounded by a transition zone (yellow) of width ht to velocity strengthening regions (blue). A favorable nucleation zone (dark green square with width $w$) is located at one end of the velocity-weakening patch. \citep{jiang2020seas}}
     \label{fig:BP5-figure}
 \end{figure}
 
@@ -76,10 +76,10 @@ To break the symmetry of the problem and facilitate comparisons of different sim
 We use the recommended parameters from the problem description and perform initial simulations for 1800 years.
 
 \subsection{SBP-SAT formulations for BP5-QD}
-For this 3D problem, we use SBP-SAT methods similar to \cite{ALMQUIST2021109842} to formulate our linear system.
+For this 3D problem, we use SBP-SAT methods similar to \citep{ALMQUIST2021109842} to formulate our linear system.
 To solve the linear elasticity in 3D, we need to solve for the displacements in $x$, $y$, and $z$ directions for each point.
 We denote the displacement vector as $\boldsymbol{u} = [u_1, u_2, u_3]$.
-To turn the tensor formulation from \cite{ALMQUIST2021109842} into a matrix formulation for iterative solvers,  we first stack the displacements for a point in $x$, $y$, $z$ directions, and then for all points in $x$, $y$, and $z$ directions.
+To turn the tensor formulation from \citep{ALMQUIST2021109842} into a matrix formulation for iterative solvers,  we first stack the displacements for a point in $x$, $y$, $z$ directions, and then for all points in $x$, $y$, and $z$ directions.
 We label the faces for 3D simulation in the following order as shown in \autoref{fig:3d_problem}
 
 \begin{figure}
@@ -125,7 +125,7 @@ Then we can rewrite governing equations in terms of the $x,y,z$ components.
     \label{eqn:components}
 \end{align}
 
-We can use them to impose the SAT terms for displacements in $x, y, z$ directions using formulations from \cite{ALMQUIST2021109842}.
+We can use them to impose the SAT terms for displacements in $x, y, z$ directions using formulations from \citep{ALMQUIST2021109842}.
 For Neuman boundary conditions, we have
 \begin{align}
     SAT_1 = &-H^{-1} [e_3 H_3 (e_3^T [T_{11}^3 u_1 + T_{12}^3 u_2 + T_{13}^3 u_3] - g_1^3)] \nonumber \\
@@ -171,7 +171,7 @@ For Dirichlet conditions, we have
 
 
 \subsection{Results}
-We discretize the problem on a truncated 128km $\times$ 128km $\times$ 128 km domain. The simulation parameters are chosen to be the values in \cite{jiang2020seas}. 
+We discretize the problem on a truncated 128km $\times$ 128km $\times$ 128 km domain. The simulation parameters are chosen to be the values in \citep{jiang2020seas}. 
 We export results on stations on the fault according to the problem description. We run our simulations for 1800 years and compare our results with results from other researchers on similar problems.
 
 We compare our results using BEMs from Cattania's group. This method only requires solving problems on the fault surface, and does not require domain truncation. Previous results have shown that domain truncation in volume-based methods would affect earthquake cycles

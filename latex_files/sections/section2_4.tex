@@ -61,7 +61,7 @@ The matrix $\boldsymbol{M}^{-1}$ should be symmetric and positive definite. Even
 
 \subsection{General Convergence Results}
 \label{section:convergence-analysis}
-In this section, we examine the convergence behaviors of the general preconditioners above. The detailed analysis can be found in \cite{doi:10.1137/1.9780898718003}. We choose the most important results to present here with notations adapted to match the other sections of the thesis.
+In this section, we examine the convergence behaviors of the general preconditioners above. The detailed analysis can be found in \citep{doi:10.1137/1.9780898718003}. We choose the most important results to present here with notations adapted to match the other sections of the thesis.
 All methods seen in the previous section define a sequence of iterates of the form
 \begin{equation}
     \boldsymbol{u}^{k+1} = \boldsymbol{Q}\boldsymbol{u}^k + \boldsymbol{q}
@@ -97,8 +97,8 @@ shows that if the iteration converges for any $\boldsymbol{u}^0$ and $\boldsymbo
 Let $\boldsymbol{Q}$ be a square matrix such that $\rho(\boldsymbol{Q}) < 1$. Then $\boldsymbol{I} - \boldsymbol{Q}$ is non-singular and iteration \autoref{eqn:iter-eqn-1} converges for any $
 \boldsymbol{q}$ and $\boldsymbol{u}^0$. Conversely, if the iteration \autoref{eqn:iter-eqn-1} converges for any $\boldsymbol{q}$ and $\boldsymbol{u}^0$, then $\rho(\boldsymbol{Q}) < 1$
 \end{theorem}
-The theorem and its proof can be found in \cite{doi:10.1137/1.9780898718003}
-Since it is often expensive to compute the spectral radius of a matrix, sufficient conditions that guarantee convergence can be useful in practice. One such sufficient condition could be obtained by utilizing the inequality $\rho(\boldsymbol{Q} \leq ||\boldsymbol{Q}||)$ for any matrix norm \cite{doi:10.1137/1.9780898718003}.
+The theorem and its proof can be found in \citep{doi:10.1137/1.9780898718003}
+Since it is often expensive to compute the spectral radius of a matrix, sufficient conditions that guarantee convergence can be useful in practice. One such sufficient condition could be obtained by utilizing the inequality $\rho(\boldsymbol{Q} \leq ||\boldsymbol{Q}||)$ for any matrix norm \citep{doi:10.1137/1.9780898718003}.
 \begin{corollary}
 Let $\boldsymbol{Q}$ be a square matrix such that $||\boldsymbol{Q}|| < 1$  for some matrix norm $||\cdot||_\cdot$. Then $\boldsymbol{I} - \boldsymbol{Q}$ is non-singular and the iteration \autoref{eqn:iter-eqn-1} converges for any initial vector $\boldsymbol{u}^0$
 \end{corollary}
@@ -107,7 +107,7 @@ Other than knowing that \autoref{eqn:iter-eqn-1} converges, we can also know how
 \begin{equation}
     \boldsymbol{e}^k = \boldsymbol{Q}^k \boldsymbol{e}^0
 \end{equation}
-The proof can be found in \cite{doi:10.1137/1.9780898718003}
+The proof can be found in \citep{doi:10.1137/1.9780898718003}
 % We can prove this by expressing $\boldsymbol{Q}$ in Jordan canonical form
 % \begin{equation}
 %     \boldsymbol{Q} = \boldsymbol{X}\boldsymbol{J}\boldsymbol{X}^{-1}
@@ -148,7 +148,7 @@ The proof can be found in \cite{doi:10.1137/1.9780898718003}
 % \end{align}
 % Thus, 
 The global asymptotic convergence factor is equal to the spectral radius of the iteration matrix. 
-The general convergence rate differs from the specific rate only when the initial error does not have any components in the invariant subspace associated with the dominant eigenvalues. Since it is hard to know a priori, the general convergence factor is more useful in practice. The above analysis can be found in \cite{doi:10.1137/1.9780898718003}.
+The general convergence rate differs from the specific rate only when the initial error does not have any components in the invariant subspace associated with the dominant eigenvalues. Since it is hard to know a priori, the general convergence factor is more useful in practice. The above analysis can be found in \citep{doi:10.1137/1.9780898718003}.
 
 Using convergence analysis here, the convergence criteria for several iterative methods such as Richardson's Iteration, and regular splitting can be derived with simpler forms. One type of matrices that is worth notice is diagonally dominant matrices. We begin with a few standard definitions
 \begin{definition}
@@ -182,7 +182,7 @@ In other words,
     \forall \lambda \in \sigma(\boldsymbol{A}), \exists  i \text{ such that} |\lambda - a_{i,i}| \leq \sum_{j = 1, j \neq i}^{j = n}|a_{i,j}|
 \end{equation}
 \end{theorem}
-The theorem and its proof can be found in \cite{doi:10.1137/1.9780898718003}
+The theorem and its proof can be found in \citep{doi:10.1137/1.9780898718003}
 % \begin{proof}
 % Let $x$ be an eigenvector associated with an eigenvalue $\lambda$, and let $m$ be an index of the component of largest modulus in $\boldsymbol{x}$, scale $\boldsymbol{x}$ so that $|\xi_m| = 1$, and $\xi_i \leq 1, \forall i \neq m$. Since $\boldsymbol{x}$ is an eigenvector, then
 % \begin{equation}
@@ -199,7 +199,7 @@ Additional refinement which has important consequences concerns of a particular 
 \begin{theorem}
 Let $\boldsymbol{A}$ be an irreducible matrix and assume that an eigenvalue $\lambda$ of $\boldsymbol{A}$ lies on the boundary of the union of the $n$ Gershgorin discs. Then $\lambda$ lies on the boundary of all Gershgorin discs
 \end{theorem}
-This theorem and its proof can be found in \cite{doi:10.1137/1.9780898718003} where an immediate corollary of the Gershgorin theorem and this theorem follows
+This theorem and its proof can be found in \citep{doi:10.1137/1.9780898718003} where an immediate corollary of the Gershgorin theorem and this theorem follows
 \begin{corollary}
 If a matrix $\boldsymbol{A}$ is strictly diagonally dominant or irreducibly diagonally dominant, then it is nonsingular.
 \end{corollary}
@@ -211,5 +211,5 @@ For SPD matrices, the convergence condition is given as follows
 \begin{theorem}
 if $\boldsymbol{A}$ is symmetric with positive diagonal elements and for $0 < \omega < 2$, SOR converges for any $\boldsymbol{u}^0$ if and only if $\boldsymbol{A}$ is positive definite. 
 \end{theorem}
-These theorems for convergence play an important role in the study of various preconditioners and can be found in \cite{doi:10.1137/1.9780898718003}.
+These theorems for convergence play an important role in the study of various preconditioners and can be found in \citep{doi:10.1137/1.9780898718003}.
 More iterative methods and preconditioners as well as their convergence criteria can be found in the same book.

@@ -1,4 +1,4 @@
-This section will present a brief review of iterative methods for solving large linear systems in our research. Many concepts and theorems are presented in \cite{doi:10.1137/1.9780898718003} and we will point the detailed information and proofs to the book.
+This section will present a brief review of iterative methods for solving large linear systems in our research. Many concepts and theorems are presented in \citep{doi:10.1137/1.9780898718003} and we will point the detailed information and proofs to the book.
 \subsection{Stationary Iterative Methods}
 \label{sec:iterative-methods}
 Stationary iterative methods can be expressed in the simple form
@@ -7,7 +7,7 @@ Stationary iterative methods can be expressed in the simple form
     \boldsymbol{u}^{k+1} &= \boldsymbol{Q} \boldsymbol{u}^k + \boldsymbol{q}
     \label{iter:stationary}
 \end{align}
-where $\boldsymbol{Q}$ and $\boldsymbol{q}$ are placeholders for a matrix and a vector respectively, both independent of iteration step $k$. Stationary iterative methods, such as the Gauss-Seidel method, act as smoothers for damping high-frequency components of the solution vectors. Further backgrounds of these iterative methods can be found in \cite{doi:10.1137/1.9780898718003}
+where $\boldsymbol{Q}$ and $\boldsymbol{q}$ are placeholders for a matrix and a vector respectively, both independent of iteration step $k$. Stationary iterative methods, such as the Gauss-Seidel method, act as smoothers for damping high-frequency components of the solution vectors. Further backgrounds of these iterative methods can be found in \citep{doi:10.1137/1.9780898718003}
 % [... add reference]
 
 The considered problem for iterative methods is a linear equation system of the form $\boldsymbol{A} \boldsymbol{u} = \boldsymbol{f}$. We introduce splitting matrix $\boldsymbol{S}$ as follows:
@@ -92,18 +92,18 @@ It might seem that in \autoref{iter:gs} the right-hand side contains the result 
 
 This is the most important difference between the Jacobi and the Gauss-Seidel method. When computing the $i$-th element $u_i^{k+1}$ in the iteration step k+1, the Gauss-Seidel method already uses all available iterates $u_j^{k+1}$ with $j=1\dots(i-1)$, while the Jacobi method only uses the iterates from the previous iteration step k. In other words, while the Jacobi method adds all increments \textit{simultaneously} only after cycling through all degrees of freedom, the Gauss-Seidel method adds all increments \textit{successively} as soon as available. As a result, the Gauss-Seidel method has the advantage that one vector is sufficient to update its vector elements $i$ successively, in contrast to the Jacobi method where an additional vector is required. However, in terms of computational cost, the difference in memory requirement is negligible in practice. 
 
-On the other hand, the operations for the iteration of different vector elements do not coincide in the Jacobi method, which means the parallelization for the Jacobi method is straightforward. However, in the Gauss-Seidel method, the nodal ordering influences the convergence behavior. There are various nodal orderings summarized in \cite{hackbusch2013multi}, such as red-black, lexicographical, zebra-line, and four-color ordering. More advanced algorithms are required for the successful parallelization of the Gauss-Seidel method. Otherwise, uncontrolled splitting of the process leads to the so-called \textit{chaotic} Gauss-Seidel method.  
+On the other hand, the operations for the iteration of different vector elements do not coincide in the Jacobi method, which means the parallelization for the Jacobi method is straightforward. However, in the Gauss-Seidel method, the nodal ordering influences the convergence behavior. There are various nodal orderings summarized in \citep{hackbusch2013multi}, such as red-black, lexicographical, zebra-line, and four-color ordering. More advanced algorithms are required for the successful parallelization of the Gauss-Seidel method. Otherwise, uncontrolled splitting of the process leads to the so-called \textit{chaotic} Gauss-Seidel method.  
 
 In terms of convergence, both stationary methods depend on the spectral radius of the corresponding iteration matrix $\boldsymbol{Q}$, which is affected by the splitting matrix $\boldsymbol{S}$ chosen for each of these two methods. If both methods converge, the convergence rate of the Gauss-Seidel method is better as each iteration would use the updated data as soon as available. 
 
 Specifically, it is sufficient for the Jacobi method to converge if the system Matrix $\boldsymbol{A}$ is strictly diagonally dominant 
-\cite{https://doi.org/10.1002/zamm.19940740205}
+\citep{https://doi.org/10.1002/zamm.19940740205}
 \begin{align}
     |A_{ii}| > \sum_{j=1,j\neq i}^{n}|A_{ij}| \text{ for all }i
     \label{cond:jacobi}
 \end{align}
 
-For a linear system that doesn't satisfy this condition, convergence can be achieved by additional damping. For the Gauss-Seidel method, other than the given condition in \autoref{cond:jacobi}, the convergence is also guaranteed if the system matrix $A$ is positive definite. The second condition is usually satisfied for the finite difference method or the finite element method if properly restrained and stabilized. \cite{bathe2006finite} Other than directly used as standalone iterative solvers, the damped Jacobi method or the Gauss-Seidel method can be applied as smoothers within the multigrid method.
+For a linear system that doesn't satisfy this condition, convergence can be achieved by additional damping. For the Gauss-Seidel method, other than the given condition in \autoref{cond:jacobi}, the convergence is also guaranteed if the system matrix $A$ is positive definite. The second condition is usually satisfied for the finite difference method or the finite element method if properly restrained and stabilized. \citep{bathe2006finite} Other than directly used as standalone iterative solvers, the damped Jacobi method or the Gauss-Seidel method can be applied as smoothers within the multigrid method.
 
 \subsubsection{Relaxation methods}
 Relaxation methods are also stationary iterative methods, thus they can also be presented in the form \autoref{iter:stationary}. For each of the methods introduced previously, there also exists a corresponding relaxation method.
@@ -113,12 +113,12 @@ In comparison to the precedent methods, the relaxation methods scale each increm
 \end{align}
 where for each individual index $i$, the temporary variable $\Breve{u}_i^{k+1}$ is computed as the $u_i^{k+1}$ of the Jacobi method in the case of the simultaneous over-relaxation method (JOR method) or as the $u_i^{k+1}$ of the Gauss-Seidel method in the case of the successive over-relaxation method (SOR method). Thus when $\omega = 1$, the relaxation scheme is identical to the Jacobi or the Gauss-Seidel method.
 
-The optimum relaxation factor can be derived theoretically from the spectral radius of the iteration matrix. However, this is expensive. For more practical use, several methods for the determination of $\omega$ were proposed in \cite{https://doi.org/10.1002/zamm.19940740205} and \cite{young2014iterative}.
+The optimum relaxation factor can be derived theoretically from the spectral radius of the iteration matrix. However, this is expensive. For more practical use, several methods for the determination of $\omega$ were proposed in \citep{https://doi.org/10.1002/zamm.19940740205} and \citep{young2014iterative}.
 
 
 \subsection{Krylov Subspace Methods}
 \label{section:krylov_subspace}
-Stationary iterative methods have been applied for a long time in history, but over the last few decades, Krylov subspace methods become more popular. These methods focus on building Krylov subspaces, named after Aleksei Nikolaevich Krylov who used these spaces to analyze oscillations of mechanical systems \cite{krylov1931numerical}. The Krylov subspace takes the form
+Stationary iterative methods have been applied for a long time in history, but over the last few decades, Krylov subspace methods become more popular. These methods focus on building Krylov subspaces, named after Aleksei Nikolaevich Krylov who used these spaces to analyze oscillations of mechanical systems \citep{krylov1931numerical}. The Krylov subspace takes the form
 \begin{equation}
     \mathcal{K}_k(A,\boldsymbol{v}) := \text{span}\{\boldsymbol{v},A\boldsymbol{v},\dots,A^{k-1}\boldsymbol{v}\}
 \end{equation}
@@ -127,7 +127,7 @@ where $A \in \mathbb{C}^{n\times n}$ and $\boldsymbol{v} \in \mathbb{C}^n$
 
 
 \subsubsection{Conjugate Gradient Method}
-The conjugate gradient (CG) method was developed by \textit{Hestenes \& Stiefel} \cite{hestenes1952methods} as one of the first Krylov subspace methods, and has been one of the most popular iterative methods in solving linear systems. Compared to the iterative methods mentioned in previous sections which are known to be stationary, the CG method is non-stationary. Let $\boldsymbol{A} \in \mathbb{R}^{n\times n}$ be a symmetric positive definite (SPD) matrix, and $\boldsymbol{f} \in \mathbb{R}^n$ be a real vector, then the minimization problem of the quadratic form $F(x) = min$
+The conjugate gradient (CG) method was developed by \textit{Hestenes \& Stiefel} \citep{hestenes1952methods} as one of the first Krylov subspace methods, and has been one of the most popular iterative methods in solving linear systems. Compared to the iterative methods mentioned in previous sections which are known to be stationary, the CG method is non-stationary. Let $\boldsymbol{A} \in \mathbb{R}^{n\times n}$ be a symmetric positive definite (SPD) matrix, and $\boldsymbol{f} \in \mathbb{R}^n$ be a real vector, then the minimization problem of the quadratic form $F(x) = min$
 \begin{equation}
     F(\boldsymbol{u}) = \frac{1}{2}\boldsymbol{u}^T\boldsymbol{A}\boldsymbol{u} - \boldsymbol{f}^T\boldsymbol{u}
 \end{equation}
@@ -189,7 +189,7 @@ The following equations describe the algorithm of the conjugate gradient method
     \boldsymbol{p}^{k+1} &= \boldsymbol{r}^k - \frac{{\boldsymbol{r}^{k+1}}^T\boldsymbol{A}\boldsymbol{p}^k}{{\boldsymbol{p}^k}^T \boldsymbol{A}\boldsymbol{p}^k} \boldsymbol{p}^k % something wrong with the spacing here
 \end{align}
 
-As shown in \cite{https://doi.org/10.1002/zamm.19940740205}, for an efficient implementation, it is possible to use an alternative form for $\lambda_k$ and $p^{k+1}$
+As shown in \citep{https://doi.org/10.1002/zamm.19940740205}, for an efficient implementation, it is possible to use an alternative form for $\lambda_k$ and $p^{k+1}$
 \begin{align}
      \lambda_k &= \frac{{\boldsymbol{r}^k}^T\boldsymbol{r}^k}{{\boldsymbol{p}^k}^T\boldsymbol{A}\boldsymbol{p}^k} \\
      \boldsymbol{p}^{k+1} &= \boldsymbol{r}^k + \frac{{\boldsymbol{r}^{k+1}}^T\boldsymbol{r}^k}{{\boldsymbol{r}^k}^T\boldsymbol{r}^k}\boldsymbol{p}^k

@@ -7,7 +7,7 @@ We use the scalar value $u$ to denote this displacement component.
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figures/BP1-figure}
-    \caption{BP1 considers a planar fault embedded in a homogeneous, linear elastic halfspace with a free surface. The fault is governed by rate-and-state friction down to the depth $W_f$ and creeps at an imposed constant rate $V_p$ down to the infinite depth. The simulations will include the nucleation, propagation, and arrest of earthquakes, and aseismic slip in the post- and inter-seismic periods. The figure and the description are given in \cite{erickson2018seas}}
+    \caption{BP1 considers a planar fault embedded in a homogeneous, linear elastic halfspace with a free surface. The fault is governed by rate-and-state friction down to the depth $W_f$ and creeps at an imposed constant rate $V_p$ down to the infinite depth. The simulations will include the nucleation, propagation, and arrest of earthquakes, and aseismic slip in the post- and inter-seismic periods. The figure and the description are given in \citep{erickson2018seas}}
     \label{fig:enter-label}
 \end{figure}
 
@@ -46,13 +46,13 @@ Below depth $W_f$, the fault creeps at an imposed constant rate, given by the in
 For the simulation, we discretize our problem on a 401 $\times$ 401 grid points in each direction after discretization on a 2D domain with around 160k unknowns. 
 The conjugate gradient method without a preconditioner on GPUs is fast enough for the simulation to be complete in $\sim$ 2 days on a V100 GPU after solving linear system $\sim$ 300000 times.
 It takes around 0.5 seconds to solve linear systems, update values, and perform other data operations.
-The results for this simulation are published in \cite{erickson2023incorporating} under the model name Thrase.
+The results for this simulation are published in \citep{erickson2023incorporating} under the model name Thrase.
 
 
 \begin{figure}
     \centering
     \includegraphics[width=\linewidth]{figures/BP1-seismic-plot.png}
-    \caption{Long‐term behavior of BP1‐FD models. Our model name is Thrase in this figure. (a) Shear stress and (b) slip rates at the depth of 7.5 km across codes with sufficiently large computational domain sizes. Also shown (in dashed black) are those for the quasi‐dynamic counterpart BP1‐QD. The color version of this figure is available only in the electronic edition. \cite{erickson2023incorporating}}
+    \caption{Long‐term behavior of BP1‐FD models. Our model name is Thrase in this figure. (a) Shear stress and (b) slip rates at the depth of 7.5 km across codes with sufficiently large computational domain sizes. Also shown (in dashed black) are those for the quasi‐dynamic counterpart BP1‐QD. The color version of this figure is available only in the electronic edition. \citep{erickson2023incorporating}}
     \label{fig:BP1-seismic-plot}
 \end{figure}
 
