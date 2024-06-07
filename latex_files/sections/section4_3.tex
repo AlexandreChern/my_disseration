@@ -104,7 +104,7 @@ Aside from this configuration, other PETSc configurations in the table exhibit c
     \label{tab:mgcg_2} 
 \end{table*}
 
-With the matrix-free action of $\boldsymbol{A}$ established, we can solve system \autoref{eqn: final} with a matrix-free version of our custom MGCG method (MF-MGCG). 
+With the matrix-free action of $\boldsymbol{A}$ established, we can solve system with a matrix-free version of our custom MGCG method (MF-MGCG). 
 Other than low-level GPU kernels, Julia also supports high-level vectorization for GPU computing, which we utilize extensively in our MGCG code for convenience.
 In this section, we compare its performance against MGCG using the cuSPARSE (matrix-explicit) SpMV (SpMV-MGCG) and also against the state-of-the-art off-the-shelf methods offered by NVIDIA, namely, AmgX - the GPU accelerated algebraic multigrid. The solvers and preconditioners used by AmgX are stored as JSON files. 
 We explored different sample JSON configuration files for AmgX in the source code and found that CG preconditioned by classical AMG performed best for our problem. 

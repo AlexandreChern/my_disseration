@@ -1,4 +1,4 @@
-SBP methods approximate partial derivatives using one-sided differences at all points close to the boundary node, generating a matrix approximating a partial derivative operator. In this work we focus on second-order derivatives which appear in \eqref{eqn:2Dvar}, however the matrix-free methods we derive are applicable to any second-order PDE. We consider SBP finite-difference approximations to boundary-value problem \eqref{eqn:2Dvar}, i.e. on the square computational domain $\bar\Omega$; solutions on the physical domain $\Omega$ are obtained by the inverse coordinate transformation.
+SBP methods approximate partial derivatives using one-sided differences at all points close to the boundary node, generating a matrix approximating a partial derivative operator. In this work we focus on second-order derivatives, however the matrix-free methods we derive are applicable to any second-order PDE. We consider SBP finite-difference approximations to boundary-value problem, i.e. on the square computational domain $\bar\Omega$; solutions on the physical domain $\Omega$ are obtained by the inverse coordinate transformation.
 
 In this work, we focus on SBP operators with second-order accuracy which contains abundant complexity at domain boundaries to enable insight into implementation design extendable to higher-order methods.  To provide background on the SBP methods we first describe the 1D operators, as Kronecker products are used to form their multi-dimensional counterparts. 
 
@@ -111,7 +111,7 @@ We use the following example from \citep{RUGGIU2018216} to showcase an example o
 
 where both g and h are known for initial and boundary conditions. The problem \autoref{eqn:1d_sbp_problem} has an energy-estimate and is well-posed. We can easily learn that the analytical solution for this equation is a right-traveling wave.
 
-We discretize 1D domain with $N+1$ points in a uniform grid on $[0,1]$ using the method described in \autoref{section:1d-sbp}. By applying SBP-SAT discretization in space to \autoref{eqn:1d_sbp_problem}, we get
+We discretize 1D domain with $N+1$ points in a uniform grid on $[0,1]$ using the method described in the previous section on the SBP-SAT methods. By applying SBP-SAT discretization in space to \autoref{eqn:1d_sbp_problem}, we get
 \begin{align}
     \begin{split}
         \boldsymbol{u}_t + D_1\boldsymbol{u} &= P^{-1}\sigma(\boldsymbol{u}_0 - \boldsymbol{g}) \boldsymbol{e}_0, \quad t > 0\\

@@ -35,7 +35,7 @@ Vector $\hat{\boldsymbol{n}}^k$ is the outward pointing normal to the face and $
 \begin{figure}
     \centering
      \includegraphics[width=\linewidth]{figures/grid_transformation.pdf}
-    \caption{(a) Geometrically complex physical domain $\Omega$ with material stiffness that increases from $\mu_\text{in}$ within a shallow, ellipsoidal sedimentary basin, to stiffer host rock given by $\mu_\text{out}$.  (b) $\Omega$ is transformed to the regular, square domain $\bar{\Omega}$ via conformal mapping.} 
+    \caption{(a) Geometrically complex physical domain $\Omega$ with material stiffness that increases from $\mu_\text{in}$ within a shallow, ellipsoidal sedimentary basin, to stiffer host rock given by $\mu_\text{out}$.  (b) $\Omega$ is transformed to the regular, square domain $\bar{\Omega}$ via conformal mapping.} \label{fig:trans}
 \end{figure}
 
 
@@ -71,7 +71,7 @@ Matrix $\boldsymbol{\tau}_k$ = $\hat{n}^k_i \boldsymbol{C}^k_{ij}\hat{n}^k_j{\bo
 
 \noindent where 
 
-\begin{equation}\label{eqn: minval}
+\begin{equation}\label{eqn:minval}
 {\bf P}_k = 
 \begin{cases}
 {\boldsymbol{C}}^{k}_{rr} ({\boldsymbol{C}}_{rr}^{k, min})^{-1}, \quad $k = 1, 2$,\\
@@ -89,10 +89,10 @@ Imposing Neumann conditions on faces $k = 3, 4$ corresponds to SAT vectors
 
 
 In order to render the linear system \autoref{eqn:2Ddiscrete} SPD, we multiply by $\left(\boldsymbol{H} \otimes \boldsymbol{H}\right)$ (the discrete equivalent of integrating over $\bar\Omega$ and discretizing the weak form). This process yields the final linear system 
-\begin{equation}\label{eqn: final}
+\begin{equation}\label{eqn:final}
    \boldsymbol{A} \boldsymbol{u} = {\boldsymbol{b}} 
 \end{equation} where
-\begin{equation}\label{eqn:discrete}
+\begin{equation}\label{eqn:discrete-linear}
 \boldsymbol{A} = \tilde{\boldsymbol{M}}^{(c_{ij})}_{ij} + \sum_{k = 1, 2} \boldsymbol{C}_k,
 \end{equation}
 %
