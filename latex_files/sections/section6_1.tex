@@ -1,8 +1,8 @@
 \section{Conclusion}
 In this thesis, I present the research work during my PhD to apply HPC methods to earthquake cycle simulations.
-In particular, I focus on designing efficient iterative solvers for the numerical stable SBP-SAT finite difference methods.
+In particular, I focus on designing efficient iterative solvers for the numerically stable SBP-SAT finite difference methods.
 There are mainly two novel contributions of the work. Firstly, I design matrix-free GPU kernels for SBP-SAT methods based on traditional stencil computation. Secondly, I designed a geometric multigrid preconditioner that is compatible with my matrix-free GPU kernels based on the existing work of the SBP-preserving interpolation operators.
 The combined approach has been proven efficient in solving linear systems formed with the SBP-SAT methods, and we are outperforming the state-of-the-art implementations from well-known scientific computing libraries and proprietary software.
 We then apply this approach to solving SEAS modeling problems and achieve more than 100x speedup compared to traditional methods.
 More importantly, this approach is memory efficient that allows us to solve a 3D simulation problem formulated with the SBP-SAT method that can not be solved by factorization-based direct methods. 
-The work presented in this thesis is valuable not only to earth science research but also to numerous other scientific fields where SBP-SAT methods can be applied.
+The work presented in this thesis is valuable not only to Earth science research but also to numerous other scientific fields where SBP-SAT methods can be applied.

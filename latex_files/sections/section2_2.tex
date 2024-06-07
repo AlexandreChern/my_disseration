@@ -3,7 +3,7 @@ SBP methods approximate partial derivatives using one-sided differences at all p
 In this work, we focus on SBP operators with second-order accuracy which contains abundant complexity at domain boundaries to enable insight into implementation design extendable to higher-order methods.  To provide background on the SBP methods we first describe the 1D operators, as Kronecker products are used to form their multi-dimensional counterparts. 
 
 
-\subsubsection{1D Operators}
+\subsection{1D SBP Operators}
 
 We discretize the spatial domain $-1\leq r \leq 1$ with $N+1$ evenly spaced grid points $r_i = -1 + ih, i=0, \dots, N$ with grid spacing $h = 2/N$. A function $u$ projected onto the computational grid is denoted by $\boldsymbol{u} = [u_0, u_1, \dots, u_N]^T$ and is often taken to be the interpolant of $u$ at the grid points. We define the grid basis vector $\vec{e}_j$ to be a vector with value 1 at grid point $j$ and 0 for the rest, which allows us to extract the jth component: $u_j = \vec{e}_j^T\vec{u}$.  
 
@@ -79,7 +79,7 @@ which, as highlighted in red, resembles the traditional (second-order-accurate) 
 
 
 
-\subsubsection{2D SBP Operators}\label{2d_sbp}
+\subsection{2D SBP Operators}\label{2d_sbp}
 The 2D domain $\bar\Omega$ is discretized using $N+1$ grid points in each direction, resulting in an  $(N+1) \times (N+1)$
 grid of points where grid point $(i,j)$ is at $(x_i, y_j) = (-1 + ih, -1 + jh)$ for $0
 \leq i, j \leq N$ with $h = 2/N$. Here we have assumed equal grid spacing in each direction, only for notational ease; the generalization to different
@@ -94,7 +94,7 @@ for $i, j \in \{r, s\}$.
 Here $\tilde{\boldsymbol{M}}^{(c_{ij})}_{ij}$ is the sum of SPD matrices approximating integrated second derivatives (i.e. sum over repeated indices $i, j$) for example $\int_{\bar\Omega} \frac{\partial}{\partial r} c_{rr} \frac{\partial}{\partial r}  \approx  \tilde{\boldsymbol{M}}^{(c_{rr})}_{rr}$ and matrix $\boldsymbol{T}$ involves the boundary derivative computations, see \cite{Erickson2022} for complete details.
  
 
-\subsubsection{SAT Penalty Terms}
+\subsection{SAT Penalty Terms}
 SBP methods are designed to work with various impositions of boundary conditions that lead to provably stable methods, for example through weak enforcement via the simultaneous-approximation-term (SAT) ~\cite{CarpenterGottliebAbarbanel1994} which we adopt here. As opposed to traditional finite difference methods that ``inject" boundary data by overwriting grid points with the given data, the SAT technique imposes boundary conditions weakly (through penalization), so that all grid points approximate both the PDE and the boundary conditions up to a certain level of accuracy.  The combined approach is known as SBP-SAT.
 Where traditional methods that use injection or strong enforcement of boundary/interface conditions destroy the discrete integration-by-parts property, using SAT terms enables proof of the method's stability (a necessary property for numerical convergence)~\cite{Mattsson2003}.
 
