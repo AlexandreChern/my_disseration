@@ -13,18 +13,18 @@ Here, $\rho$ is the material density, $u$ is the vector of particle displacement
     \caption{A 3D image of the complex fault network from EMC earthquake; image generated using scripts from \cite{https://doi.org/10.1002/2016GL072289}}
     \label{fig:fault-network}
 \end{figure}
-A fault network (shown in \autoref{fig:fault-network}) is composed of faults governed by non-linear, rate-and-state friction which determines the relationship between the slip velocity $V$ to shear traction $\tau$ with the (effective) norm stress $\bar{\sigma}$, the friction coefficient $f$ and a state variable $\Psi$.
+A fault network (an example shown in \autoref{fig:fault-network}) is composed of faults governed by non-linear, rate-and-state friction which determines the relationship between the slip velocity $V$ to shear traction $\tau$ with the (effective) norm stress $\bar{\sigma}$, the friction coefficient $f$ and a state variable $\Psi$.
 \begin{equation}\label{eqn:friction-law}
     \tau = \bar{\sigma} f(V,\Psi), \Psi = G(V, \Psi)
 \end{equation}
 The form of the state evolution law $G$ can take several forms such as the aging law in which the state evolves in the absence of slip or the slip law with strong rate-weakening.
 
-During the interseismic phase, the inertial terms in the governing equation \ref{eqn:governing} are set 0 ($\ddot{u} = 0$).
-Tectonic loading is imposed through time-dependent boundary conditions and the slip on faults are incorporated through friction law \ref{eqn:friction-law}.
+During the interseismic phase, the inertial terms in the governing \autoref{eqn:governing} are set 0 ($\ddot{u} = 0$).
+Tectonic loading is imposed through time-dependent boundary conditions and the slip on faults are incorporated through friction law \autoref{eqn:friction-law}.
 The evolution of $\Psi$ constraints the time step, and very large time steps can be used during the interseismic phase.
-The main computational challenge comes from solving the large linear systems of equations that come from the discretization of the steady-state version of the equation \ref{eqn:governing}.
+The main computational challenge comes from solving the large linear systems of equations that come from the discretization of the steady-state version of the \autoref{eqn:governing}.
 During the interseismic phase, tectonic loading determines the boundary conditions and the stress on faults as the result of elastic deformation.
-Once an event begins to nucleate, we enter the coseismic phase and inertial terms of governing equation \ref{eqn:governing} are retained.
+Once an event begins to nucleate, we enter the coseismic phase and inertial terms of governing \autoref{eqn:governing} are retained.
 It is more efficient to use explicit integration during this period because it simplifies the computation. In both phases, the governing equation can be solved using the SBP-SAT methods mentioned in the previous section.
 
 \subsection{3D Problem Setup}
@@ -33,11 +33,9 @@ The medium is assumed to be a homogeneous, isotropic, linear elastic half-space 
 \begin{equation} \label{eqn:domain}
     \textbf{x} = (x_1, x_2, x_3) \in (-\infty, \infty) \times (\infty, \infty) \times (0, \infty)
 \end{equation}
-
 with a free surface at $x_3 = 0$ and $x_3$ as positive downward. A vertical, strike-slip fault is embedded at $x_1 = 0$, We use the notation ``+'' and ``-'' to refer to the different sides of the fault. 
 
 We assume 3D motion, letting $u_i = u_i(\textbf{x}, t), i = 1, 2, 3$ denote the displacement in the $i$-direction.
-
 Hooke’s law for linear elasticity is given by
 \begin{equation}
     \sigma_{ij} = K\epsilon_{kk}\delta_{ij} + 2\mu (\epsilon_{ij} - \frac{1}{3} \epsilon_{kk}\delta_{ij})
@@ -46,9 +44,7 @@ for bulk modulus $K$ and shear modulus $\mu$. The strain-displacement relations 
 \begin{equation}
     \epsilon_{ij} = \frac{1}{2} \left[\frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i}\right]
 \end{equation}
-
 The description of these benchmark problems can be found in \cite{erickson2018seas,jiang2020seas}.
-
 To simulate the SEAS problems using the quasi-static method, it usually follows these steps.
 
 \begin{algorithm}
@@ -58,18 +54,19 @@ To simulate the SEAS problems using the quasi-static method, it usually follows 
         
         \While{simulation time not reached}
             \State \textbf{Step 2:} Solve steady-state problems to obtain displacements
-            \State \hspace{1em} In 2D, Solve Poisson's equation
-            \State \hspace{1em} In 3D Solve linear elasticity
+            % \State \hspace{1em} In 2D, Solve Poisson's equation
+            % \State \hspace{1em} In 3D Solve linear elasticity
+            \State \hspace{1em} Linear solve of equations of static elasticity
             
             \State \textbf{Step 3:} Calculate stress from displacements
             
-            \State \textbf{Step 4:} Calculate displacement velocity using stress and rate-and-state frictions
+            \State \textbf{Step 4:} Calculate slip velocity using rate-and-state friction
             
             \State \textbf{Step 5:} Determine time step size ($dt$) using ODE solver
             
-            \State \textbf{Step 6:} Calculate state variables using aging law and $dt$
+            \State \textbf{Step 6:} Integrate state variables using aging law and $dt$
             
-            \State \textbf{Step 7:} Update boundary conditions using velocity and $dt$
+            \State \textbf{Step 7:} Update boundary conditions using slip velocity and $dt$
         \EndWhile
     \end{algorithmic}
 \end{algorithm}
@@ -105,10 +102,10 @@ where \textbf{F} and \textbf{V} are vectors and $V$ is the norm of the \textbf{V
 The rate-and-state friction where shear stress on fault is equal to fault strength \textbf{F}.
 In Quadsi-static simulations, fault displacements are solved given governing equations and boundary conditions. 
 Shear stress is calculated using displacements on fault.
-In equation \ref{eqn:fault-strength} and \ref{eqn:friction-coefficient}, we can solve for $V$ and then calculate components of $V$ based on components of \textbf{F}. 
+In \autoref{eqn:fault-strength} and \autoref{eqn:friction-coefficient}, we can solve for $V$ and then calculate components of $V$ based on components of \textbf{F}. 
 This significantly simplifies the calculation and improves numerical accuracy due to the magnitude differences between different components of \textbf{F} and \textbf{V}.
 
-Once all parameters in Equation \ref{eqn:friction-coefficient} and \ref{eqn:fault-strength} are known along shear stress calculated from displacements, it is common to apply Newton's method given in Algorithm \ref{alg:newton} to solve the non-linear equation to obtain $V$.
+Once all parameters in \autoref{eqn:friction-coefficient} and \autoref{eqn:fault-strength} are known along shear stress calculated from displacements, it is common to apply Newton's method given in Algorithm \autoref{alg:newton} to solve the non-linear equation to obtain $V$.
 \begin{algorithm}
 \caption{Newton's Method}
 \begin{algorithmic}[1]
@@ -137,7 +134,7 @@ Once all parameters in Equation \ref{eqn:friction-coefficient} and \ref{eqn:faul
 In our problem with high nonlinearity from the $\sinh^{-1}$ function, to improve numerical stability, we also need to apply the ``safe-guarded'' method.
 One commonly used method is called bisection, it uses a similar approach to binary search. 
 Based on the functional values of a close range $[x_L, x_r]$, it updates the search range of the root $x$.
-Newton's method modified with Bisection is given in Algorithm \ref{agl:newton-bisec}.
+Newton's method modified with Bisection is given in Algorithm \autoref{agl:newton-bisec}.
 
 \begin{algorithm}
 \caption{Newton's Method with Bisection}

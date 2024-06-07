@@ -189,7 +189,7 @@ which was first introduced in \cite{RUGGIU2018216}. This involves the coarse gri
     (\phi_1,\psi_1)_{H_1} &= (\phi_1H_1\psi_1) \\
      (\phi_2,\psi_2)_{H_2} &= (\phi_2H_2\psi_2)
 \end{align}
-are equal for $\phi_1 = I_p\phi_2$ and $\psi_2 = I_r \psi_1$. $\phi$ and $\psi$ correspond to the $\boldsymbol{u}$ and $\boldsymbol{v}$ in the previous section that describes the SBP-SAT methods in detail. We use these new notations to avoid confusion with the $\mathbf{u}$ used in the previous subsection on the multigrid method. As a result, the interpolation operators $I_r$ and $I_p$ are adjoints to each other with respect to the SBP-based scalar products defined in \cite{hackbusch2013multi}.
+are equal for $\phi_1 = I_p\phi_2$ and $\psi_2 = I_r \psi_1$. $\phi$ and $\psi$ correspond to the $\boldsymbol{u}$ and $\boldsymbol{v}$ in the previous section on iterative solvers. We use these new notations to avoid confusion with the $\mathbf{u}$ used in the previous subsection on the multigrid method. As a result, the interpolation operators $I_r$ and $I_p$ are adjoints to each other with respect to the SBP-based scalar products defined in \cite{hackbusch2013multi}.
 \begin{align}
     (I_p,\xi_2,\xi_1)_{H_1} = (\xi_2,I_r\xi_1)_{H_2}
     \label{eqn:adjoint}
@@ -263,7 +263,7 @@ Both grids are conforming to domain boundaries, implying that $(I_p\phi_2)_i = \
 \begin{align}
      (\phi_2,D_{2,2}\psi_2)_{H_2} &= \phi_{2,N/2}(S\phi_2)_{N/2} \nonumber\\ &- \phi_{2,0}(S\phi_2)_0 - (SI_p\phi_2)^TA(SI_p\psi_2)_{H_2}
 \end{align}
-where $S$ is equivalent to $\boldsymbol{d}_0^T$ in \autoref{subsection:sbp-sat} which approximates the first derivative at the boundaries.
+where $S$ is equivalent to $\boldsymbol{d}_0^T$ which approximates the first derivative at the boundaries as discussed in the previous section on the SBP-SAT methods.
 
 Additional proofs or propositions to SBP-preserving interpolations can also be found in  \cite{ruggiu2018new}. Furthermore, several model problems have been tested with multigrid iteration schemes using these SBP-preserving interpolations. These problems include a Poisson equation, the anisotropic elliptic problem, and the advection-diffusion problem. Numerical experiments show that the SBP-preserving interpolation improves convergence properties of the multigrid scheme for SBP-SAT discretizations regardless of the order of the discretization and smoother chosen. Moreover, the excellent performance in combination with the smoother SOR, clearly indicates that multigrid algorithms with SBP-preserving interpolation can be designed to get fast convergence. The paper mainly covers the steady model problem to compare the effect of different grid transfer operators. For time-dependent problems, the effectiveness of multigrid algorithms with these SBP-preserving interpolations needs to be tested \cite{ruggiu2018new}.
 
