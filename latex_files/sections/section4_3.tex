@@ -104,14 +104,14 @@ Aside from this configuration, other PETSc configurations in the table exhibit c
     \label{tab:mgcg_2} 
 \end{table*}
 
-With the matrix-free action of $\boldsymbol{A}$ established, we can solve system with a matrix-free version of our custom MGCG method (MF-MGCG). 
+With the matrix-free action of $\boldsymbol{A}$ established, we can solve system  with a matrix-free version of our custom MGCG method (MF-MGCG). 
 Other than low-level GPU kernels, Julia also supports high-level vectorization for GPU computing, which we utilize extensively in our MGCG code for convenience.
 In this section, we compare its performance against MGCG using the cuSPARSE (matrix-explicit) SpMV (SpMV-MGCG) and also against the state-of-the-art off-the-shelf methods offered by NVIDIA, namely, AmgX - the GPU accelerated algebraic multigrid. The solvers and preconditioners used by AmgX are stored as JSON files. 
 We explored different sample JSON configuration files for AmgX in the source code and found that CG preconditioned by classical AMG performed best for our problem. 
 To maintain a multigrid setup comparable to our MGCG, we modified the \texttt{PCG\_CLASSICAL\_V\_JACOBI.json} to use 1 and 5 smoothing steps with block Jacobi as the smoother.
 % and remove aggressive coarsening. 
 All algorithms stop when the relative residual is reduced to less than $10^{-6}$ times the initial residual.
-We report results from AmgX in \autoref{tab:mgcg_1} and our MGCG in \autoref{tab:mgcg_2}. Also included in the table are results using a direct solve (using LU factorization in LAPACK in Julia) only because it is so often used in the earthquake cycle community for volume based codes \citep{erickson2020community} and our developed methods offer promising alternatives. As illustrated, the GPU-accelerated iteratives schemes achieve much better performance for the problem sizes tested.
+We report results from AmgX in \autoref{tab:mgcg_1} and our MGCG in \autoref{tab:mgcg_2}. Also included in the table are results using a direct solve (using LU factorization in LAPACK in Julia) only because it is so often used in the earthquake cycle community for volume based codes \citep{10.1785/0220190248} and our developed methods offer promising alternatives. As illustrated, the GPU-accelerated iteratives schemes achieve much better performance for the problem sizes tested.
 
 The results from \autoref{tab:mgcg_1} and \autoref{tab:mgcg_2} show that our MGCG method uses fewer iterations to converge compared to AmgX, while iterations for both remain generally constant with increasing problem size. When we increase smoothing steps from 1 to 5, the AmgX sees reduced iterations, but the time to solve also increases by roughly $3\times$.
 %This increase in time to solve is more noticeable for smaller problems with $N=2^{10}, 2^{11}, 2^{12}$.

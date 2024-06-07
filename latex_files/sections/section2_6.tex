@@ -149,7 +149,7 @@ There are more schemes for multigrid, and the main schemes are summarized in\aut
     \centering
     \includegraphics[width=\linewidth]{figures/multigrid_scheme.png}
     \caption{Schedule of grids for (a) V-cycle, (b) W-cycle, and (c) FMG scheme,
-all on four levels. \citep{briggs2000multigrid}}
+all on four levels. \citep{10.5555/357695}}
     \label{fig:multigrid_scheme}
 \end{figure}
 
@@ -157,7 +157,7 @@ Earlier work in multigrid relies on the geometric structure to construct coarse 
 
 \subsection{Algebraic Multigrid}
   The classical multigrid formed around the geometric structure has been generalized that the multigrid is analyzed in terms of the matrix properties \citep{mccormick1982multigrid}. This algebraic approach to theory was further extended to form the basis for much of the early development that led to the so-called Ruge-St{\"u}ben or classical algebraic multigrid (CAMG) method \citep{brandt1986algebraic,mandel1988algebraic,ruge1987algebraic}. A detailed overview of the algebraic multigrid can be found in this recent paper \citep{xu2017algebraic}. Here, we want to present it more concisely.
-  We begin this subsection with the following theorem in linear algebra taken from \citep{briggs2000multigrid}.
+  We begin this subsection with the following theorem in linear algebra taken from \citep{10.5555/357695}.
 \begin{theorem}[Solvability and the Fundamental Theorem of Linear
 Algebra]
 Suppose we have a matrix $A \in \mathbf{R}^{m\times n}$. The fundamental theorem of linear algebra states that the range (column space) of the matrix, $\mathcal{R}(A)$, is equal to the orthogonal
@@ -170,7 +170,7 @@ orthogonally decomposed as follows:
 For the equation $A\mathbf{u}=\mathbf{f}$ to have a solution, it is necessary that the vector $\mathbf{f}$ lie in $\mathcal{R}(A)$. Thus, an equivalent condition is that $\mathbf{f}$ be orthogonal to every vector in $\mathcal{N}(A^T)$. For the equation $A\mathbf{u}=\mathbf{f}$ to have a \textit{unique} solution, it is necessary that $\mathcal{N}(A) = \{\mathbf{0}\}$. 
 Otherwise, if $\mathbf{u}$ is a solution and $\mathbf{v} \in \mathcal(A)$, then $A(\mathbf{u} + \mathbf{v}) = A\mathbf{u} + A\mathbf{v} = \mathbf{f} + \mathbf{0} = \mathbf{f}$, so the solution is not unique.
 \end{theorem}
-This is another point to view the coarse-grid correction scheme, and this leads to the algebraic multigrid. More theories related to this topic and the spectral picture of multigrid can be found in \citep{briggs2000multigrid}.
+This is another point to view the coarse-grid correction scheme, and this leads to the algebraic multigrid. More theories related to this topic and the spectral picture of multigrid can be found in \citep{10.5555/357695}.
 
 The unique aspect of the CAMG is that the coarse problem is defined on a subset of the degrees of freedom of the initial problem, thus resulting in both coarse and fine points, which leads to the term CF-based AMG. A different approach to constructing algebraic multigrid is called \textit{smoothed aggregation} AMG (SA), where collections of degrees-of-freedom define a coarse degree-of-freedom \citep{vanvek1996algebraic}. Together, CF and SA form the basis of AMG and led to several developments that extend AMG to a wider class of problems and architectures.
 
