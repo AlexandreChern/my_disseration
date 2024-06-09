@@ -28,7 +28,7 @@ Once an event begins to nucleate, we enter the coseismic phase and inertial term
 It is more efficient to use explicit integration during this period because it simplifies the computation. In both phases, the governing equation can be solved using the SBP-SAT methods mentioned in the previous section.
 
 \subsection{3D Problem Setup}
-The 3D problem setup described below is taken from previous SEAS publications \citep{10.1785/0220190248}.
+The 3D problem setup described below is taken from the BP5 problem description \citep{jiang2020seas}.
 The medium is assumed to be a homogeneous, isotropic, linear elastic half-space defined by
 \begin{equation} \label{eqn:domain}
     \textbf{x} = (x_1, x_2, x_3) \in (-\infty, \infty) \times (\infty, \infty) \times (0, \infty)
@@ -71,7 +71,7 @@ To simulate the SEAS problems using the quasi-static method, it usually follows 
     \end{algorithmic}
 \end{algorithm}
 
-The DifferentialEquations.jl package provides powerful adapted ODE solvers based on Runge-Kutta methods and useful ODE interfaces that allow us to modify data and write to outputs.
+The DifferentialEquations.jl package provides powerful adaptive ODE solvers based on Runge-Kutta methods and useful ODE interfaces that allow us to modify data and write to outputs.
 The key challenge here is step 2 which requires solving a large linear system that is formed with the SBP-SAT methods.
 It's difficult to apply direct methods due to their high memory requirements and computational inefficiency. 
 In the next two chapters, we will go into detail to first formulate the linear systems using the SBP-SAT methods and then apply HPC algorithms to solve such problems.

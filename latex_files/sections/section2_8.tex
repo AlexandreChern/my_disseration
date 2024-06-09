@@ -13,7 +13,7 @@ There are currently three leading architectures of parallel models around which 
 \end{itemize}
 
 \subsubsection{Shared memory computers}
-A shared memory computer has processors connected to a large global memory, and the address space is the same for all processors. Data stored in a large global memory is readily accessible to any processor. There are two possible implementations of shared memory machines: 
+A shared memory computer has processors connected to a large global memory, and the address space is the same for all processors. Data stored in a large global memory is readily accessible to any processor. Traditionally, there are two possible implementations of shared memory machines: 
 \begin{itemize}
     \item bus-based architectures
     \item switch-based architectures
@@ -34,6 +34,7 @@ A shared memory computer has processors connected to a large global memory, and 
 \end{figure}
 
 These two architectures are illustrated in \autoref{fig:bus-shared} and \autoref{fig:switch-shared}. So far, the bus-based model has been used more often. Buses are the backbone for communication between the different units of most computers, and usually have higher bandwidth for data I/O. The main reason why the bus-based model is more common is that the hardware involved in such implementation is simpler \citep{adeli1987parallel}. However, memory conflicts as well as the necessity to maintain data coherence can lead to worse performance. Moreover, shared memory computers can not take advantage of data locality in problems such as solving PDEs. Some machines can even have logically shared but physically distributed memory.
+Modern HPC CPUs have ring meshes and Non-Uniform Memory Access (NUMA) to address challenges of scalability and communication \citep{569606,10.1145/1854273.1854350}.
 
 \subsubsection{Distributed Memory Architectures}
 The \textit{distributed memory} model can refer to distributed memory SIMD architecture or distributed memory with \textit{memory passing} interface. A typical distributed memory system consists of a large number of identical processors and each processor has its own memory. These processors are interconnected in a regular topology. This can be shown with \autoref{fig:distributed-memory}. In these diagrams, each processor unit can be viewed as a complete processor with its one memory, CPU, I/O subsystems, control unit, etc. These processors are linked to a number of ``neighboring'' processors. In the ``message passing'' model, no global synchronizations are performed of the parallel tasks. Instead, computations are \textit{data driven} because each processor performs a given task only when the operands it requires become available. The programmer needs to explicitly instruct data exchanges between different processors.
@@ -55,7 +56,7 @@ Unlike the shared-memory model, distributed memory computers can easily exploit 
 \subsection{Key Operations in Parallel Implementation}
 \subsubsection{Types of Operations}
 
-We use the preconditioned Conjugate Gradient to demonstrate the typical operations involved that can be parallelized. The PCG algorithm consists of the following types of operations:
+We use the preconditioned Conjugate Gradient (PCG) to demonstrate the typical operations involved that can be parallelized. The PCG algorithm consists of the following types of operations:
 \begin{itemize}
     \item Preconditioner setup
     \item Matrix-vector multiplications
@@ -64,10 +65,10 @@ We use the preconditioned Conjugate Gradient to demonstrate the typical operatio
     \item Preconditioning operations
 \end{itemize}
 
-Matrix-vector multiplications, vector updates, and dot products are common operations in so-called Basic Linear Algebra Subprograms (BLAS) that can be easily parallelized and have been well studied and implemented for dense matrices\citep{10.1145/77626.79170,chtchelkanova1997parallel,freeman1992parallel}. In terms of the computational costs, the vector update and dot product are much lower compared to the matrix-vector multiplication, which can still be carried out very quickly on the latest GPUs. The tricky part or the bottleneck for both memory and the runtime lies in the first step of preconditioner setup and the last step of preconditioning operations. We will discuss these two key operations in the next subsection. For now, let's focus on the Matrix-vector multiplication that has much higher computational costs than the vector update and the dot product.
+Matrix-vector multiplications, vector updates, and dot products are common operations in so-called Basic Linear Algebra Subprograms (BLAS) that can be easily parallelized and have been well studied and implemented for dense matrices\citep{10.1145/77626.79170,chtchelkanova1997parallel,freeman1992parallel}. In terms of the computational costs, the vector update and dot product are much lower compared to the matrix-vector multiplication, which can still be carried out very quickly on the latest GPUs. The tricky part or the bottleneck for both memory and the runtime lies in the first step of preconditioner setup and the last step of preconditioning operations. We will discuss these two key operations in the next subsection. For now, let's focus on the matrix-vector multiplication that has much higher computational costs than the vector update and the dot product.
 
-\subsubsection{Sparse Matrix-vector Products}
-The linear system coming from the discretization in the finite difference method is often sparse, which allows us to store them efficiently and use sparse matrix-vector products (SpMVs) for efficient computation. Different formats for storing sparse matrices can be found in \citep{doi:10.1137/1.9780898718003}. Compressed Sparse Row (CSR) sparse matrix format is one of the earliest sparse formats developed. It is ideal for parallelization since the data from each row can be handled independently. The SpMV algorithm for CSR format as well as the demonstration of the storage scheme of the CSR format is shown in \autoref{fig:csr}
+\subsubsection{Sparse Matrix-Vector Products}
+The linear system coming from the discretization in the finite difference method is often sparse, which allows us to store them efficiently and use Sparse Matrix-Vector Products (SpMVs) for efficient computation. Different formats for storing sparse matrices can be found in \citep{doi:10.1137/1.9780898718003}. Compressed Sparse Row (CSR) sparse matrix format is one of the earliest sparse formats developed. It is ideal for parallelization since the data from each row can be handled independently. The SpMV algorithm for CSR format as well as the demonstration of the storage scheme of the CSR format is shown in \autoref{fig:csr}
 
 \begin{figure}[h!]
     \centering
@@ -131,11 +132,8 @@ Here $A(i,j)$ refers to the element in the sparse matrix. The different sparse m
 Several techniques can be for parallel implementations of the preconditioners. They can be summarized into three types of techniques.
 The simplest approach is to use a Jacobi or block Jacobi approach. In this case, a Jacobi preconditioner may be consist of a diagonal or a block-diagonal of $A$
 To improve the performance, these preconditioners can be accelerated by polynomial iterations. For example, the second level of preconditioning is called \textit{polynomial preconditioning}.
-
 A different strategy is to enhance parallelism by using graph algorithms, such as graph-coloring techniques. The gist of this approach is that all unknowns associated with the same color can be determined simultaneously in the forward or backward sweeps.
-
 The third strategy uses generalizations of "partitioning" techniques which can be also called "domain decomposition" approaches.
-
 We will give a brief overview of these methods in this part.
 
 Overlapping block-Jacobi preconditioning is a parallel preconditioner similar to the general block-Jacobi approach with overlapping blocks as shown in \autoref{fig:overlap-block-jacobi}. Enlarging a system of algebraic equations by including duplicate copies of several rows, leads to an efficient iterative scheme on a multiprocessor MIMD array \citep{WAIT1988325}. 
@@ -242,7 +240,7 @@ The NVIDIA GPU platform has various memory architectures. The types of memory ca
 The effective bandwidth of each type of memory depends significantly on the access pattern. Global memory is relatively large but has a much higher latency. Using the right access pattern such as memory coalescing and avoiding bank conflicts will help achieve good memory bandwidth.
 
 
-GPUs were initially designed for graphics-related calculations such as image rendering. General-purpose GPU programming on NVIDIA GPUs is supported by the NVIDIA CUDA toolkit. CUDA programs use similar syntax to C++. The main code on the host (CPU) would invoke a \textit{kernel grid} that runs on the device (GPU). The same parallel kernel is executed by many threads. These threads are organized into thread blocks. Blocks and threads are the logical division of the GPU and are mapped to the actual SMs. Thread blocks are split into warps scheduled by SIMT units. All threads in the same block share the same shared memory and can be synchronized by a barrier. Threads in a warp execute one common instruction at a time. This is referred as warp-level synchronization \citep{wilt2013cuda}. It's most efficient when 32 threads of a warp follow the same execution path. Branch divergence in which threads within the same warp are executing different instructions often causes worse performance/
+GPUs were initially designed for graphics-related calculations such as image rendering. General-purpose GPU programming on NVIDIA GPUs is supported by the NVIDIA CUDA toolkit. CUDA programs use similar syntax to C++. The main code on the host (CPU) would invoke a \textit{kernel grid} that runs on the device (GPU). The same parallel kernel is executed by many threads. These threads are organized into thread blocks. Blocks and threads are the logical division of the GPU and are mapped to the actual SMs. Thread blocks are split into warps scheduled by SIMT units. All threads in the same block share the same shared memory and can be synchronized by a barrier. Threads in a warp execute one common instruction at a time. This is referred as warp-level synchronization \citep{wilt2013cuda}. It's most efficient when 32 threads of a warp follow the same execution path. Branch divergence in which threads within the same warp are executing different instructions often causes worse performance.
 
 CUDA is only a lower-level tool for direct kernel programming. Libraries built on top of CUDA allow users to directly use code and kernels written for different tasks without manually programming and optimizing kernels themselves. Existing common CUDA libraries that supports GPU SpMV operation include CUDPP (CUDA Data Parallel Primitives)\citep{harris2007cudpp}, NVIDIA Cusp library \citep{dalton2014cusp}, and the IBM SpMV library \citep{baskaran2009optimizing}. In these packages, different formats of sparse matrices are studied for producing high-performance SpMV kernels on GPUs. These include the compressed sparse row (CSR) format, the coordinate format (COO), the diagonal (DIA) format, the ELLPACK (ELL) format., and a hybrid (ELL/COO) format. There are other recent sparse matrix formats specifically designed for GPU computing, but we will not go into detail to cover each of them.
 
