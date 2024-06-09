@@ -1065,6 +1065,118 @@ pages	= {265--283}
   doi = {10.1109/TPDS.2018.2872064}
 }
 
+@article{10.1145/960118.808380,
+author = {Backus, John},
+title = {The history of FORTRAN I, II, and III},
+year = {1978},
+issue_date = {August 1978},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {13},
+number = {8},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/960118.808380},
+doi = {10.1145/960118.808380},
+abstract = {Before 1954 almost all programming was done in machine language or assembly language. Programmers rightly regarded their work as a complex, creative art that required human inventiveness to produce an efficient program. Much of their effort was devoted to overcoming the difficulties created by the computers of that era: the lack of index registers, the lack of built- in floating point operations, restricted instruction sets (which might have AND but not OR, for example), and primitive input- output arrangements. Given the nature of computers, the services which “automatic programming” performed for the programmer were concerned with overcoming the machine's shortcomings. Thus the primary concern of some “automatic programming” systems was to allow the use of symbolic addresses and decimal numbers (e.g., the MIDAC Input Translation Program [Brown and Carr 1954]).But most of the larger “automatic. Programming” systems (with the exception of Laning and Zierler's algebraic system [Laning and Zierler 1954] and the A-2 compiler [Remington Rand 1953; Moser 1954]) simply provided a synthetic “computer” with an order code different from that of the real machine. This synthetic computer usually had floating point instructions and index registers and had improved input-output commands; it was therefore much easier to program than its real counterpart.},
+journal = {SIGPLAN Not.},
+month = {aug},
+pages = {165–180},
+numpages = {16}
+}
+
+@inproceedings{10.1145/323779.323736,
+author = {Stroustrup, Bjarne},
+title = {An overview of C++},
+year = {1986},
+isbn = {0897912055},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/323779.323736},
+doi = {10.1145/323779.323736},
+booktitle = {Proceedings of the 1986 SIGPLAN Workshop on Object-Oriented Programming},
+pages = {7–18},
+numpages = {12},
+location = {Yorktown Heights, New York, USA},
+series = {OOPWORK '86}
+}
+
+@article{10.1145/323648.323736,
+author = {Stroustrup, Bjarne},
+title = {An overview of C++},
+year = {1986},
+issue_date = {Oct. 1986},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {21},
+number = {10},
+issn = {0362-1340},
+url = {https://doi.org/10.1145/323648.323736},
+doi = {10.1145/323648.323736},
+journal = {SIGPLAN Not.},
+month = {jun},
+pages = {7–18},
+numpages = {12}
+}
+
+@book{10.5555/2544010,
+author = {Josuttis, Nicolai M.},
+title = {The C++ Standard Library: A Tutorial and Reference},
+year = {2012},
+isbn = {0321623215},
+publisher = {Addison-Wesley Professional},
+edition = {2nd},
+abstract = {The Best-Selling C++ Resource Now Updated for C++11 The C++ standard library provides a set of common classes and interfaces that greatly extend the core C++ language. The library, however, is not self-explanatory. To make full use of its componentsand to benefit from their poweryou need a resource that does far more than list the classes and their functions. The C++ Standard Library: A Tutorial and Reference, Second Edition, describes this library as now incorporated into the new ANSI/ISO C++ language standard (C++11). The book provides comprehensive documentation of each library component, including an introduction to its purpose and design; clearly written explanations of complex concepts; the practical programming details needed for effective use; traps and pitfalls; the exact signature and definition of the most important classes and functions; and numerous examples of working code. The book focuses in particular on the Standard Template Library (STL), examining containers, iterators, function objects, and STL algorithms. The book covers all the new C++11 library components, including Concurrency Fractional arithmetic Clocks and timers Tuples New STL containers New STL algorithms New smart pointers New locale facets Random numbers and distributions Type traits and utilities Regular expressions The book also examines the new C++ programming style and its effect on the standard library, including lambdas, range-based for loops, move semantics, and variadic templates. An accompanying Web site, including source code, can be found at www.cppstdlib.com.}
+}
+
+
+@book{doi:10.1137/1.9781611974669,
+author = {Higham, Desmond J. and Higham, Nicholas J.},
+title = {MATLAB Guide, Third Edition},
+publisher = {Society for Industrial and Applied Mathematics},
+year = {2016},
+doi = {10.1137/1.9781611974669},
+address = {Philadelphia, PA},
+edition   = {},
+URL = {https://epubs.siam.org/doi/abs/10.1137/1.9781611974669},
+eprint = {https://epubs.siam.org/doi/pdf/10.1137/1.9781611974669}
+}
+
+
+
+
+
+
+
+@article{doi:10.1137/140980260,
+author = {Naumov, M. and Arsaev, M. and Castonguay, P. and Cohen, J. and Demouth, J. and Eaton, J. and Layton, S. and Markovskiy, N. and Reguly, I. and Sakharnykh, N. and Sellappan, V. and Strzodka, R.},
+title = {AmgX: A Library for GPU Accelerated Algebraic Multigrid and Preconditioned Iterative Methods},
+journal = {SIAM Journal on Scientific Computing},
+volume = {37},
+number = {5},
+pages = {S602-S626},
+year = {2015},
+doi = {10.1137/140980260},
+
+URL = { 
+    
+        https://doi.org/10.1137/140980260
+    
+    
+
+},
+eprint = { 
+    
+        https://doi.org/10.1137/140980260
+    
+    
+
+}
+,
+    abstract = { The solution of large sparse linear systems arises in many applications, such as computational fluid dynamics and oil reservoir simulation. In realistic cases the matrices are often so large that they require large scale distributed parallel computing to obtain the solution of interest in a reasonable time. In this paper we discuss the design and implementation of the AmgX library, which provides drop-in GPU acceleration of distributed algebraic multigrid (AMG) and preconditioned iterative methods. The AmgX library implements both classical and aggregation-based AMG methods with different selector and interpolation strategies, along with a variety of smoothers and preconditioners, including block-Jacobi, Gauss--Seidel, and incomplete-LU factorization. The library contains many of the standard and flexible preconditioned Krylov subspace iterative methods, which can be combined with any of the available multigrid methods or simpler preconditioners. The parallelism in the aggregation scheme exploits parallel graph matching techniques, while the smoothers and preconditioners often rely on parallel graph coloring algorithms. The AMG algorithm implemented in the AmgX library achieves \$2\$--\$5\times\$ speedup on a single GPU against a competitive implementation on the CPU. As will be shown in the numerical experiments section, both setup and solve phases scale well across multiple nodes, sustaining this performance advantage. }
+}
+
+
+
 @book{doi:10.1137/1.9781611970937,
 author = {Greenbaum, A.},
 title = {Iterative Methods for Solving Linear Systems},

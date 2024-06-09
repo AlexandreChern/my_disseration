@@ -5,7 +5,7 @@ Traditionally, Fortran has been used to write high performance numerical code.
 It is short for ``Formula Translation''. As the name suggest, it is one of the oldest and most enduring programming languages in scientific computing.
 Developed in the 1950s by IBM, it was designed to facilitate numerical and scientific computations, particularly for high-performance computing on mainframe computers.
 
-Fortran was specifically designed for efficient numerical and scientific computing, with optimized operations handling mathematical operations, arrays, and complex computations.
+Fortran was specifically designed for efficient numerical and scientific computing, with optimized operations handling mathematical operations, arrays, and complex computations \citep{10.1145/960118.808380}.
 It provides a rich set of built-in functions and libraries for numerical analysis, linear algebra, differential equations, and other mathematical tasks.
 It is a statically typed language, meaning that variable types are declared explicitly at compile time and do not change during runtime. This allows compilers to perform extensive type checking and optimization to generate efficient code for execution.
 
@@ -15,7 +15,8 @@ This allows legacy Fortran programs to continue running without modification on 
 Because of these reasons, despite its age, Fortran remains widely used in scientific and engineering computing.
 
 \subsection{C and C\texttt{++}}
-C was created in 1972 as a general-purpose programming language. C\texttt{++} was created in 1979 to enhance C language with object-oriented design and many useful standard template libraries.
+C was created in 1972 as a general-purpose programming language. C\texttt{++} was created in 1979 to enhance C language with object-oriented design \citep{10.1145/323648.323736}.
+Standard template libraries were introduced in C\texttt{++} in 1990s to improve code reusability and standardization \citep{10.5555/2544010}.
 Despite the historical dominance of Fortran in scientific and engineering computing, C and C\texttt{++} have gradually replaced Fortran in many scientific computing and HPC codes due to their performance, flexibility, and rich ecosystem of tools and libraries.
 
 While Fortran continues to be used in certain domains, particularly in legacy codebases and specialized applications, the adoption of C and C\texttt{++} as the default language in many modern packages reflects the evolving needs and preferences of HPC developers for modern, versatile programming languages.
@@ -24,7 +25,7 @@ C and C\texttt{++} are known for their performance and efficiency.
 In fact, they are often used as the standard to compare the performance of various programming languages. 
 This is because they provide low-level control over hardware resources and memory management, allowing programmers to write code that executes with high speed and minimal overhead. 
 The performance is crucial for HPC applications, which often involve computationally extensive tasks and large-scale simulations.
-Known as high-level languages, C and C\texttt{++} strike a balance between high-level abstractions and low-level control. They support multiple programming paradigms including procedural, and object-oriented.
+Known as somewhat high-level languages, C and C\texttt{++} strike a balance between high-level abstractions and low-level control. They support multiple programming paradigms including procedural, and object-oriented.
 C/C\texttt{++} can also be extended to handle parallel processing via pragma directives.
 This allows the creation of modular, reusable code with encapsulation, inheritance, polymorphism, and templates.
 Standard Libraries built on top of these features provide implementations of fundamental data structures, algorithms, and utilities.
@@ -41,7 +42,7 @@ This interoperability allows developers to leverage existing software components
 However, the impact on the performance needs to be considered carefully when interoperating C and C\texttt{++} with other languages.
 
 \subsection{MATLAB}
-MATLAB is a high-level programming language usually used in an interactive development environment (IDE) from the software with the same name.
+MATLAB is a high-level programming language usually used in an interactive development environment (IDE) from the software with the same name \citep{doi:10.1137/1.9781611974669}.
 Developed by MathWorks, it is widely used for numerical computing, data analysis, visualization, and algorithm development.
 Compared to compiled languages that can generate binary executables running natively on operation systems, MATLAB requires an interpreter (usually by MATLAB) to ``translate'' the code whenever the code is run.
 To avoid ambiguity, we refer to both the language and the IDE as MATLAB here.
