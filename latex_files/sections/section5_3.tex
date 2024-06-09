@@ -166,7 +166,7 @@ For Dirichlet conditions, we have
     \label{eqn:dirichlet-condition}
 \end{align}
 
-
+Detailed formulation of these matrices will be provided in the code for paper submission in the future.
 % \subsection{Discretization and parameters selection}
 
 
@@ -191,8 +191,26 @@ We first look at the changes in shear stress along the slip direction for a samp
     \label{fig:bp5-slip2}
 \end{figure}
 
+Last we look at changes in the state variable for two sample locations on the fault, one inside and one outside of the nucleation favorable region. The figures are shown in \autoref{fig:state-inside} and \autoref{fig:state-outside}. 
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/state-variable-nucleation.png}
+    \caption{Comparison of the state variable inside the nucleation favorable region}
+    \label{fig:state-inside}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figures/state-variable-outside-nucleation.png}
+    \caption{Comparison of the state variable outside the nucleation favorable region}
+    \label{fig:state-outside}
+\end{figure}
+
+
+
 Preliminary results have shown agreement in the modeling of the same problems using different methods.
+Both our model and the model from comparison group can capture different behaviors of earthquakes for fault stations inside and outside of the nucleation favorable regions.
 Current results from other simulations are mainly based on boundary element methods, which take hours to run.
 Our methods are volume-based and have more than 100 times higher degrees of freedom.
 With the GPU-accelerated MGCG as a solver, our simulation time is cut to around ~8 hours, with around $0.2s$ for each round of solving linear system and updating values. 
-This is down from weeks and months of estimated time using direct methods if we have sufficient large enough memory for matrix factorization.
+This is down from years of estimated time using direct methods if we have sufficient large enough memory for matrix factorization.

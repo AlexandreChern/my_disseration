@@ -9,3 +9,5 @@ Our code on matrix-free SBP-SAT methods can be developed with ParallelStencils.j
 
 In this work, we only apply Richardson iteration as matrix-free smoothers for our multigrid preconditioners. During our research, we observed faster convergence with higher-order Krylov subspace methods as smoother. These methods are also highly suitable for GPU architectures and can be implemented matrix-free.
 In future work, we can explore using higher order second-order Richardson methods and Chebyshev iterations as smoothers in multigrid methods to further reduce steps till convergence for CG.
+
+We focused on solving the PDEs using the SBP-SAT methods in the thesis. However, ODE solvers also play an important role impacting the performance of simulations. In future work, more research will be needed to improve the performance of ODE solvers in junction with the integration of the GPU-accelerated solvers for the SBP-SAT methods.

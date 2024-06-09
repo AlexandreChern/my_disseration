@@ -56,12 +56,10 @@ The results for this simulation are published in \citep{erickson2023incorporatin
     \label{fig:BP1-seismic-plot}
 \end{figure}
 
-The \autoref{fig:BP1-seismic-plot}
-
 \autoref{fig:BP1-seismic-plot} shows our results along with simulation results from other researchers. 
 When using different methods to solve the same benchmark problem, we achieve comparable results regarding the time between two slip events and the slip rate.
 
 
 For the 2D problem with more than 1000 grid points in each direction or a 3D problem with recommended resolutions from benchmark problem 5, we will be solving linear systems with millions or tens of millions of unknowns.
 The above approach is too slow even on the latest GPUs.
-We need more advanced algorithms like the MGCG method described in Chapter 5.
+We need more advanced algorithms like the MGCG method described in Chapter 4.
