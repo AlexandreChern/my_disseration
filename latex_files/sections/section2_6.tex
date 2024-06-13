@@ -179,7 +179,7 @@ PETSc adopts a geometric algebraic multigrid (GAMG) based on smoothed aggregatio
 Finally, PyAMG includes a number of AMG variants for testings, and Cusp distributes with a standard SA implementation for use on a GPU \citep{dalton2014cusp,bell2022pyamg}. 
 
 \subsection{The Multigrid Method Within the SBP-SAT Scheme}
-Since the SBP-SAT scheme is a framework for discretization to form a linear system, it is compatible with the multigrid method and can be accelerated using this technique. The key challenge from simply applying the common prolongation and restriction operators with the Galerkin condition \autoref{galerkin-condition} is that the summation-by-parts property would not be preserved for the coarse grid operators. In order to accurately represent the coarse-grid correction problem for the SBP-SAT scheme, a more suitable class of interpolation operators needs to be proposed. Many works have been done to address this issue \citep{ruggiu2018new,RUGGIU2018216}.
+Since the SBP-SAT scheme is a framework for discretization to form a linear system, it is compatible with the multigrid method and can be accelerated using this technique. The key challenge from simply applying the common prolongation and restriction operators with the Galerkin condition \autoref{galerkin-condition} is that the summation-by-parts property would not be preserved for the coarse grid operators. In order to accurately represent the coarse-grid correction problem for the SBP-SAT scheme, a more suitable class of interpolation operators needs to be proposed. Many works have been done to address this issue \citep{RUGGIU2018216}.
 
 To overcome this issue, consider defining the restriction operator as 
 \begin{equation}
@@ -215,7 +215,7 @@ SBP-preserving interpolation operators with minimal bandwidth are given in Appen
     \centering
     \includegraphics{figures/sbp_restriction.png}
     \centering
-    \caption{The 2nd-order SBP-preserving restriction operator $I_r$}
+    \caption{The 2nd-order SBP-preserving restriction operator $I_r$ \citep{RUGGIU2018216}}
     \label{fig:sbp_restriction}
 \end{figure}
 
@@ -251,7 +251,7 @@ Both grids are conforming to the domain boundaries, and the prolongation onto th
 \begin{equation}
     (\phi_2,D_{1,2}\psi_2)_{H_2} = \phi_{2,N/2}\psi_{2,N/2} - \phi_{2,0}\psi_{2,0} - (D_{1,2}\phi_{2},\psi_{2})_{H_2}
 \end{equation}
-And we've shown that the coarse grid operator $D_{1,2}$ constructed in a such way preserves the SBP property. Also, the coarse grid first derivative SBP operator $D_{1,2}$ retains the order of accuracy of the original scheme at the interior nodes if 2$q$th order SBP-preserving interpolations are used. The proof can be found in \citep{ruggiu2018new}.
+And we've shown that the coarse grid operator $D_{1,2}$ constructed in a such way preserves the SBP property. Also, the coarse grid first derivative SBP operator $D_{1,2}$ retains the order of accuracy of the original scheme at the interior nodes if 2$q$th order SBP-preserving interpolations are used. The proof can be found in \citep{RUGGIU2018216}.
 
 \subsubsection{SBP-preserving interpolation applied to the second derivative}
 The SBP-preserving interpolation can also be applied to the second derivative operator. Similar to the proof for the first derivative operator, we can prove that the coarse grid operator constructed in such ways preserves the SBP property.
@@ -271,7 +271,7 @@ Both grids are conforming to domain boundaries, implying that $(I_p\phi_2)_i = \
 \end{equation}
 where $S$ is equivalent to $\boldsymbol{d}_0^T$ which approximates the first derivative at the boundaries as discussed in the previous section on the SBP-SAT methods.
 
-Additional proofs or propositions to SBP-preserving interpolations can also be found in  \citep{ruggiu2018new}. Furthermore, several model problems have been tested with multigrid iteration schemes using these SBP-preserving interpolations. These problems include a Poisson equation, the anisotropic elliptic problem, and the advection-diffusion problem. Numerical experiments show that the SBP-preserving interpolation improves convergence properties of the multigrid scheme for SBP-SAT discretizations regardless of the order of the discretization and smoother chosen. Moreover, the excellent performance in combination with the smoother SOR, clearly indicates that multigrid algorithms with SBP-preserving interpolation can be designed to get fast convergence. The paper mainly covers the steady model problem to compare the effect of different grid transfer operators. For time-dependent problems, the effectiveness of multigrid algorithms with these SBP-preserving interpolations needs to be tested \citep{ruggiu2018new}.
+Additional proofs or propositions to SBP-preserving interpolations can also be found in  \citep{RUGGIU2018216}. Furthermore, several model problems have been tested with multigrid iteration schemes using these SBP-preserving interpolations. These problems include a Poisson equation, the anisotropic elliptic problem, and the advection-diffusion problem. Numerical experiments show that the SBP-preserving interpolation improves convergence properties of the multigrid scheme for SBP-SAT discretizations regardless of the order of the discretization and smoother chosen. Moreover, the excellent performance in combination with the smoother SOR, clearly indicates that multigrid algorithms with SBP-preserving interpolation can be designed to get fast convergence. The paper mainly covers the steady model problem to compare the effect of different grid transfer operators. For time-dependent problems, the effectiveness of multigrid algorithms with these SBP-preserving interpolations needs to be tested \citep{RUGGIU2018216}.
 
 
 \subsection{Multigrid Preconditioned Conjugate Gradient}
