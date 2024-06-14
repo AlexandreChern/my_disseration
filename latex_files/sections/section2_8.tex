@@ -133,7 +133,7 @@ Several techniques can be for parallel implementations of the preconditioners. T
 The simplest approach is to use a Jacobi or block Jacobi approach. In this case, a Jacobi preconditioner may be consist of a diagonal or a block-diagonal of $A$
 To improve the performance, these preconditioners can be accelerated by polynomial iterations. For example, the second level of preconditioning is called \textit{polynomial preconditioning}.
 A different strategy is to enhance parallelism by using graph algorithms, such as graph-coloring techniques. The gist of this approach is that all unknowns associated with the same color can be determined simultaneously in the forward or backward sweeps.
-The third strategy uses generalizations of "partitioning" techniques which can be also called "domain decomposition" approaches.
+The third strategy uses generalizations of ``partitioning'' techniques which can be also called ``domain decomposition'' approaches.
 We will give a brief overview of these methods in this part.
 
 Overlapping block-Jacobi preconditioning is a parallel preconditioner similar to the general block-Jacobi approach with overlapping blocks as shown in \autoref{fig:overlap-block-jacobi}. Enlarging a system of algebraic equations by including duplicate copies of several rows, leads to an efficient iterative scheme on a multiprocessor MIMD array \citep{WAIT1988325}. 
