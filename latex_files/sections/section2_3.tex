@@ -143,13 +143,13 @@ equal to the zero vector
 
 The CG method is an iterative minimizer of the given quadratic form and therefore an iterative solver for the linear equation system $\boldsymbol{Au=f}$ when $\boldsymbol{A}$ is SPD. The quadratic form is always minimized from an approximate vector $\boldsymbol{u}^k$ in the direction of a provided search vector $\boldsymbol{p}^k \neq 0$, which can be written as
 \begin{equation}
-    F(\boldsymbol{u}^k + \lambda\boldsymbol{p}^k) = min
+    F(\boldsymbol{u}^k + \lambda\boldsymbol{p}^k) = \min
 \end{equation}
 where both $\boldsymbol{u}^k$ and $\boldsymbol{p}^k$ are constant vectors $\in \mathbb{R}$ and a scalar variable $\lambda \in \mathbb{R}$. This leads to the following parabola function of $\lambda$
-\begin{align}
-    (\frac{1}{2}{\boldsymbol{p}^{k}}^{T} \boldsymbol{A} \boldsymbol{p}^k) \lambda^2 &+ ({\boldsymbol{p}^{k}}^{T} \boldsymbol{A} \boldsymbol{u}^k - {\boldsymbol{p}^{k}}^T\boldsymbol{f})\lambda \nonumber \\
-    &+ ((\frac{1}{2}{\boldsymbol{u}^{k}}^{T} \boldsymbol{A} \boldsymbol{u}^k) - {\boldsymbol{u}^k}^T) = min
-\end{align}
+\begin{equation}
+    (\frac{1}{2}{\boldsymbol{p}^{k}}^{T} \boldsymbol{A} \boldsymbol{p}^k) \lambda^2 + ({\boldsymbol{p}^{k}}^{T} \boldsymbol{A} \boldsymbol{u}^k - {\boldsymbol{p}^{k}}^T\boldsymbol{f})\lambda \nonumber
+    + ((\frac{1}{2}{\boldsymbol{u}^{k}}^{T} \boldsymbol{A} \boldsymbol{u}^k) - {\boldsymbol{u}^k}^T) = \min
+\end{equation}
 
 This quadratic form is minimized for 
 \begin{equation}

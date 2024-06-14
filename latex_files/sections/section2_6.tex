@@ -61,7 +61,7 @@ Smoothing technique for the solution can be defined as follows
 \end{split}
 \end{equation}
 
-where $S$ is the smoother. If $S$ is an exponential smoother $S_{\text{exp}} = e^{-L_1\Delta\tau}$, this will yield the pseudo time-marching procedure in \autoref{pseudo-march}. This iterative method would converge after $\nu$ steps to 
+where $S$ is the \textit{smoother}. If $S$ is an exponential smoother $S_{\text{exp}} = e^{-L_1\Delta\tau}$, this will yield the pseudo time-marching procedure in \autoref{pseudo-march}. This iterative method would converge after $\nu$ steps to 
 \begin{equation}
     \mathbf{w} = S^{\nu} \mathbf{u}^0 + (I_1 - S^{\nu})L_1^{-1}\mathbf{F}
     \label{converged_iter}
@@ -197,7 +197,7 @@ are equal for $\phi_1 = I_p\phi_2$ and $\psi_2 = I_r \psi_1$. $\phi$ and $\psi$ 
     \label{eqn:adjoint}
 \end{align}
 
-by using \autoref{eqn:interpolation_sbp}, it is possible to build pairs of consistent and accurate prolongation and restriction operators. The following definition of the SBP-preserving interpolation operators was given in \citep{RUGGIU2018216}, where the operators were used to couple SBP-SAT formulations on grids with different mesh sizes with numerical stability.
+by using \autoref{eqn:interpolation_sbp}, it is possible to build pairs of consistent and accurate prolongation and restriction operators. The following definition of the \textit{SBP-preserving} interpolation operators was given in \citep{RUGGIU2018216}, where the operators were used to couple SBP-SAT formulations on grids with different mesh sizes with numerical stability.
 
 
 
