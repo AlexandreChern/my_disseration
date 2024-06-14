@@ -1,5 +1,5 @@
 \section{Future Work}
-This work is focused on the second-order SBP-SAT methods. SBP-SAT methods are known to be high order accuracy, and using higher-order SBP operators will increase arithmetic intensity that will increase the performance of matrix-free GPU kernels compared to SpMV operators.
+This thesis is focused on the second-order SBP-SAT methods. SBP-SAT methods are known to be high order accuracy, and using higher-order SBP operators will increase arithmetic intensity that will increase the performance of matrix-free GPU kernels compared to SpMV operators.
 
 In addition, the matrix-free kernels presented in this paper are only implemented on a single GPU. 
 Although this is enough to solve the problems presented in this paper, it would be more important in the HPC aspect to design matrix-free kernels that can run on multiple GPUs across different nodes.
@@ -7,7 +7,7 @@ ParallelStencils.jl is a Julia package that enables large-scale stencil-based co
 It's also built on top of KernelAbstractions.jl, a Julia package that targets heterogeneous platforms.
 Our code on matrix-free SBP-SAT methods can be developed with ParallelStencils.jl to run on supercomputers built with CPUs/GPUs from different vendors.
 
-In this work, we only apply Richardson iteration as matrix-free smoothers for our multigrid preconditioners. During our research, we observed faster convergence with higher-order Krylov subspace methods as smoother. These methods are also highly suitable for GPU architectures and can be implemented matrix-free.
+In this thesis, we only apply Richardson iteration as the matrix-free smoother for our multigrid preconditioners. During our research, we observed faster convergence with higher-order Krylov subspace methods as smoother. These methods are also highly suitable for GPU architectures and can be implemented matrix-free.
 In future work, we can explore using higher order second-order Richardson methods and Chebyshev iterations as smoothers in multigrid methods to further reduce steps till convergence for CG.
 
 We focused on solving the PDEs using the SBP-SAT methods in the thesis. However, ODE solvers also play an important role impacting the performance of simulations. In future work, more research will be needed to improve the performance of ODE solvers in junction with the integration of the GPU-accelerated solvers for the SBP-SAT methods.
