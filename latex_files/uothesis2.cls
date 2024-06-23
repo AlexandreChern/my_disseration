@@ -9,6 +9,9 @@
 %% See http://www.latex-project.org/lppl.txt
 %% ----------------------------------------------------------------
 %%
+%% updated 20JUN2014
+%% Added co-chairs, updated cover page for 2023 guidance
+%%
 %% updated 09JUN2014
 %% macro cvitem may be commented out for skipped content
 %% extra periods in figures and tables were removed. Oct2013 A.C.
@@ -35,7 +38,7 @@
 \typeout{Currently maintained by Sam Pollard}
 \typeout{Accepted by the University of Oregon Graduate School}
 \typeout{for multiple citation formats used with PhD Dissertations}
-\typeout{2 Feb 2022}
+\typeout{20 Jun 2024}
 \typeout{}
 \listfiles
 \newif\ifthesis
@@ -254,6 +257,7 @@ of this document.}
 \newif\if@cochair
 \def\cochair#1{\gdef\@cochair{#1}\@cochairtrue}
 
+% CM: I needed two equal co-chairs instead of one chair and one co-chair so I added this command which basically is just a pass-through (see later)
 \newif\if@cochairs
 \def\cochairs#1{\gdef\@cochairs{#1}\@cochairstrue}
 
@@ -375,36 +379,35 @@ of this document.}
   \begin{center}
   \vspace*{0.25in}
   \doublespacing
-  \@uppercovertitle
+  \@covertitle
   \singlespacing
   \vfill
   by \\*[\baselineskip]
-  \@author\\
+  \@author\\*
   \vfil
   \ifdraft\@disclaimer\\\fi\vfill
   \doublespacing
-   A \@papertype\ accepted and approved in partial fulfillment of the \\
+   A \@papertype\ accepted and approved in partial fulfillment of the \\*
    requirements for the degree of \\*
-   \@degree \\
-   in\ \@major \\*[\baselineskip] \\
+   \@degree \\*
+   in \@major \\*[\baselineskip]
 
-   Dissertation Committee: \\
+   Dissertation Committee:\\*
    \if@cochairs
-     \@cochairs\\
+     \@cochairs
    \else
-     \@chair , Chair\\
+     \@chair, Chair\\*
      \if@cochair
-       \@cochair , Co-chair\\
+       \@cochair, Co-chair\\*
      \fi
    \fi
    \if@lackscommittee
      % If we don't have a committee, do nothing. Otherwise, render the committee. Rather, just enter a few blank lines.
-     \\ \\
    \else
-     \@committee\\ \\
-   \fi \\
+     \@committee
+   \fi
    \vfill
-   University of Oregon \\
+   University of Oregon \\*
    \@degreemonth ~\thedegreeyear\\
    \end{center}
 }
@@ -458,7 +461,7 @@ All rights reserved.
     \vspace*{3ex}
     \noindent
     \@author\\*[\baselineskip]
-    \@degree\ in\ \@major \\*[\baselineskip]
+    \@degree\ in \@major \\*[\baselineskip]
     Title: \@abstracttitle\\*[\baselineskip]
     %\\*[2\baselineskip]
   \end{spacing}
@@ -564,9 +567,6 @@ All rights reserved.
 \def\@maketitlepages{
   \pagenumbering{arabic}
   \@maketitlepage
-  \if@approved
-    \@makeapprovepage
-  \fi
   \@makecopyrightpage
   \@makeabstractpage
   \@makevita

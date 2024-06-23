@@ -1,6 +1,7 @@
 SHELL = /bin/sh
 MAIN = main
 LATEX = pdflatex
+# LATEXFLAGS= -interaction=nonstopmode -f
 
 all: $(MAIN).pdf findref
 
