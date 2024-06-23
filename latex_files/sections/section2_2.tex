@@ -148,7 +148,7 @@ where $\Delta u = \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\parti
  and vector $\boldsymbol{n}$ is the outward pointing normal to the domain boundary $\partial\Omega$. The $g$'s represent boundary data on the west, east, south, and north boundaries.
  
  
-The SBP-SAT discretization of (\ref{eqn:poisson_eqn}) is given by
+The SBP-SAT discretization of (\autoref{eqn:poisson_eqn}) is given by
 \begin{equation}\label{eqn:discrete}
 -\boldsymbol{D}_2\boldsymbol{u} = \boldsymbol{f} + \boldsymbol{b}^{N} + \boldsymbol{b}^{S} + \boldsymbol{b}^{W} + \boldsymbol{b}^{E},
 \end{equation}
@@ -159,4 +159,4 @@ where $\boldsymbol{D}_2 = \left(\boldsymbol{I} \otimes \boldsymbol{D}_{xx}\right
 - \left(\boldsymbol{H}^{-1}\boldsymbol{e_0}\boldsymbol{d_0}^T \otimes \boldsymbol{I}\right) (\boldsymbol{E}_\text{W}\boldsymbol{u} - \boldsymbol{e}^T_\text{W}\boldsymbol{g}_\text{W}),
 \end{equation}
 where $\alpha$ again represents a penalty parameter, $\boldsymbol{E}_\text{W}$ is a sparse boundary extraction operator, and $\boldsymbol{e}^T_\text{W}$ is an operator that lifts the boundary data to the whole domain. Details of all the SAT terms can be found in \citep{Erickson2014}.
-System (\ref{eqn:discrete}) can be rendered SPD by multiplying from the left by $\left(\boldsymbol{H} \otimes \boldsymbol{H}\right)$,  producing the sparse linear system $\boldsymbol{Au} = \boldsymbol{b}$.
+System (\autoref{eqn:discrete}) can be rendered SPD by multiplying from the left by $\left(\boldsymbol{H} \otimes \boldsymbol{H}\right)$,  producing the sparse linear system $\boldsymbol{Au} = \boldsymbol{b}$.
