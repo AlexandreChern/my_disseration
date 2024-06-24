@@ -1,4 +1,5 @@
 \section{Partial Differential Equations for the Solid Earth}
+This chapter contains the first-authored previously published work in the International Conference of Supercomputing (ICS 24').
 \subsection{Governing equations and boundary conditions}
 Static deformation of the solid Earth over the time-scales of earthquake cycles is governed by the equilibrium equation and a constitutive relationship describing the material properties.  The standard assumption is that the Earth is linear elastic, defined on a sub-domain of $\mathbb{R}^3$.  While solutions to the 3D elasticity equations are the eventual target, 2D problems are considered in this work in order to sort out implementation details with reduced computational costs.  The 2D anti-plane shear problem \citep{antiplaneshear} is particularly ubiquitous in earthquake applications, where a vertical cross-section of a 3D problem (assuming invariance in one-direction) gives rise to an elliptic equation, where only one non-zero component of the displacement vector exists and depends on two spatial variables, namely,
 \begin{equation}
